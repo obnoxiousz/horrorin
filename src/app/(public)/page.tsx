@@ -72,25 +72,24 @@ export default function HomePage() {
     <AppShell>
       {/* ===== HERO ===== */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-30" />
+        {/* <div className="absolute inset-0 grid-pattern opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-700/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-700/10 rounded-full blur-3xl" /> */}
 
         <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-20 relative">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6 animate-slide-up">
-              <Badge
+              {/* <Badge
                 variant="outline"
                 className="bg-primary/10 border-primary/30 text-primary"
               >
                 <Sparkles className="w-3 h-3 mr-1" /> Komunitas Horror #1
                 Indonesia
-              </Badge>
+              </Badge> */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
                 Bikin cerita{" "}
-                <span className="text-primary text-glow">horror</span> kek
-                <br className="hidden sm:block" /> pros. Tanpa design skill. 👻
+                <span className="text-primary text-glow">horror</span> kek pros. Tanpa design skill.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
                 Pilih template kece, edit konten, tayangin ke ribuan pembaca.
@@ -178,7 +177,7 @@ export default function HomePage() {
               Lihat semua <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-thin">
+          <div className="box gap-2  pb-2 -mx-4 px-4 scrollbar-thin">
             {CATEGORIES.map((c) => (
               <CategoryPill
                 key={c.slug}

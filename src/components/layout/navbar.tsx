@@ -74,8 +74,8 @@ export function Navbar() {
       <header
         data-state={isVisible ? "visible" : "hidden"}
         className={cn(
-          "fixed top-4 left-1/2 z-50 max-w-[calc(100vw-2rem)] rounded-full",
-          "glass-strong shadow-lg shadow-black/30",
+          "fixed top-4 left-0 right-0 z-50 mx-auto w-fit max-w-[calc(100vw-2rem)] rounded-full",
+          "glass-strong shadow-lg shadow-black/30 backdrop-blur-md backdrop-saturate-150",
           "transition-[translate,opacity] duration-300 ease-out",
           "motion-reduce:transition-opacity motion-reduce:translate-y-0",
           isVisible
