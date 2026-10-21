@@ -70,98 +70,6 @@ export default function HomePage() {
 
   return (
     <AppShell>
-      {/* ===== HERO ===== */}
-      <section className="relative overflow-hidden">
-        {/* <div className="absolute inset-0 grid-pattern opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
-        <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-700/10 rounded-full blur-3xl" /> */}
-
-        <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-20 relative">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-6 animate-slide-up">
-              {/* <Badge
-                variant="outline"
-                className="bg-primary/10 border-primary/30 text-primary"
-              >
-                <Sparkles className="w-3 h-3 mr-1" /> Komunitas Horror #1
-                Indonesia
-              </Badge> */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Bikin cerita{" "}
-                <span className="text-primary text-glow">horror</span> kek pros. Tanpa design skill.
-              </h1>
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Pilih template kece, edit konten, tayangin ke ribuan pembaca.
-                Horrorin gabungin Canva + Reddit + Medium buat para pencinta
-                urban legend Indonesia.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                {session ? (
-                  <Link href="/editor">
-                    <Button
-                      size="lg"
-                      className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
-                    >
-                      <PenTool className="w-5 h-5" /> Mulai Cerita Baru ✍️
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link href="/gabung">
-                    <Button
-                      size="lg"
-                      className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
-                    >
-                      Gabung Horrorin 🚀
-                    </Button>
-                  </Link>
-                )}
-                <Link href="/trending">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="gap-2 rounded-full h-12 px-6 font-semibold"
-                  >
-                    <Flame className="w-5 h-5 text-primary" /> Liat yang
-                    Trending
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <div className="flex items-center gap-6 pt-4">
-                <Stat label="Cerita tayang" value="2.4K+" />
-                <div className="w-px h-10 bg-border" />
-                <Stat label="Kreator aktif" value="850+" />
-                <div className="w-px h-10 bg-border" />
-                <Stat label="Pembaca bulanan" value="120K+" />
-              </div>
-            </div>
-
-            {/* Hero preview: stacked cards */}
-            <div className="relative hidden lg:block h-[420px]">
-              {trending[0] && (
-                <StoryCard
-                  story={trending[0]}
-                  className="absolute top-0 left-0 w-72 rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-500"
-                />
-              )}
-              {trending[1] && (
-                <StoryCard
-                  story={trending[1]}
-                  className="absolute top-10 right-0 w-72 rotate-[4deg] hover:rotate-[2deg] transition-transform duration-500"
-                />
-              )}
-              {/* {trending[2] && (
-                <StoryCard
-                  story={trending[2]}
-                  className="absolute bottom-0 left-12 w-72 rotate-[2deg] hover:rotate-0 transition-transform duration-500"
-                />
-              )} */}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ===== CATEGORIES ===== */}
       <section className="border-y border-border/40 bg-card/20 backdrop-blur-sm">
@@ -352,6 +260,100 @@ export default function HomePage() {
           <CreatorsRow />
         </section>
       </div>
+
+      
+      {/* ===== HERO ===== */}
+      <section className="relative overflow-hidden">
+        {/* <div className="absolute inset-0 grid-pattern opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
+        <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-700/10 rounded-full blur-3xl" /> */}
+
+        <div className="container mx-auto max-w-7xl px-4 py-12 sm:py-20 relative">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6 animate-slide-up">
+              {/* <Badge
+                variant="outline"
+                className="bg-primary/10 border-primary/30 text-primary"
+              >
+                <Sparkles className="w-3 h-3 mr-1" /> Komunitas Horror #1
+                Indonesia
+              </Badge> */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
+                Bikin cerita{" "}
+                <span className="text-primary text-glow">horror</span> kek pros. Tanpa design skill.
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Pilih template kece, edit konten, tayangin ke ribuan pembaca.
+                Horrorin gabungin Canva + Reddit + Medium buat para pencinta
+                urban legend Indonesia.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                {session ? (
+                  <Link href="/editor">
+                    <Button
+                      size="lg"
+                      className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
+                    >
+                      <PenTool className="w-5 h-5" /> Mulai Cerita Baru ✍️
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/gabung">
+                    <Button
+                      size="lg"
+                      className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
+                    >
+                      Gabung Horrorin 🚀
+                    </Button>
+                  </Link>
+                )}
+                <Link href="/trending">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-2 rounded-full h-12 px-6 font-semibold"
+                  >
+                    <Flame className="w-5 h-5 text-primary" /> Liat yang
+                    Trending
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Stats */}
+              <div className="flex items-center gap-6 pt-4">
+                <Stat label="Cerita tayang" value="2.4K+" />
+                <div className="w-px h-10 bg-border" />
+                <Stat label="Kreator aktif" value="850+" />
+                <div className="w-px h-10 bg-border" />
+                <Stat label="Pembaca bulanan" value="120K+" />
+              </div>
+            </div>
+
+            {/* Hero preview: stacked cards */}
+            <div className="relative hidden lg:block h-[420px]">
+              {trending[0] && (
+                <StoryCard
+                  story={trending[0]}
+                  className="absolute top-0 left-0 w-72 rotate-[-6deg] hover:rotate-[-3deg] transition-transform duration-500"
+                />
+              )}
+              {trending[1] && (
+                <StoryCard
+                  story={trending[1]}
+                  className="absolute top-10 right-0 w-72 rotate-[4deg] hover:rotate-[2deg] transition-transform duration-500"
+                />
+              )}
+              {/* {trending[2] && (
+                <StoryCard
+                  story={trending[2]}
+                  className="absolute bottom-0 left-12 w-72 rotate-[2deg] hover:rotate-0 transition-transform duration-500"
+                />
+              )} */}
+            </div>
+          </div>
+        </div>
+      </section>
     </AppShell>
   );
 }
