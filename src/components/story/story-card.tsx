@@ -161,12 +161,12 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
           <img
             src={story.thumbnailUrl}
             alt={story.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            className="w-full h-full object-cover"
           />
         ) : (
           <div className="w-full h-full horror-gradient flex items-center justify-center text-6xl">👻</div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/30 group-hover:bg-primary/40 transition-color duration-700" />
         {story.category && (
           <Badge className="absolute top-3 left-3 py-1 px-2 bg-primary/90 backdrop-blur border-0">
             <span className="mr-1">{story.category.icon}</span> {story.category.name}
