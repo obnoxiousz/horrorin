@@ -6,7 +6,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      {/* Navbar sudah floating (fixed) dan tidak lagi menghabiskan ruang di flow;
+          pt-20 memberi ruang untuk pill (top-4 + h-14 = 72px) supaya konten
+          teratas tidak tertutup navbar. */}
+      <main className="flex-1 pt-20">{children}</main>
       <Footer />
     </div>
   );

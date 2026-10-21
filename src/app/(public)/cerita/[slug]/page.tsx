@@ -354,7 +354,7 @@ export default function StoryDetailPage({
           </div>
 
           {/* ===== Comments ===== */}
-          <section id="comments" className="mt-12 scroll-mt-20">
+          <section id="comments" className="mt-12 scroll-mt-32">
             <h2 className="text-xl font-bold mb-5 flex items-center gap-2">
               <MessageCircle className="w-5 h-5 text-primary" />
               Komen ({formatNumber(story.commentCount)})
