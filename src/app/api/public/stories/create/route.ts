@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireUser } from "@/auth/session";
 import { db } from "@/lib/db";
 import { storyRepository } from "@/repositories/story-repository";
+import { templateRepository } from "@/repositories";
 import { slugify } from "@/utils/format";
 import { z } from "zod";
 
@@ -10,6 +11,7 @@ const schema = z.object({
   excerpt: z.string().max(280).optional().nullable(),
   categoryId: z.string().min(1, "Kategori wajib"),
   templateId: z.string().optional().nullable(),
+  templateSlug: z.string().optional().nullable(),
   thumbnailUrl: z.string().optional().nullable(),
   tags: z.array(z.string()).optional(),
   blocks: z.array(
@@ -34,7 +36,14 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
-  const { title, excerpt, categoryId, templateId, thumbnailUrl, tags, blocks, status } = parsed.data;
+  const { title, excerpt, categoryId, templateId, templateSlug, thumbnailUrl, tags, blocks, status } = parsed.data;
+
+  // Resolve template from DB id or slug
+  let resolvedTemplateId = templateId ?? null;
+  if (!resolvedTemplateId && templateSlug) {
+    const tpl = await templateRepository.findBySlug(templateSlug);
+    resolvedTemplateId = tpl?.id ?? null;
+  }
 
   // Ensure unique slug
   let base = slugify(title);
@@ -62,7 +71,7 @@ export async function POST(req: NextRequest) {
       status,
       authorId: user!.id,
       categoryId,
-      templateId: templateId ?? null,
+      templateId: resolvedTemplateId,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
       tags: tags?.length
         ? {
@@ -86,16 +95,35 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ story });
 }
 
+// GET /api/public/stories/create?id=<storyId> — fetch own story (draft editor)
+export async function GET(req: NextRequest) {
+  const { user, response } = await requireUser();
+  if (response) return response;
+
+  const id = req.nextUrl.searchParams.get("id");
+  const story = id ? await storyRepository.findById(id) : null;
+  if (!story || story.authorId !== user!.id) {
+    return NextResponse.json({ error: "Draft nggak ketemu 😢" }, { status: 404 });
+  }
+
+  return NextResponse.json({ story });
+}
+
 export async function PATCH(req: NextRequest) {
   const { user, response } = await requireUser();
   if (response) return response;
   const body = await req.json().catch(() => ({}));
-  const { id, title, excerpt, categoryId, templateId, thumbnailUrl, tags, blocks, status } = body ?? {};
+  const { id, title, excerpt, categoryId, templateId, templateSlug, thumbnailUrl, tags, blocks, status } = body ?? {};
   if (!id) return NextResponse.json({ error: "Id wajib" }, { status: 400 });
 
   const existing = await storyRepository.findById(id);
   if (!existing || existing.authorId !== user!.id) {
     return NextResponse.json({ error: "Cerita nggak ketemu" }, { status: 404 });
+  }
+
+  let tplId: string | undefined = templateId;
+  if (!tplId && templateSlug) {
+    tplId = (await templateRepository.findBySlug(templateSlug))?.id ?? undefined;
   }
 
   const allText = (blocks ?? [])
@@ -143,7 +171,7 @@ export async function PATCH(req: NextRequest) {
       ...(title !== undefined && { title, slug: slugify(title) + "-" + id.slice(-4) }),
       ...(excerpt !== undefined && { excerpt }),
       ...(categoryId !== undefined && { categoryId }),
-      ...(templateId !== undefined && { templateId }),
+      ...(tplId !== undefined && { templateId: tplId }),
       ...(thumbnailUrl !== undefined && { thumbnailUrl }),
       ...(readingTime !== undefined && { readingTime }),
       ...(status !== undefined && {

@@ -56,10 +56,22 @@ interface Block {
   data: StoryBlockData;
 }
 
+export interface EditorDraftStory {
+  id: string;
+  title: string;
+  excerpt?: string | null;
+  categoryId: string;
+  thumbnailUrl?: string | null;
+  tags?: { name: string }[];
+  template?: { id: string; slug: string; name: string } | null;
+  blocks: { type: string; data: string | object }[];
+}
+
 interface StoryEditorProps {
   template: TemplateDef;
   categories: any[];
   onBack: () => void;
+  initialStory?: EditorDraftStory | null;
 }
 
 const BLOCK_TYPES: {
@@ -173,25 +185,42 @@ export function StoryEditor({
   template,
   categories,
   onBack,
+  initialStory,
 }: StoryEditorProps) {
-  // Generate initial blocks from template structure
+  // Generate initial blocks: from existing draft when editing, else from template structure
+  const init = initialStory ?? null;
   const [blocks, setBlocks] = useState<Block[]>(() =>
-    template.structure.map((s) => ({
-      id: genId(),
-      type: s.type,
-      data: defaultDataFor(s.type),
-    })),
+    init
+      ? init.blocks.map(
+          (b): Block => ({
+            id: genId(),
+            type: b.type as BlockType,
+            data:
+              typeof b.data === "string"
+                ? (JSON.parse(b.data as string) as StoryBlockData)
+                : (b.data as StoryBlockData),
+          }),
+        )
+      : template.structure.map((s) => ({
+          id: genId(),
+          type: s.type,
+          data: defaultDataFor(s.type),
+        })),
   );
-  const [title, setTitle] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [title, setTitle] = useState(init?.title ?? "");
+  const [excerpt, setExcerpt] = useState(init?.excerpt ?? "");
+  const [categoryId, setCategoryId] = useState(
+    init?.categoryId ?? categories[0]?.id ?? "",
+  );
+  const [thumbnailUrl, setThumbnailUrl] = useState(init?.thumbnailUrl ?? "");
+  const [tags, setTags] = useState<string[]>(
+    init?.tags?.map((t) => t.name) ?? [],
+  );
   const [tagInput, setTagInput] = useState("");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [storyId, setStoryId] = useState<string | null>(null);
+  const [storyId, setStoryId] = useState<string | null>(init?.id ?? null);
   const [showLeftMobile, setShowLeftMobile] = useState(false);
   const [showRightMobile, setShowRightMobile] = useState(false);
 
@@ -301,6 +330,7 @@ export function StoryEditor({
       null,
     categoryId,
     templateId: undefined,
+    templateSlug: template.slug,
     thumbnailUrl: thumbnailUrl || null,
     tags,
     status,
@@ -324,7 +354,7 @@ export function StoryEditor({
     try {
       const payload = buildPayload(publish ? "PUBLISHED" : "DRAFT");
       const r = await fetch("/api/public/stories/create", {
-        method: "POST",
+        method: storyId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });

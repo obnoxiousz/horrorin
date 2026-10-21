@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
@@ -16,16 +16,32 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LoadingState } from "@/components/ui/states";
-import { TEMPLATES, type TemplateDef } from "@/constants";
+import { TEMPLATES, getTemplate, type TemplateDef } from "@/constants";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { StoryEditor } from "@/components/editor/story-editor";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function EditorPage() {
+  return (
+    <Suspense
+      fallback={
+        <AppShell>
+          <LoadingState text="Lagi nyiapin editor... 👀" />
+        </AppShell>
+      }
+    >
+      <EditorContent />
+    </Suspense>
+  );
+}
+
+function EditorContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
   const [step, setStep] = useState<"select" | "edit">("select");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDef | null>(null);
 
@@ -37,14 +53,58 @@ export default function EditorPage() {
     },
   });
 
+  const {
+    data: draftData,
+    error: draftError,
+    isLoading: draftLoading,
+  } = useQuery({
+    queryKey: ["editor-draft", editId],
+    queryFn: async () => {
+      const r = await fetch(`/api/public/stories/create?id=${editId}`);
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error ?? "Draft nggak ketemu 😢");
+      return d;
+    },
+    enabled: !!editId,
+    retry: false,
+  });
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/masuk?next=/editor");
     }
   }, [status, router]);
 
+  useEffect(() => {
+    if (draftError) {
+      toast.error((draftError as Error).message || "Draft nggak ketemu 😢");
+      router.push(session?.user?.username ? `/u/${session.user.username}` : "/");
+    }
+  }, [draftError, router, session?.user?.username]);
+
   if (status === "loading" || status === "unauthenticated") {
     return <AppShell><LoadingState text="Lagi nyiapin editor... 👀" /></AppShell>;
+  }
+
+  // ===== EDIT MODE: opening an existing draft =====
+  if (editId) {
+    if (draftLoading || draftError) {
+      return (
+        <AppShell>
+          <LoadingState text="Lagi buka draftmu... 👀" />
+        </AppShell>
+      );
+    }
+    const draft = draftData?.story;
+    const tpl = getTemplate(draft?.template?.slug ?? "") ?? TEMPLATES[0];
+    return (
+      <StoryEditor
+        template={tpl}
+        categories={catData?.categories ?? []}
+        initialStory={draft}
+        onBack={() => router.back()}
+      />
+    );
   }
 
   // ===== STEP 1: TEMPLATE GALLERY =====
