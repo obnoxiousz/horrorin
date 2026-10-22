@@ -28,12 +28,8 @@ import { Badge } from "@/components/ui/badge";
 import { CATEGORIES } from "@/constants";
 import { formatNumber } from "@/utils/format";
 import { useSession } from "next-auth/react";
-
-async function fetchJSON(url: string) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error("Failed");
-  return r.json();
-}
+import { storyQueries } from "@/lib/api/stories";
+import { categoryQueries } from "@/lib/api/categories";
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -43,22 +39,14 @@ export default function HomePage() {
     isLoading: latestLoading,
     isError: latestError,
     refetch: refetchLatest,
-  } = useQuery({
-    queryKey: ["stories", "latest"],
-    queryFn: () => fetchJSON("/api/public/stories?sort=latest&take=8"),
-  });
-  const { data: trendingData, isLoading: trendingLoading } = useQuery({
-    queryKey: ["stories", "trending"],
-    queryFn: () => fetchJSON("/api/public/stories?sort=trending&take=4"),
-  });
-  const { data: recommendedData, isLoading: recommendedLoading } = useQuery({
-    queryKey: ["stories", "recommended"],
-    queryFn: () => fetchJSON("/api/public/stories?sort=recommended&take=4"),
-  });
-  const { data: catData } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => fetchJSON("/api/public/categories"),
-  });
+  } = useQuery(storyQueries.list({ sort: "latest", take: 8 }));
+  const { data: trendingData, isLoading: trendingLoading } = useQuery(
+    storyQueries.list({ sort: "trending", take: 4 })
+  );
+  const { data: recommendedData, isLoading: recommendedLoading } = useQuery(
+    storyQueries.list({ sort: "recommended", take: 4 })
+  );
+  const { data: catData } = useQuery(categoryQueries.all());
 
   useEffect(() => {
     document.title = "Horrorin — Komunitas Cerita Horror Indonesia";
@@ -408,11 +396,9 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function CreatorsRow() {
   const { data, isLoading } = useQuery({
-    queryKey: ["creators"],
-    queryFn: async () => {
-      // Get unique authors from latest stories
-      const r = await fetch("/api/public/stories?sort=trending&take=20");
-      const d = await r.json();
+    ...storyQueries.creators(20),
+    select: (d: { stories: any[] }) => {
+      // Get unique authors from trending stories
       const seen = new Map<string, any>();
       for (const s of d.stories ?? []) {
         if (s.author && !seen.has(s.author.id)) seen.set(s.author.id, s.author);

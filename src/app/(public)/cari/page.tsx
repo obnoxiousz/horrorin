@@ -9,6 +9,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
 import { ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
 import { Input } from "@/components/ui/input";
+import { storyQueries } from "@/lib/api/stories";
 
 export default function CariPage() {
   return (
@@ -29,15 +30,9 @@ function CariInner() {
     document.title = q ? `Cari "${q}" — Horrorin` : "Cari — Horrorin";
   }, [q]);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["stories", "search", q],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/stories?q=${encodeURIComponent(q)}&take=24`);
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: q.length > 0,
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    storyQueries.list({ q, take: 24 }, q.length > 0)
+  );
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();

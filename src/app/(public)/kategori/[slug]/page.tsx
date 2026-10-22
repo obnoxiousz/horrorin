@@ -9,6 +9,7 @@ import { StoryCard } from "@/components/story/story-card";
 import { ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
 import { getCategory } from "@/constants";
 import { cn } from "@/lib/utils";
+import { storyQueries } from "@/lib/api/stories";
 
 const SORTS = [
   { value: "latest", label: "Terbaru" },
@@ -30,14 +31,9 @@ export default function CategoryDetailPage({
     document.title = `${category?.name ?? "Kategori"} — Horrorin`;
   }, [category]);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["stories", "category", slug, sort],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/stories?category=${slug}&sort=${sort}&take=24`);
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    storyQueries.list({ category: slug, sort, take: 24 })
+  );
 
   const stories = data?.stories ?? [];
 

@@ -148,4 +148,15 @@ export const storyQueries = {
       retry: false as const,
     });
   },
+  /** Home's CreatorsRow swallows every failure into an empty authors list
+   *  (its fetch has no ok-check), so any error collapses to {stories:[]}. */
+  creators(take: number) {
+    return queryOptions({
+      queryKey: queryKeys.stories.list({ sort: "trending", take }),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        storiesApi.list({ sort: "trending", take }, { signal: ctx.signal }).catch(
+          () => ({ stories: [] })
+        ),
+    });
+  },
 };

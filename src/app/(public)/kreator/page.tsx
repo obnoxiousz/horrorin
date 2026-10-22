@@ -7,6 +7,7 @@ import { Users, ArrowRight, BookOpen } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { ErrorState, EmptyState } from "@/components/ui/states";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { storyQueries } from "@/lib/api/stories";
 
 export default function KreatorPage() {
   useEffect(() => {
@@ -14,11 +15,8 @@ export default function KreatorPage() {
   }, []);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["creators", "all"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/stories?sort=trending&take=50");
-      if (!r.ok) throw new Error("failed");
-      const d = await r.json();
+    ...storyQueries.list({ sort: "trending", take: 50 }),
+    select: (d: { stories: any[] }) => {
       // Extract unique authors with story count
       const map = new Map<string, any>();
       for (const s of d.stories ?? []) {
@@ -32,7 +30,7 @@ export default function KreatorPage() {
           }
         }
       }
-      return Array.from(map.values()).sort((a, b) => b.totalLikes - a.totalLikes);
+      return Array.from(map.values()).sort((a: any, b: any) => b.totalLikes - a.totalLikes);
     },
   });
 

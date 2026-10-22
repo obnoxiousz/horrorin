@@ -6,20 +6,16 @@ import { Flame } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
 import { LoadingState, ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
+import { storyQueries } from "@/lib/api/stories";
 
 export default function TrendingPage() {
   useEffect(() => {
     document.title = "Lagi Trending — Horrorin";
   }, []);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["stories", "trending", "page"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/stories?sort=trending&take=24");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    storyQueries.list({ sort: "trending", take: 24 })
+  );
 
   const stories = data?.stories ?? [];
 

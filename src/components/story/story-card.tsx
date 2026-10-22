@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { formatNumber, formatRelativeTime, readingTimeLabel, truncate } from "@/utils/format";
 import { useState } from "react";
 import { toast } from "sonner";
+import { storiesApi } from "@/lib/api/stories";
+import { ApiError } from "@/lib/api/client";
 
 interface StoryCardProps {
   story: any;
@@ -24,37 +26,25 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
     e.preventDefault();
     e.stopPropagation();
     try {
-      const r = await fetch("/api/public/stories/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ storyId: story.id }),
-      });
-      if (!r.ok) {
-        if (r.status === 401) toast.error("Login dulu yuk buat like 💔");
-        return;
-      }
-      const d = await r.json();
+      const d = await storiesApi.like(story.id);
       setLiked(d.liked);
       setLikeCount((c) => c + (d.liked ? 1 : -1));
-    } catch {}
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401)
+        toast.error("Login dulu yuk buat like 💔");
+    }
   };
   const onBookmark = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const r = await fetch("/api/public/stories/bookmark", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ storyId: story.id }),
-      });
-      if (!r.ok) {
-        if (r.status === 401) toast.error("Login dulu yuk buat simpan 📌");
-        return;
-      }
-      const d = await r.json();
+      const d = await storiesApi.bookmark(story.id);
       setBookmarked(d.bookmarked);
       toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
-    } catch {}
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401)
+        toast.error("Login dulu yuk buat simpan 📌");
+    }
   };
 
   if (variant === "horizontal") {

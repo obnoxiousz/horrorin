@@ -6,20 +6,16 @@ import { Clock } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
 import { LoadingState, ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
+import { storyQueries } from "@/lib/api/stories";
 
 export default function TerbaruPage() {
   useEffect(() => {
     document.title = "Cerita Terbaru — Horrorin";
   }, []);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["stories", "latest", "page"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/stories?sort=latest&take=24");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    storyQueries.list({ sort: "latest", take: 24 })
+  );
 
   const stories = data?.stories ?? [];
 
