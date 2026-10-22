@@ -57,7 +57,7 @@ export default function SimpanPage() {
 
   return (
     <AppShell>
-      <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12">
+      <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12 animate-in fade-in duration-300">
         {/* ===== Header ===== */}
         <header className="flex items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">

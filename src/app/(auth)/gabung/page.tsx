@@ -9,6 +9,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouteTransition } from "@/components/ui/route-transition";
+import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +33,7 @@ const schema = z
 
 export default function GabungPage() {
   const router = useRouter();
+  const { start } = useRouteTransition();
   const [form, setForm] = useState({ name: "", username: "", email: "", password: "", confirm: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -87,10 +90,12 @@ export default function GabungPage() {
       });
       if (res?.error) {
         toast.error("Akun dibuat, tapi gagal auto-login. Masuk manual ya");
+        start();
         router.push("/masuk");
         return;
       }
       toast.success("Selamat datang di Horrorin! 👋");
+      start();
       router.push("/");
       router.refresh();
     } catch {
@@ -100,7 +105,8 @@ export default function GabungPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <PageTransition>
+      <div className="min-h-screen flex">
       {/* Left hero */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden horror-gradient">
         <div className="absolute inset-0 grid-pattern opacity-40" />
@@ -259,7 +265,8 @@ export default function GabungPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PageTransition>
   );
 }
 

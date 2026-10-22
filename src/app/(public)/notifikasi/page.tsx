@@ -95,7 +95,7 @@ export default function NotifikasiPage() {
 
   return (
     <AppShell>
-      <div className="container mx-auto max-w-3xl px-4 py-8 sm:py-12">
+      <div className="container mx-auto max-w-3xl px-4 py-8 sm:py-12 animate-in fade-in duration-300">
         {/* ===== Header ===== */}
         <header className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">

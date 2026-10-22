@@ -20,6 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useNavbarVisibility } from "@/hooks/use-navbar-visibility";
+import { useRouteTransition } from "@/components/ui/route-transition";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/", label: "Beranda" },
@@ -32,6 +34,7 @@ export function Navbar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const { start } = useRouteTransition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [unread, setUnread] = useState(0);
@@ -54,6 +57,7 @@ export function Navbar() {
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchValue.trim()) return;
+    start();
     router.push(`/cari?q=${encodeURIComponent(searchValue.trim())}`);
     setMobileOpen(false);
   };
@@ -91,13 +95,14 @@ export function Navbar() {
         <div className="flex h-14 items-center gap-2 px-3 sm:px-5">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-0 bg-primary/40 blur-lg rounded-full group-hover:bg-primary/60 transition-colors" />
               <Ghost className="relative w-7 h-7 text-primary" />
             </div>
             <span className="text-xl font-bold tracking-tight">
               Horror<span className="text-primary">in</span>
-            </span>
+            </span> */}
+            <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} />
           </Link>
 
           {/* Desktop Nav */}

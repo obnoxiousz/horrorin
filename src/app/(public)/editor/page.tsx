@@ -16,6 +16,8 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LoadingState } from "@/components/ui/states";
+import { SkeletonForm } from "@/components/ui/skeletons";
+import { PageTransition } from "@/components/ui/page-transition";
 import { TEMPLATES, getTemplate, type TemplateDef } from "@/constants";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -28,7 +30,7 @@ export default function EditorPage() {
     <Suspense
       fallback={
         <AppShell>
-          <LoadingState text="Lagi nyiapin editor... 👀" />
+          <LoadingState text="Lagi nyiapin editor... 👀" variant="skeleton" />
         </AppShell>
       }
     >
@@ -83,7 +85,7 @@ function EditorContent() {
   }, [draftError, router, session?.user?.username]);
 
   if (status === "loading" || status === "unauthenticated") {
-    return <AppShell><LoadingState text="Lagi nyiapin editor... 👀" /></AppShell>;
+    return <AppShell><LoadingState text="Lagi nyiapin editor... 👀" variant="skeleton" /></AppShell>;
   }
 
   // ===== EDIT MODE: opening an existing draft =====
@@ -91,19 +93,23 @@ function EditorContent() {
     if (draftLoading || draftError) {
       return (
         <AppShell>
-          <LoadingState text="Lagi buka draftmu... 👀" />
+          <div className="container mx-auto max-w-3xl px-4 py-12">
+            <SkeletonForm rows={5} />
+          </div>
         </AppShell>
       );
     }
     const draft = draftData?.story;
     const tpl = getTemplate(draft?.template?.slug ?? "") ?? TEMPLATES[0];
     return (
-      <StoryEditor
-        template={tpl}
-        categories={catData?.categories ?? []}
-        initialStory={draft}
-        onBack={() => router.back()}
-      />
+      <PageTransition>
+        <StoryEditor
+          template={tpl}
+          categories={catData?.categories ?? []}
+          initialStory={draft}
+          onBack={() => router.back()}
+        />
+      </PageTransition>
     );
   }
 
@@ -154,14 +160,16 @@ function EditorContent() {
 
   // ===== STEP 2: BLOCK EDITOR =====
   return (
-    <StoryEditor
-      template={selectedTemplate}
-      categories={catData?.categories ?? []}
-      onBack={() => {
-        setStep("select");
-        setSelectedTemplate(null);
-      }}
-    />
+    <PageTransition>
+      <StoryEditor
+        template={selectedTemplate}
+        categories={catData?.categories ?? []}
+        onBack={() => {
+          setStep("select");
+          setSelectedTemplate(null);
+        }}
+      />
+    </PageTransition>
   );
 }
 

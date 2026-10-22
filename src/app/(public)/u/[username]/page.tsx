@@ -160,6 +160,7 @@ export default function ProfilePage({
 
   return (
     <AppShell>
+      <div className="animate-in fade-in duration-300">
       {/* ===== Header ===== */}
       <header className="relative overflow-hidden border-b border-border/40">
         <div className="absolute inset-0 horror-gradient opacity-50" />
@@ -366,6 +367,7 @@ export default function ProfilePage({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </AppShell>
   );
 }

@@ -8,19 +8,24 @@ import { Ghost, Mail, Lock, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouteTransition } from "@/components/ui/route-transition";
+import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
 
 export default function MasukPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen" />}>
-      <MasukInner />
-    </Suspense>
+    <PageTransition>
+      <Suspense fallback={<div className="min-h-screen" />}>
+        <MasukInner />
+      </Suspense>
+    </PageTransition>
   );
 }
 
 function MasukInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { start } = useRouteTransition();
   const callbackUrl = searchParams.get("next") || searchParams.get("callbackUrl") || "/";
 
   const [email, setEmail] = useState("");
@@ -51,6 +56,7 @@ function MasukInner() {
         return;
       }
       toast.success("Berhasil masuk! 👋");
+      start();
       router.push(callbackUrl);
       router.refresh();
     } catch {

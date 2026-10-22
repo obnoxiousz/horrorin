@@ -188,7 +188,7 @@ export default function StoryDetailPage({
 
   return (
     <AppShell>
-      <article className="pb-20">
+      <article className="pb-20 animate-in fade-in duration-300">
         {/* ===== Back button + breadcrumb ===== */}
         <div className="container mx-auto max-w-3xl px-4 pt-6">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">

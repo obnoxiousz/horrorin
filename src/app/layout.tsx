@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Providers } from "@/components/providers";
+import { RouteTransition } from "@/components/ui/route-transition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +35,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} antialiased bg-background text-foreground min-h-screen`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <Suspense fallback={null}>
+            <RouteTransition />
+          </Suspense>
+          {children}
+        </Providers>
         <Toaster />
         <Sonner position="top-right" theme="dark" />
       </body>
