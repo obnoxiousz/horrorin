@@ -128,7 +128,7 @@ export function RouteTransition() {
       aria-live="polite"
       aria-busy="true"
       className={cn(
-        "fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm transition-opacity",
+        "fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-sm transition-opacity",
         phase === "leaving" ? "pointer-events-none opacity-0" : "opacity-100",
       )}
       style={{ transitionDuration: `${FADE_MS}ms` }}
@@ -137,10 +137,10 @@ export function RouteTransition() {
       <Image
         src="/assets/logo.svg"
         alt=""
-        width={1000}
-        height={1000}
+        width={100}
+        height={100}
         priority
-        className="w-16 h-16 sm:w-20 sm:h-20 animate-pulse motion-reduce:animate-none"
+        className="w-48 h-48 sm:w-52 sm:h-52 animate-pulse motion-reduce:animate-none"
       />
     </div>
   );
