@@ -20,7 +20,8 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryBlockRenderer } from "@/components/story/story-block-renderer";
 import { StoryCard } from "@/components/story/story-card";
-import { LoadingState, ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
+import { ErrorState, EmptyState } from "@/components/ui/states";
+import { SkeletonDetail } from "@/components/ui/skeletons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -156,7 +157,7 @@ export default function StoryDetailPage({
     },
   });
 
-  if (isLoading) return <AppShell><LoadingState text="Lagi buka ceritanya... 👀" /></AppShell>;
+  if (isLoading) return <AppShell><SkeletonDetail /></AppShell>;
   if (isError || !data?.story) {
     return (
       <AppShell>

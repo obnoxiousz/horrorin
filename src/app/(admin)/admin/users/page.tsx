@@ -17,6 +17,7 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { AdminNav } from "@/components/layout/admin-nav";
 import { LoadingState } from "@/components/ui/states";
+import { SkeletonList, SkeletonTable } from "@/components/ui/skeletons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -107,7 +108,7 @@ export default function AdminUsersPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" />
+        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
       </AppShell>
     );
   }
@@ -142,7 +143,14 @@ export default function AdminUsersPage() {
 
         {/* ===== Desktop table ===== */}
         {isLoading ? (
-          <LoadingState text="Lagi ngambil data users... 👀" />
+          <>
+            <div className="hidden lg:block glass rounded-3xl overflow-hidden">
+              <SkeletonTable cols={7} rows={8} />
+            </div>
+            <div className="lg:hidden">
+              <SkeletonList count={5} className="space-y-3" />
+            </div>
+          </>
         ) : users.length === 0 ? (
           <div className="glass rounded-3xl p-10 text-center">
             <p className="text-sm text-muted-foreground">

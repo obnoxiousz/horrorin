@@ -19,6 +19,7 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { AdminNav } from "@/components/layout/admin-nav";
 import { LoadingState } from "@/components/ui/states";
+import { SkeletonList, SkeletonStats } from "@/components/ui/skeletons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
@@ -63,7 +64,7 @@ export default function AdminDashboardPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" />
+        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
       </AppShell>
     );
   }
@@ -99,7 +100,10 @@ export default function AdminDashboardPage() {
         <AdminNav />
 
         {isLoading ? (
-          <LoadingState text="Lagi ngambil data... 👀" />
+          <div className="space-y-4">
+            <SkeletonStats />
+            <SkeletonList count={6} />
+          </div>
         ) : (
           <>
             {/* ===== Stat cards ===== */}

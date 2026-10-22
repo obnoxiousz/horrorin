@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { Bookmark } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
-import { LoadingState, ErrorState, EmptyState } from "@/components/ui/states";
+import { ErrorState, EmptyState } from "@/components/ui/states";
+import { SkeletonCardGrid, SkeletonPageHeader } from "@/components/ui/skeletons";
 import { useSession } from "next-auth/react";
 
 export default function SimpanPage() {
@@ -36,7 +37,10 @@ export default function SimpanPage() {
   if (status === "loading" || status === "unauthenticated" || isLoading) {
     return (
       <AppShell>
-        <LoadingState text="Lagi ngambil simpanan... 📌" />
+        <div className="container mx-auto max-w-7xl px-4 py-8 sm:py-12">
+          <SkeletonPageHeader className="mb-8" />
+          <SkeletonCardGrid count={8} />
+        </div>
       </AppShell>
     );
   }

@@ -91,27 +91,51 @@ export function StoryCardSkeleton({ variant = "default" }: { variant?: "default"
     );
   }
   return (
-    <div className="flex flex-col rounded-3xl overflow-hidden glass animate-pulse">
-      <div className="aspect-video bg-muted" />
-      <div className="p-5 space-y-3">
-        <div className="h-3 w-1/2 bg-muted rounded" />
-        <div className="h-5 w-3/4 bg-muted rounded" />
-        <div className="h-3 w-full bg-muted rounded" />
-        <div className="h-3 w-2/3 bg-muted rounded" />
-        <div className="h-8 w-full bg-muted rounded mt-4" />
+    <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-muted animate-pulse">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      <div className="absolute top-3 left-3 h-5 w-16 rounded-full bg-black/40" />
+      <div className="absolute top-3 right-3 h-7 w-7 rounded-full bg-black/50" />
+      <div className="absolute inset-x-0 bottom-0 p-4 space-y-2.5">
+        <div className="h-2.5 w-1/2 bg-white/30 rounded" />
+        <div className="h-4 w-3/4 bg-white/30 rounded" />
+        <div className="h-2.5 w-1/3 bg-white/30 rounded" />
       </div>
     </div>
   );
 }
 
-export function LoadingState({ text = "Lagi nyiapin cerita... 👀" }: { text?: string }) {
+export function LoadingState({
+  text = "Lagi nyiapin cerita... 👀",
+  variant = "spinner",
+}: {
+  text?: string;
+  variant?: "spinner" | "skeleton";
+}) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="relative w-12 h-12 mb-4">
-        <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
-        <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-      <p className="text-sm text-muted-foreground">{text}</p>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      className="flex flex-col items-center justify-center py-16 px-4"
+    >
+      {variant === "spinner" ? (
+        <>
+          <div className="relative w-12 h-12 mb-4">
+            <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+          <p className="text-sm text-muted-foreground">{text}</p>
+        </>
+      ) : (
+        <>
+          <span className="sr-only">{text}</span>
+          <div className="w-full max-w-xs space-y-3">
+            <div className="h-4 w-2/3 bg-muted rounded animate-pulse mx-auto" />
+            <div className="h-4 w-full bg-muted rounded animate-pulse" />
+            <div className="h-4 w-5/6 bg-muted rounded animate-pulse" />
+          </div>
+        </>
+      )}
     </div>
   );
 }

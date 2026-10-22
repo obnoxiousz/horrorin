@@ -16,6 +16,7 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { AdminNav } from "@/components/layout/admin-nav";
 import { LoadingState } from "@/components/ui/states";
+import { SkeletonList, SkeletonTable } from "@/components/ui/skeletons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -103,7 +104,7 @@ export default function AdminStoriesPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" />
+        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
       </AppShell>
     );
   }
@@ -126,7 +127,14 @@ export default function AdminStoriesPage() {
         <AdminNav />
 
         {isLoading ? (
-          <LoadingState text="Lagi ngambil data cerita... 👀" />
+          <>
+            <div className="hidden lg:block glass rounded-3xl overflow-hidden">
+              <SkeletonTable cols={8} rows={8} />
+            </div>
+            <div className="lg:hidden">
+              <SkeletonList count={6} className="space-y-3" />
+            </div>
+          </>
         ) : stories.length === 0 ? (
           <div className="glass rounded-3xl p-10 text-center">
             <p className="text-sm text-muted-foreground">Belum ada cerita di database 👻</p>

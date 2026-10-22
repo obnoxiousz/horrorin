@@ -16,7 +16,8 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
-import { LoadingState, ErrorState, EmptyState, StoryCardSkeleton } from "@/components/ui/states";
+import { ErrorState, EmptyState } from "@/components/ui/states";
+import { SkeletonProfile } from "@/components/ui/skeletons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -131,7 +132,7 @@ export default function ProfilePage({
     }
   }, [isOwn, data]);
 
-  if (isLoading) return <AppShell><LoadingState text="Lagi buka profil... 👀" /></AppShell>;
+  if (isLoading) return <AppShell><SkeletonProfile /></AppShell>;
   if (isError || !data?.profile) {
     return (
       <AppShell>

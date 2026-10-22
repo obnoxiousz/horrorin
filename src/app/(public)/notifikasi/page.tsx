@@ -14,7 +14,8 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
-import { LoadingState, ErrorState, EmptyState } from "@/components/ui/states";
+import { ErrorState, EmptyState } from "@/components/ui/states";
+import { SkeletonList, SkeletonPageHeader } from "@/components/ui/skeletons";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -69,7 +70,10 @@ export default function NotifikasiPage() {
   if (status === "loading" || status === "unauthenticated" || isLoading) {
     return (
       <AppShell>
-        <LoadingState text="Lagi ngambil notifikasi... 👀" />
+        <div className="container mx-auto max-w-3xl px-4 py-8 sm:py-12">
+          <SkeletonPageHeader className="mb-6" />
+          <SkeletonList count={6} />
+        </div>
       </AppShell>
     );
   }

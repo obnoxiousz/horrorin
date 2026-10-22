@@ -27,7 +27,7 @@ export default function AdminReportsPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" />
+        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
       </AppShell>
     );
   }
