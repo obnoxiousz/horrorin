@@ -146,99 +146,101 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
     <Link
       href={`/cerita/${story.slug}`}
       className={cn(
-        "group flex flex-col rounded-3xl overflow-hidden glass hover:glass-strong transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10",
-        variant === "featured" && "sm:col-span-2 sm:row-span-2",
+        "group relative block w-full aspect-[3/4] @container rounded-2xl overflow-hidden text-white md:hover:scale-[1.03] transition-transform duration-300",
         className
       )}
     >
       {/* Thumbnail */}
-      <div className={cn(
-        "relative overflow-hidden bg-muted",
-        variant === "featured" ? "aspect-[16/10]" : "aspect-video"
-      )}>
-        {story.thumbnailUrl ? (
-           
-          <img
-            src={story.thumbnailUrl}
-            alt={story.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full horror-gradient flex items-center justify-center text-6xl">👻</div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/30 group-hover:bg-primary/40 transition-color duration-700" />
-        {story.category && (
-          <Badge className="absolute top-3 left-3 py-1 px-2 bg-primary/90 backdrop-blur border-0">
+      {story.thumbnailUrl ? (
+        <img
+          src={story.thumbnailUrl}
+          alt={story.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 horror-gradient flex items-center justify-center text-5xl">
+          👻
+        </div>
+      )}
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      {/* Hover tint */}
+      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/25 transition-colors duration-300" />
+
+      {/* Top bar */}
+      <div className="absolute top-0 inset-x-0 flex items-start justify-between gap-2 p-3 pointer-events-none">
+        {story.category ? (
+          <Badge className="py-1 px-2 bg-primary/90 backdrop-blur border-0">
             <span className="mr-1">{story.category.icon}</span> {story.category.name}
           </Badge>
+        ) : (
+          <span />
         )}
-        {variant === "featured" && (
-          <Badge className="absolute top-3 right-3 py-1 px-2 bg-amber-500/90 backdrop-blur border-0 text-black">
-            🔥 Trending
-          </Badge>
-        )}
-
-        {/* Bookmark button */}
-        <button
-          onClick={onBookmark}
-          aria-label="Simpan cerita"
-          className={cn(
-            "absolute bottom-3 right-3 w-9 h-9 rounded-full backdrop-blur flex items-center justify-center transition-all",
-            bookmarked ? "bg-primary text-primary-foreground" : "bg-black/40 hover:bg-black/60"
+        <div className="flex flex-col items-end gap-2">
+          {variant === "featured" && (
+            <Badge className="py-1 px-2 bg-amber-500/90 backdrop-blur border-0 text-black">
+              🔥 Trending
+            </Badge>
           )}
-        >
-          <Bookmark className={cn("w-4 h-4", bookmarked && "fill-current")} />
-        </button>
+          {/* Bookmark button */}
+          <button
+            onClick={onBookmark}
+            aria-label="Simpan cerita"
+            className={cn(
+              "pointer-events-auto w-7 h-7 rounded-full backdrop-blur flex items-center justify-center transition-all",
+              bookmarked ? "bg-primary text-primary-foreground" : "bg-black/40 hover:bg-black/60"
+            )}
+          >
+            <Bookmark className={cn("w-3.5 h-3.5", bookmarked && "fill-current")} />
+          </button>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 sm:p-5 flex flex-col flex-1">
-        <div className="flex items-center gap-2 mb-2.5">
-          <Avatar className="w-6 h-6">
+      {/* Bottom block */}
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-3 sm:p-4">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <Avatar className="w-5 h-5 shrink-0">
             <AvatarImage src={story.author?.image ?? undefined} />
             <AvatarFallback className="text-[10px] bg-primary/20 text-primary">
               {story.author?.name?.charAt(0) ?? "?"}
             </AvatarFallback>
           </Avatar>
-          <span className="text-xs font-medium truncate">{story.author?.name ?? story.author?.username}</span>
-          <span className="text-xs text-muted-foreground">·</span>
-          <span className="text-xs text-muted-foreground">{formatRelativeTime(story.publishedAt ?? story.createdAt)}</span>
+          <span className="text-[11px] font-medium text-white/80 truncate">
+            {story.author?.name ?? story.author?.username}
+          </span>
+          <span className="text-[11px] text-white/50">·</span>
+          <span className="text-[11px] text-white/60 shrink-0">
+            {formatRelativeTime(story.publishedAt ?? story.createdAt)}
+          </span>
         </div>
 
-        <h3 className={cn(
-          "font-bold leading-tight line-clamp-2 group-hover:text-primary transition-colors mb-1.5",
-          variant === "featured" ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
-        )}>
+        <h3 className="text-sm sm:text-base font-bold leading-snug line-clamp-2 text-white">
           {story.title}
         </h3>
-        <p className={cn(
-          "text-muted-foreground line-clamp-2 text-sm",
-          variant === "featured" && "sm:text-base"
-        )}>
+        <p className="hidden @[220px]:block text-xs text-white/70 line-clamp-2">
           {story.excerpt ?? truncate(story.title, 100)}
         </p>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> {readingTimeLabel(story.readingTime)}
-            </span>
-            <button
-              onClick={onLike}
-              className={cn(
-                "flex items-center gap-1 transition-colors",
-                liked ? "text-primary" : "hover:text-primary"
-              )}
-            >
-              <Heart className={cn("w-3.5 h-3.5", liked && "fill-current")} /> {formatNumber(likeCount)}
-            </button>
-            <span className="flex items-center gap-1">
-              <MessageCircle className="w-3.5 h-3.5" /> {formatNumber(story.commentCount)}
-            </span>
-          </div>
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Eye className="w-3.5 h-3.5" /> {formatNumber(story.viewCount)}
+        {/* Stats row */}
+        <div className="flex items-center gap-2.5 mt-0.5 text-[11px] text-white/75">
+          <span className="hidden @[220px]:flex items-center gap-1 shrink-0">
+            <Clock className="w-3 h-3" /> {readingTimeLabel(story.readingTime)}
+          </span>
+          <button
+            onClick={onLike}
+            className={cn(
+              "flex items-center gap-1 transition-colors",
+              liked ? "text-primary" : "hover:text-primary"
+            )}
+          >
+            <Heart className={cn("w-3 h-3", liked && "fill-current")} /> {formatNumber(likeCount)}
+          </button>
+          <span className="flex items-center gap-1">
+            <MessageCircle className="w-3 h-3" /> {formatNumber(story.commentCount)}
+          </span>
+          <span className="hidden @[220px]:flex items-center gap-1 ml-auto shrink-0">
+            <Eye className="w-3 h-3" /> {formatNumber(story.viewCount)}
           </span>
         </div>
       </div>

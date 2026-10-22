@@ -268,7 +268,7 @@ export default function ProfilePage({
                 action={isOwn ? { label: "Mulai Cerita Baru ✍️", href: "/editor" } : undefined}
               />
             ) : (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4">
                 {publishedStories.map((s: any) => (
                   <StoryCard key={s.id} story={s} />
                 ))}

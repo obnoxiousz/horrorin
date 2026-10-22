@@ -92,7 +92,7 @@ function CariInner() {
             icon={<Search className="w-10 h-10 text-primary" />}
           />
         ) : isLoading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
             {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
               <StoryCardSkeleton key={i} />
             ))}
@@ -111,7 +111,7 @@ function CariInner() {
               Ketemu <span className="font-semibold text-foreground">{stories.length}</span> cerita buat{" "}
               <span className="font-semibold text-foreground">"{q}"</span>
             </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
               {stories.map((s: any) => (
                 <StoryCard key={s.id} story={s} />
               ))}

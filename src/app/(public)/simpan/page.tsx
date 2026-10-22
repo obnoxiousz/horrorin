@@ -84,7 +84,7 @@ export default function SimpanPage() {
             action={{ label: "Jelajah cerita 🔥", href: "/trending" }}
           />
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
             {bookmarks.map((s: any) => (
               <StoryCard key={s.id} story={s} />
             ))}

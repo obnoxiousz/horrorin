@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { StoryCard } from "@/components/story/story-card";
+import { StoryRow } from "@/components/story/story-row";
 import { CategoryPill } from "@/components/story/category-pill";
 import {
   EmptyState,
@@ -85,7 +86,7 @@ export default function HomePage() {
               Lihat semua <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="box gap-2  pb-2 -mx-4 px-4 scrollbar-thin">
+          <div className="space-y-1 space-x-1 pb-2 -mx-4 px-4 scrollbar-thin">
             {CATEGORIES.map((c) => (
               <CategoryPill
                 key={c.slug}
@@ -101,7 +102,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="container mx-auto max-w-7xl px-4 py-10 space-y-16">
+      <div className="container mx-auto max-w-7xl px-4 py-10 space-y-16 animate-in fade-in duration-300">
         {/* ===== TRENDING ===== */}
         <section>
           <SectionHeader
@@ -111,11 +112,11 @@ export default function HomePage() {
             href="/trending"
           />
           {trendingLoading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StoryRow>
               {[0, 1, 2, 3].map((i) => (
                 <StoryCardSkeleton key={i} />
               ))}
-            </div>
+            </StoryRow>
           ) : trending.length === 0 ? (
             <EmptyState
               title="Masih sepi nih..."
@@ -123,11 +124,11 @@ export default function HomePage() {
               action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
             />
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StoryRow>
               {trending.slice(0, 4).map((s: any) => (
                 <StoryCard key={s.id} story={s} />
               ))}
-            </div>
+            </StoryRow>
           )}
         </section>
 
@@ -140,21 +141,21 @@ export default function HomePage() {
             href="/terbaru"
           />
           {latestLoading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[0, 1, 2, 3].map((i) => (
+            <StoryRow>
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <StoryCardSkeleton key={i} />
               ))}
-            </div>
+            </StoryRow>
           ) : latestError ? (
             <ErrorState onRetry={() => refetchLatest()} />
           ) : latest.length === 0 ? (
             <EmptyState />
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StoryRow>
               {latest.slice(0, 8).map((s: any) => (
                 <StoryCard key={s.id} story={s} />
               ))}
-            </div>
+            </StoryRow>
           )}
         </section>
 
@@ -192,19 +193,19 @@ export default function HomePage() {
             icon={<TrendingUp className="w-5 h-5 text-primary" />}
           />
           {recommendedLoading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StoryRow>
               {[0, 1, 2, 3].map((i) => (
                 <StoryCardSkeleton key={i} />
               ))}
-            </div>
+            </StoryRow>
           ) : recommended.length === 0 ? (
             <EmptyState />
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StoryRow>
               {recommended.slice(0, 4).map((s: any) => (
                 <StoryCard key={s.id} story={s} />
               ))}
-            </div>
+            </StoryRow>
           )}
         </section>
 
