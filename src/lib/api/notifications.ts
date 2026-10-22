@@ -1,29 +1,50 @@
-import { api } from "./client";
+import { api, type ClientOptions } from "./client";
 import { queryKeys } from "@/lib/query-keys";
-import type { NotificationDTO } from "@/types";
+import { queryOptions } from "@tanstack/react-query";
 
-export interface NotificationsListResponse {
-  notifications: NotificationDTO[];
-  unread: number;
+export interface MyNotificationsResponse {
+  notifications: {
+    id: string;
+    read: boolean;
+    createdAt: string;
+    actor?: {
+      id: string;
+      name: string | null;
+      image: string | null;
+      username: string | null;
+    } | null;
+    story?:
+      | {
+          id: string;
+          slug: string;
+          title: string;
+          thumbnailUrl: string | null;
+        }
+      | null;
+    type: string;
+  }[];
 }
 
+/** The navbar strips query-string ids in use — kept verbatim on the client. */
 export const notificationsApi = {
-  list() {
-    return api.get<NotificationsListResponse>("/notifications");
+  list(opts?: ClientOptions) {
+    return api.get<MyNotificationsResponse>("/public/notifications", {
+      signal: opts?.signal,
+    });
   },
 
-  /** Matches the mark-all call (body {}) and the ids variant of the route. */
-  markRead(ids?: string[]) {
-    return api.post<{ ok: boolean }>("/notifications/read", ids ? { ids } : {});
+  markRead(opts?: ClientOptions) {
+    return api.patch<{ ok: boolean }>("/public/notifications/read", undefined, opts);
   },
 };
 
 export const notificationQueries = {
-  list(enabled?: boolean) {
-    return {
-      queryKey: queryKeys.notifications.all,
-      queryFn: () => notificationsApi.list(),
-      enabled: enabled ?? true,
-    };
+  list(enabled: boolean) {
+    return queryOptions({
+      queryKey: queryKeys.notifications.list(),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        notificationsApi.list({ signal: ctx.signal }),
+      enabled,
+    });
   },
 };

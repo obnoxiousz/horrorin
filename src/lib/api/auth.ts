@@ -1,24 +1,25 @@
 import { api } from "./client";
 
-export interface RegisterPayload {
-  name: string;
+export interface RegisterBody {
   email: string;
-  username: string;
   password: string;
+  name: string;
+  username: string;
 }
 
 export interface RegisterResponse {
   ok: boolean;
   user: {
     id: string;
-    name: string | null;
     email: string;
-    username: string | null;
+    name: string;
+    username: string;
   };
 }
 
+/** Only data.error carries the message on failure (the page prints data.error). */
 export const authApi = {
-  register(payload: RegisterPayload) {
-    return api.post<RegisterResponse>("/auth/register", payload);
+  register(body: RegisterBody) {
+    return api.post<RegisterResponse>("/public/auth/register", body);
   },
 };

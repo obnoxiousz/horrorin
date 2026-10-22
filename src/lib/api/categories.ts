@@ -1,15 +1,15 @@
 import { api, type ClientOptions } from "./client";
 import { queryKeys } from "@/lib/query-keys";
-import type { CategoryWithCount, TemplateDTO } from "@/types";
+import { queryOptions } from "@tanstack/react-query";
+import type { CategoryWithCount } from "@/types";
 
-export interface CategoryListResponse {
+export interface CategoriesResponse {
   categories: CategoryWithCount[];
-  templates: TemplateDTO[];
 }
 
 export const categoriesApi = {
   all(opts?: ClientOptions) {
-    return api.get<CategoryListResponse>("/categories", {
+    return api.get<CategoriesResponse>("/public/categories", {
       signal: opts?.signal,
     });
   },
@@ -17,10 +17,10 @@ export const categoriesApi = {
 
 export const categoryQueries = {
   all() {
-    return {
-      queryKey: queryKeys.categories.all,
+    return queryOptions({
+      queryKey: queryKeys.categories.list(),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         categoriesApi.all({ signal: ctx.signal }),
-    };
+    });
   },
 };
