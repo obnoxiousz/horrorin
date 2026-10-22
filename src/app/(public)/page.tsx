@@ -106,7 +106,7 @@ export default function HomePage() {
         {/* ===== TRENDING ===== */}
         <section>
           <SectionHeader
-            title="Lagi Trending Nih 🔥"
+            title="Lagi Trending Nih "
             subtitle="Cerita yang paling banyak dibahas minggu ini"
             icon={<Flame className="w-5 h-5 text-primary" />}
             href="/trending"
@@ -121,7 +121,7 @@ export default function HomePage() {
             <EmptyState
               title="Masih sepi nih..."
               description="Jadilah orang pertama yang bikin cerita! 👻"
-              action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
+              action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
             />
           ) : (
             <StoryRow>
@@ -253,7 +253,7 @@ export default function HomePage() {
         {/* ===== POPULAR CREATORS ===== */}
         <section>
           <SectionHeader
-            title="Kreator Paling Liris ✍️"
+            title="Kreator Paling Liris "
             subtitle="Sumber cerita serem favorit pembaca"
             icon={<Users className="w-5 h-5 text-primary" />}
             href="/kreator"
@@ -296,7 +296,7 @@ export default function HomePage() {
                       size="lg"
                       className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
                     >
-                      <PenTool className="w-5 h-5" /> Mulai Cerita Baru ✍️
+                      <PenTool className="w-5 h-5" /> Mulai Cerita Baru 
                     </Button>
                   </Link>
                 ) : (

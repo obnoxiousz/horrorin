@@ -170,7 +170,7 @@ export default function NotifikasiPage() {
                 : "Belum ada notifikasi. Mulai interaksi sama cerita atau kreator lain biar dapet notif!"
             }
             icon={<Bell className="w-10 h-10 text-primary" />}
-            action={{ label: "Jelajah cerita 🔥", href: "/trending" }}
+            action={{ label: "Jelajah cerita ", href: "/trending" }}
           />
         ) : (
           <div className="space-y-2">

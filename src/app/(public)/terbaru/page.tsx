@@ -59,7 +59,7 @@ export default function TerbaruPage() {
           <EmptyState
             title="Masih sepi nih... 👻"
             description="Belum ada cerita baru. Jadilah yang pertama!"
-            action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
+            action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">

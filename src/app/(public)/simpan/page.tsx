@@ -81,7 +81,7 @@ export default function SimpanPage() {
             title="Belum ada simpanan nih 📌"
             description="Simpen cerita yang menarik buat kamu baca nanti. Cukup klik ikon bookmark di setiap cerita!"
             icon={<Bookmark className="w-10 h-10 text-primary" />}
-            action={{ label: "Jelajah cerita 🔥", href: "/trending" }}
+            action={{ label: "Jelajah cerita ", href: "/trending" }}
           />
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">

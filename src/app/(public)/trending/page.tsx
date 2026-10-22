@@ -37,7 +37,7 @@ export default function TrendingPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                Lagi Trending 🔥
+                Lagi Trending 
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
                 Cerita horror yang paling banyak dibahas minggu ini. Jangan ketinggalan!
@@ -59,7 +59,7 @@ export default function TrendingPage() {
           <EmptyState
             title="Masih sepi nih... 👻"
             description="Belum ada cerita yang trending. Jadilah yang pertama bikin heboh!"
-            action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
+            action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">

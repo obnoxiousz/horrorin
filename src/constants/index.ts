@@ -113,7 +113,7 @@ export const TEMPLATES: TemplateDef[] = [
     slug: "tulisan-saja",
     name: "Tulisan Saja",
     description: "Fokus ke kata-kata. Buat kalian yang bisa bikin bulu kuduk ngeri cuma lewat teks.",
-    emoji: "✍️",
+    emoji: "",
     accent: "#a855f7",
     structure: [
       { type: "text" },

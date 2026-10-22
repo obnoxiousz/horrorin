@@ -103,7 +103,7 @@ function CariInner() {
           <EmptyState
             title={`Yah... nggak ada hasil buat "${q}" 👻`}
             description="Coba kata kunci lain, atau cek yang lagi trending!"
-            action={{ label: "Liat yang Trending 🔥", href: "/trending" }}
+            action={{ label: "Liat yang Trending ", href: "/trending" }}
           />
         ) : (
           <>

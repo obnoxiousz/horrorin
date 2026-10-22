@@ -366,7 +366,7 @@ export function StoryEditor({
       const d = await r.json();
       setStoryId(d.story.id);
       if (publish) {
-        toast.success("Ceritamu berhasil tayang! 🔥");
+        toast.success("Ceritamu berhasil tayang! ");
         setTimeout(
           () => (window.location.href = `/cerita/${d.story.slug}`),
           1500,

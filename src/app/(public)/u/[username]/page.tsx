@@ -265,7 +265,7 @@ export default function ProfilePage({
               <EmptyState
                 title={isOwn ? "Belum ada cerita nih 👻" : "Belum ada cerita published"}
                 description={isOwn ? "Mulai tulis cerita pertamamu dan tayangin ke ribuan pembaca!" : `${profile.name} belum publish cerita apa-apa.`}
-                action={isOwn ? { label: "Mulai Cerita Baru ✍️", href: "/editor" } : undefined}
+                action={isOwn ? { label: "Mulai Cerita Baru ", href: "/editor" } : undefined}
               />
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-4">
@@ -282,7 +282,7 @@ export default function ProfilePage({
                 <EmptyState
                   title="Belum ada draft nih 📝"
                   description="Mulai nulis dan save sebagai draft. Bisa diterusin kapan aja!"
-                  action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
+                  action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
                 />
               ) : (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -394,7 +394,7 @@ function DraftCard({ story }: { story: any }) {
           <div className="w-full h-full horror-gradient flex items-center justify-center">📝</div>
         )}
         <Badge className="absolute top-3 left-3 bg-amber-500/90 border-0 text-black">
-          ✍️ Draft
+           Draft
         </Badge>
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1">

@@ -52,7 +52,7 @@ export default function KreatorPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                Kreator Horrorin ✍️
+                Kreator Horrorin 
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
                 Sumber cerita serem favorit pembaca. Follow kreator favoritmu biar nggak ketinggalan cerita baru.

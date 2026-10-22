@@ -180,7 +180,7 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
         <div className="flex flex-col items-end gap-2">
           {variant === "featured" && (
             <Badge className="py-1 px-2 bg-amber-500/90 backdrop-blur border-0 text-black">
-              🔥 Trending
+               Trending
             </Badge>
           )}
           {/* Bookmark button */}

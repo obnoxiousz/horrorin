@@ -118,7 +118,7 @@ export default function CategoryDetailPage({
           <EmptyState
             title="Yah... belum ada cerita nih 👻"
             description={`Jadilah orang pertama yang bikin cerita di kategori ${category?.name ?? "ini"}!`}
-            action={{ label: "Mulai Cerita Baru ✍️", href: "/editor" }}
+            action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">

@@ -45,7 +45,7 @@ Built all 16 page routes for Horrorin (Bahasa Indonesia, Gen Z casual tone, dark
    - Grid of StoryCard from /api/public/stories/bookmark/list
    - EmptyState when no bookmarks
 7. **`src/app/(public)/trending/page.tsx`** — Trending stories
-   - Hero header "Lagi Trending 🔥"
+   - Hero header "Lagi Trending "
    - Fetch /api/public/stories?sort=trending&take=24, StoryCard grid
 8. **`src/app/(public)/terbaru/page.tsx`** — Latest stories
    - Same as trending but sort=latest, title "Cerita Terbaru 🆕"
