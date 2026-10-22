@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 
 export type StoryWithRelations = Prisma.StoryGetPayload<{
   include: {
@@ -36,7 +36,7 @@ export const storyRepository = {
         { excerpt: { contains: search } },
       ];
     }
-    let orderBy: Prisma.StoryOrderByWithRelationInput = { publishedAt: "desc" };
+    let orderBy: Prisma.StoryOrderByWithRelationInput | Prisma.StoryOrderByWithRelationInput[] = { publishedAt: "desc" };
     if (sort === "trending") {
       orderBy = [{ likeCount: "desc" }, { viewCount: "desc" }];
     } else if (sort === "recommended") {

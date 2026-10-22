@@ -1,7 +1,8 @@
 // Horrorin — database seed script
 // Run: bun run scripts/seed.ts
 
-import { PrismaClient } from "@prisma/client";
+import type { User } from "../src/generated/prisma/client";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { hash } from "bcryptjs";
 import { CATEGORIES, TEMPLATES } from "../src/constants";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -74,7 +75,7 @@ async function main() {
     { name: "Bayu Atmaja", username: "bayu_pendaki", email: "bayu@horrorin.id", bio: "Pendaki yang sering banget ketemu 'pasukan' di gunung. ⛰️" },
     { name: "Sinta Larasati", username: "sinta_diary", email: "sinta@horrorin.id", bio: "Tukang cerita pengalaman pribadi yang bikin bulu kuduk merinding." },
   ];
-  const createdUsers = [];
+  const createdUsers: User[] = [];
   for (const u of users) {
     const user = await db.user.upsert({
       where: { email: u.email },
