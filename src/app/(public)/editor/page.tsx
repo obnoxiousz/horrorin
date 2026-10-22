@@ -24,6 +24,8 @@ import { toast } from "sonner";
 import { StoryEditor } from "@/components/editor/story-editor";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { categoryQueries, categoriesApi } from "@/lib/api/categories";
+import { storyQueries } from "@/lib/api/stories";
 
 export default function EditorPage() {
   return (
@@ -47,29 +49,18 @@ function EditorContent() {
   const [step, setStep] = useState<"select" | "edit">("select");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDef | null>(null);
 
+  // Tolerant read (no ok-check today): any failure still renders without categories.
   const { data: catData } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/categories");
-      return r.json();
-    },
+    ...categoryQueries.all(),
+    queryFn: (ctx: { signal?: AbortSignal }) =>
+      categoriesApi.all({ signal: ctx.signal }).catch(() => ({ categories: [] })),
   });
 
   const {
     data: draftData,
     error: draftError,
     isLoading: draftLoading,
-  } = useQuery({
-    queryKey: ["editor-draft", editId],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/stories/create?id=${editId}`);
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error ?? "Draft nggak ketemu 😢");
-      return d;
-    },
-    enabled: !!editId,
-    retry: false,
-  });
+  } = useQuery(storyQueries.draft(editId));
 
   useEffect(() => {
     if (status === "unauthenticated") {

@@ -65,6 +65,7 @@ export interface StoryDTO {
     name: string | null;
     username: string | null;
     image: string | null;
+    bio?: string | null;
   };
   categoryId: string;
   category: {

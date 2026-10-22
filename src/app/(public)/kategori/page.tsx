@@ -7,20 +7,14 @@ import { Palette, ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { LoadingState, ErrorState, EmptyState } from "@/components/ui/states";
 import { formatNumber } from "@/utils/format";
+import { categoryQueries } from "@/lib/api/categories";
 
 export default function KategoriPage() {
   useEffect(() => {
     document.title = "Jelajah Kategori — Horrorin";
   }, []);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/categories");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-  });
+  const { data, isLoading, isError, refetch } = useQuery(categoryQueries.all());
 
   const categories = data?.categories ?? [];
 

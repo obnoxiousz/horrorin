@@ -42,6 +42,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { storyQueries, storiesApi } from "@/lib/api/stories";
+import { commentQueries, commentsApi } from "@/lib/api/comments";
 
 export default function StoryDetailPage({
   params,
@@ -56,34 +58,11 @@ export default function StoryDetailPage({
   const [bookmarked, setBookmarked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["story", slug],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/stories/${slug}`);
-      if (!r.ok) throw new Error("not found");
-      return r.json();
-    },
-    retry: false,
-  });
-
-  const { data: relatedData } = useQuery({
-    queryKey: ["related", slug],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/stories/related/${slug}`);
-      if (!r.ok) return { stories: [] };
-      return r.json();
-    },
-  });
-
-  const { data: commentsData, refetch: refetchComments } = useQuery({
-    queryKey: ["comments", slug],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/comments/${data?.story?.id}`);
-      if (!r.ok) return { comments: [] };
-      return r.json();
-    },
-    enabled: !!data?.story?.id,
-  });
+  const { data, isLoading, isError, refetch } = useQuery(storyQueries.detail(slug));
+  const { data: relatedData } = useQuery(storyQueries.related(slug));
+  const { data: commentsData, refetch: refetchComments } = useQuery(
+    commentQueries.byStory(data?.story?.id ?? "")
+  );
 
   useEffect(() => {
     if (data?.story) {
@@ -94,15 +73,7 @@ export default function StoryDetailPage({
   }, [data]);
 
   const likeMutation = useMutation({
-    mutationFn: async () => {
-      const r = await fetch("/api/public/stories/like", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ storyId: data?.story?.id }),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: () => storiesApi.like(data?.story?.id ?? ""),
     onMutate: async () => {
       setLiked((v) => !v);
       setLikeCount((c) => c + (liked ? -1 : 1));
@@ -119,15 +90,7 @@ export default function StoryDetailPage({
   });
 
   const bookmarkMutation = useMutation({
-    mutationFn: async () => {
-      const r = await fetch("/api/public/stories/bookmark", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ storyId: data?.story?.id }),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: () => storiesApi.bookmark(data?.story?.id ?? ""),
     onSuccess: (d) => {
       setBookmarked(d.bookmarked);
       toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
@@ -138,15 +101,8 @@ export default function StoryDetailPage({
   });
 
   const commentMutation = useMutation({
-    mutationFn: async (content: string) => {
-      const r = await fetch(`/api/public/comments/${data?.story?.id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: (content: string) =>
+      commentsApi.create(data?.story?.id ?? "", { content }),
     onSuccess: () => {
       setCommentText("");
       refetchComments();
