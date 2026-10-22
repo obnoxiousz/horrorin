@@ -1,4 +1,5 @@
 import { api, type ClientOptions } from "./client";
+import { queryKeys } from "@/lib/query-keys";
 import type { AdminStoryRow, AdminUserRow } from "@/types";
 
 export type AdminUserFilters = {
@@ -41,5 +42,24 @@ export const adminApi = {
 
   deleteStory(id: string) {
     return api.delete<{ ok: boolean }>(`/admin/stories/${encodeURIComponent(id)}`);
+  },
+};
+
+export const adminQueries = {
+  users(search: string, enabled = true) {
+    return {
+      queryKey: queryKeys.admin.usersList(search),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        adminApi.users(search ? { q: search } : {}, { signal: ctx.signal }),
+      enabled,
+    };
+  },
+  stories(enabled = true) {
+    return {
+      queryKey: queryKeys.admin.stories(),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        adminApi.stories({ signal: ctx.signal }),
+      enabled,
+    };
   },
 };

@@ -1,4 +1,5 @@
 import { api, type ClientOptions } from "./client";
+import { queryKeys } from "@/lib/query-keys";
 import type { StoryDTO, StoryListItem } from "@/types";
 
 export type StoryListFilters = {
@@ -86,5 +87,40 @@ export const storiesApi = {
 
   update(payload: CreateOrUpdateStoryPayload, opts?: ClientOptions) {
     return api.patch<{ story: StoryDTO }>(CREATE_PATH, payload, opts);
+  },
+};
+
+export const storyQueries = {
+  list(filters: StoryListFilters, enabled = true) {
+    return {
+      queryKey: queryKeys.stories.list(filters),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        storiesApi.list(filters, { signal: ctx.signal }),
+      enabled,
+    };
+  },
+  detail(slug: string) {
+    return {
+      queryKey: queryKeys.stories.detail(slug),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        storiesApi.bySlug(slug, { signal: ctx.signal }),
+      retry: false as const,
+    };
+  },
+  related(slug: string) {
+    return {
+      queryKey: queryKeys.stories.related(slug),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        storiesApi.related(slug, { signal: ctx.signal }),
+    };
+  },
+  draft(editId: string | null) {
+    return {
+      queryKey: queryKeys.stories.draft(editId ?? ""),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        storiesApi.draft(editId ?? "", { signal: ctx.signal }),
+      enabled: !!editId,
+      retry: false as const,
+    };
   },
 };

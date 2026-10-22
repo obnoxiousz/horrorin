@@ -1,4 +1,5 @@
 import { api, type ClientOptions } from "./client";
+import { queryKeys } from "@/lib/query-keys";
 import type { CommentDTO } from "@/types";
 
 export interface CommentsListResponse {
@@ -32,5 +33,16 @@ export const commentsApi = {
       { content, ...(parentId !== undefined && { parentId }) },
       opts
     );
+  },
+};
+
+export const commentQueries = {
+  byStory(storyId: string | null | undefined) {
+    return {
+      queryKey: queryKeys.comments.byStory(storyId ?? ""),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        commentsApi.byStory(storyId ?? "", { signal: ctx.signal }),
+      enabled: !!storyId,
+    };
   },
 };

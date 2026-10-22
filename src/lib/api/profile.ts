@@ -1,4 +1,5 @@
 import { api, type ClientOptions } from "./client";
+import { queryKeys } from "@/lib/query-keys";
 import type { ProfileDTO, StoryListItem } from "@/types";
 
 export interface ProfileByUsernameResponse {
@@ -49,5 +50,24 @@ export const profileApi = {
     } catch {
       return { stories: [] };
     }
+  },
+};
+
+export const profileQueries = {
+  byUsername(username: string) {
+    return {
+      queryKey: queryKeys.profile.byUsername(username),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        profileApi.get(username, { signal: ctx.signal }),
+      retry: false as const,
+    };
+  },
+  myStories(username: string, enabled: boolean) {
+    return {
+      queryKey: queryKeys.profile.myStories(username),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        profileApi.myStories({ signal: ctx.signal }),
+      enabled,
+    };
   },
 };

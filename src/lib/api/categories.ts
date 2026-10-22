@@ -1,4 +1,5 @@
 import { api, type ClientOptions } from "./client";
+import { queryKeys } from "@/lib/query-keys";
 import type { CategoryWithCount, TemplateDTO } from "@/types";
 
 export interface CategoryListResponse {
@@ -11,5 +12,15 @@ export const categoriesApi = {
     return api.get<CategoryListResponse>("/categories", {
       signal: opts?.signal,
     });
+  },
+};
+
+export const categoryQueries = {
+  all() {
+    return {
+      queryKey: queryKeys.categories.all,
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        categoriesApi.all({ signal: ctx.signal }),
+    };
   },
 };
