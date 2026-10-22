@@ -94,7 +94,7 @@ export default function GabungPage() {
         router.push("/masuk");
         return;
       }
-      toast.success("Selamat datang di Horrorin! 👋");
+      toast.success("Selamat datang di Horrorin! ");
       start();
       router.push("/");
       router.refresh();
@@ -163,7 +163,7 @@ export default function GabungPage() {
               <p className="text-sm text-muted-foreground">
                 Udah punya akun?{" "}
                 <Link href="/masuk" className="text-primary hover:underline font-medium">
-                  Masuk dulu 👋
+                  Masuk dulu 
                 </Link>
               </p>
             </div>

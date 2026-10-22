@@ -55,7 +55,7 @@ function MasukInner() {
         setLoading(false);
         return;
       }
-      toast.success("Berhasil masuk! 👋");
+      toast.success("Berhasil masuk! ");
       start();
       router.push(callbackUrl);
       router.refresh();
@@ -83,7 +83,7 @@ function MasukInner() {
 
           <div className="space-y-6 max-w-md">
             <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight">
-              Balik lagi ke <span className="text-primary text-glow">Horrorin</span> 👋
+              Balik lagi ke <span className="text-primary text-glow">Horrorin</span> 
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
               Lanjutin ngebaca cerita serem yang belum kelar, atau mulai posting pengalaman gaibmu sendiri.
@@ -121,7 +121,7 @@ function MasukInner() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Masuk dulu 👋</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Masuk dulu </h2>
               <p className="text-sm text-muted-foreground">
                 Belum punya akun?{" "}
                 <Link href="/gabung" className="text-primary hover:underline font-medium">
@@ -188,7 +188,7 @@ function MasukInner() {
                     Lagi masuk...
                   </>
                 ) : (
-                  "Masuk dulu 👋"
+                  "Masuk dulu "
                 )}
               </Button>
             </form>

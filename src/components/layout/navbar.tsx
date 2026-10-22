@@ -201,7 +201,7 @@ export function Navbar() {
                       onClick={async () => {
                         const { signOut } = await import("next-auth/react");
                         signOut({ callbackUrl: "/" });
-                        toast.success("Sampai jumpa lagi 👋");
+                        toast.success("Sampai jumpa lagi ");
                       }}
                     >
                       Keluar
@@ -212,7 +212,7 @@ export function Navbar() {
             ) : status === "unauthenticated" ? (
               <div className="flex items-center gap-2">
                 <Link href="/masuk" className="hidden sm:block">
-                  <Button variant="ghost" className="rounded-full">Masuk dulu 👋</Button>
+                  <Button variant="ghost" className="rounded-full">Masuk dulu </Button>
                 </Link>
                 <Link href="/gabung">
                   <Button className="rounded-full bg-primary hover:bg-primary/90 font-semibold">Gabung Horrorin</Button>

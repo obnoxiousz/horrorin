@@ -396,7 +396,7 @@ export default function StoryDetailPage({
                 <div className="p-5 rounded-2xl glass text-center">
                   <p className="text-sm text-muted-foreground mb-3">Masuk dulu buat ikutan ngekomen 💬</p>
                   <Link href="/masuk">
-                    <Button className="rounded-full bg-primary">Masuk dulu 👋</Button>
+                    <Button className="rounded-full bg-primary">Masuk dulu </Button>
                   </Link>
                 </div>
               )}

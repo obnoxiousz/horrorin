@@ -127,7 +127,7 @@ export default function LupaPasswordPage() {
               <p className="text-center text-sm text-muted-foreground mt-6">
                 Ingat password?{" "}
                 <Link href="/masuk" className="text-primary hover:underline font-medium">
-                  Masuk dulu 👋
+                  Masuk dulu 
                 </Link>
               </p>
             </>

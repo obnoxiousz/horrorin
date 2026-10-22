@@ -13,9 +13,9 @@ Built all 16 page routes for Horrorin (Bahasa Indonesia, Gen Z casual tone, dark
 
 #### Auth pages (`(auth)` group)
 1. **`src/app/(auth)/masuk/page.tsx`** — Login page
-   - Split-screen layout: left hero with tagline "Balik lagi ke Horrorin 👋", right form
+   - Split-screen layout: left hero with tagline "Balik lagi ke Horrorin ", right form
    - Email + password fields, show/hide password toggle
-   - Buttons: "Masuk dulu 👋" (submit), "Lupa password?" link, "Masuk pake Google" (toast: "coming soon")
+   - Buttons: "Masuk dulu " (submit), "Lupa password?" link, "Masuk pake Google" (toast: "coming soon")
    - Uses `signIn("credentials", { redirect: false })` from next-auth/react
    - Wrapped in `<Suspense>` for `useSearchParams`
 2. **`src/app/(auth)/gabung/page.tsx`** — Register page
