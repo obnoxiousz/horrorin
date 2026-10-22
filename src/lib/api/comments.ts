@@ -7,12 +7,6 @@ export interface CommentsListResponse {
   comments: CommentDTO[];
 }
 
-export type CommentCreatePayload = {
-  storyId: string;
-  content: string;
-  parentId?: string | null;
-};
-
 export const commentsApi = {
   /** The page stays silent on failed loads — aborts/network rethrow (was !r.ok). */
   async byStory(
@@ -30,8 +24,11 @@ export const commentsApi = {
     }
   },
 
-  create(payload: CommentCreatePayload) {
-    return api.post<{ comment: CommentDTO }>("/public/comments", payload);
+  create(storyId: string, payload: { content: string; parentId?: string }) {
+    return api.post<{ comment: CommentDTO }>(
+      `/public/comments/${encodeURIComponent(storyId)}`,
+      payload
+    );
   },
 };
 
