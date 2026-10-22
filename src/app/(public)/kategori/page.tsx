@@ -38,7 +38,7 @@ export default function KategoriPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                Jelajah Kategori 🎨
+                Jelajah Kategori
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
                 Pilih topik favoritmu. Dari urban legend, rumah angker, sampai ritual yang bikin merinding.
@@ -58,7 +58,7 @@ export default function KategoriPage() {
           <ErrorState onRetry={() => refetch()} />
         ) : categories.length === 0 ? (
           <EmptyState
-            title="Belum ada kategori 👻"
+            title="Belum ada kategori"
             description="Mungkin lagi maintenance. Coba lagi nanti ya."
           />
         ) : (
