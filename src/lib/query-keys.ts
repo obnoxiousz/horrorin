@@ -1,32 +1,38 @@
-// Single source of truth for TanStack Query keys. Key literals never appear
-// outside this file — pages/components call a factory below, and
-// invalidateQueries/setQueryData must reference these same factories.
-//
-// Conventions:
-// - Hierarchy: "all" roots like stories / admin let parent keys invalidate
-//   every child (React Query prefix matching on tuple keys).
-// - Read keys are more specific than invalidation roots, e.g. admin.users()
-//   invalidates, admin.usersList(search) reads.
-// - Filters go into keys as plain objects — built here in a canonical order
-//   so identical params always hash to the same cache entry.
-
-import type { StoryListFilters } from "@/lib/api/stories";
-
+/**
+ * Central query-key registry for @tanstack/react-query.
+ *
+ * Only keys consumed TODAY live here; Phase 1 adds home/admin-stats/unread keys
+ * when their endpoints exist. Anything not listed must not be created ad hoc.
+ *
+ * NOTE: invalidating queryKeys.stories.all covers every story query on the
+ * client: lists, detail, related, mine and editor drafts.
+ */
 export const queryKeys = {
   stories: {
     all: ["stories"] as const,
     lists: () => [...queryKeys.stories.all, "list"] as const,
-    /** read key: feed exact filters; built in one canonical shape */
-    list: (filters: StoryListFilters) => {
-      const { sort, take, category, tag, q } = filters;
-      return [
+    list: (filters?: {
+      sort?: "latest" | "trending" | "recommended";
+      take?: number;
+      category?: string;
+      tag?: string;
+      q?: string;
+    }) =>
+      [
         ...queryKeys.stories.lists(),
-        { sort, take, category, tag, q },
-      ] as const;
-    },
-    detail: (slug: string) => ["story", slug] as const,
-    related: (slug: string) => ["related", slug] as const,
-    draft: (id: string) => [...queryKeys.stories.all, "draft", id] as const,
+        {
+          sort: filters?.sort,
+          take: filters?.take,
+          category: filters?.category,
+          tag: filters?.tag,
+          q: filters?.q,
+        },
+      ] as const,
+    detail: (slug: string) => [...queryKeys.stories.all, "detail", slug] as const,
+    related: (slug: string) => [...queryKeys.stories.all, "related", slug] as const,
+    mine: (username: string) => [...queryKeys.stories.all, "mine", username] as const,
+    drafts: () => [...queryKeys.stories.all, "draft"] as const,
+    draft: (editId: string) => [...queryKeys.stories.drafts(), editId] as const,
   },
   comments: {
     all: ["comments"] as const,
@@ -34,24 +40,26 @@ export const queryKeys = {
   },
   categories: {
     all: ["categories"] as const,
+    list: () => queryKeys.categories.all,
   },
   notifications: {
     all: ["notifications"] as const,
+    list: () => queryKeys.notifications.all,
   },
   profile: {
     all: ["profile"] as const,
     byUsername: (username: string) => [...queryKeys.profile.all, username] as const,
-    myStories: (username: string) => ["my-stories", username] as const,
   },
   bookmarks: {
     all: ["bookmarks"] as const,
+    list: () => queryKeys.bookmarks.all,
   },
   admin: {
     all: ["admin"] as const,
-    /** invalidation root for the users table */
+    // Invalidation root — prefix-matches every usersList read key.
     users: () => [...queryKeys.admin.all, "users"] as const,
-    usersList: (search?: string) =>
-      [...queryKeys.admin.users(), { search }] as const,
+    // Read key — search embedded as an object so the root above can invalidate it.
+    usersList: (search: string) => [...queryKeys.admin.users(), { search }] as const,
     stories: () => [...queryKeys.admin.all, "stories"] as const,
   },
 } as const;
