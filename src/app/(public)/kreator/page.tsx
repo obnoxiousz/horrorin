@@ -76,7 +76,7 @@ export default function KreatorPage() {
           <EmptyState
             title="Belum ada kreator nih 👻"
             description="Jadilah kreator pertama dan mulai posting cerita seremmu!"
-            action={{ label: "Gabung Horrorin 🚀", href: "/gabung" }}
+            action={{ label: "Gabung Horrorin", href: "/gabung" }}
           />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

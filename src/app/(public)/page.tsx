@@ -293,7 +293,7 @@ export default function HomePage() {
                       size="lg"
                       className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-base font-bold h-12 px-6"
                     >
-                      Gabung Horrorin 🚀
+                      Gabung Horrorin
                     </Button>
                   </Link>
                 )}

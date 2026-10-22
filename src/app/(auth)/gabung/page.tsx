@@ -13,6 +13,7 @@ import { useRouteTransition } from "@/components/ui/route-transition";
 import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const schema = z
   .object({
@@ -109,21 +110,22 @@ export default function GabungPage() {
       <div className="min-h-screen flex">
       {/* Left hero */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden horror-gradient">
-        <div className="absolute inset-0 grid-pattern opacity-40" />
+        {/* <div className="absolute inset-0 grid-pattern opacity-40" />
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-700/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-700/20 rounded-full blur-3xl" /> */}
 
         <div className="relative flex flex-col justify-between p-12 xl:p-16 text-white">
           <Link href="/" className="flex items-center gap-2 group w-fit">
-            <Ghost className="w-7 h-7 text-primary" />
+            {/* <Ghost className="w-7 h-7 text-primary" />
             <span className="text-xl font-bold tracking-tight">
               Horror<span className="text-primary">in</span>
-            </span>
+            </span> */}
+            <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} className="w-50" />
           </Link>
 
           <div className="space-y-6 max-w-md">
             <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight">
-              Gabung komunitas horror paling <span className="text-primary text-glow">ngeri</span> di Indonesia 👻
+              Gabung komunitas horror paling <span className="text-primary text-glow">ngeri</span> di Indonesia
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
               Bagikan cerita seremmu ke ribuan pembaca. Pilih template kece, edit konten, tayangin. Semudah posting story IG.
@@ -136,7 +138,7 @@ export default function GabungPage() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Horrorin. Made with 💀 in Indonesia.
+            © {new Date().getFullYear()} Horrorin.
           </p>
         </div>
       </div>
@@ -151,15 +153,16 @@ export default function GabungPage() {
 
         <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
           <div className="w-full max-w-md">
-            <div className="lg:hidden flex items-center gap-2 mb-6">
-              <Ghost className="w-8 h-8 text-primary" />
+            <div className="lg:hidden flex items-center gap-2 mb-sm">
+              {/* <Ghost className="w-8 h-8 text-primary" />
               <span className="text-2xl font-bold tracking-tight">
                 Horror<span className="text-primary">in</span>
-              </span>
+              </span> */}
+              <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} className="w-30" />
             </div>
 
             <div className="mb-6">
-              <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Gabung Horrorin 🚀</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Gabung Horrorin</h2>
               <p className="text-sm text-muted-foreground">
                 Udah punya akun?{" "}
                 <Link href="/masuk" className="text-primary hover:underline font-medium">
@@ -254,7 +257,7 @@ export default function GabungPage() {
                     Lagi bikin akun...
                   </>
                 ) : (
-                  "Gabung Horrorin 🚀"
+                  "Gabung Horrorin"
                 )}
               </Button>
             </form>

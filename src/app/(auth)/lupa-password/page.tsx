@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function LupaPasswordPage() {
   const [email, setEmail] = useState("");
@@ -42,10 +43,11 @@ export default function LupaPasswordPage() {
 
       <div className="relative w-full max-w-md">
         <Link href="/" className="flex items-center gap-2 justify-center mb-8">
-          <Ghost className="w-8 h-8 text-primary" />
+          {/* <Ghost className="w-8 h-8 text-primary" />
           <span className="text-2xl font-bold tracking-tight">
             Horror<span className="text-primary">in</span>
-          </span>
+          </span> */}
+          <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} className="w-50" />
         </Link>
 
         <div className="glass-strong rounded-3xl p-8">

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useRouteTransition } from "@/components/ui/route-transition";
 import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function MasukPage() {
   return (
@@ -68,17 +69,18 @@ function MasukInner() {
   return (
     <div className="min-h-screen flex">
       {/* Left hero */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden horror-gradient">
-        <div className="absolute inset-0 grid-pattern opacity-40" />
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-700/20 rounded-full blur-3xl" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        {/* <div className="absolute inset-0 grid-pattern opacity-40" /> */}
+        {/* <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/30 rounded-full blur-3xl" /> */}
+        {/* <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-700/20 rounded-full blur-3xl" /> */}
 
         <div className="relative flex flex-col justify-between p-12 xl:p-16 text-white">
           <Link href="/" className="flex items-center gap-2 group w-fit">
-            <Ghost className="w-7 h-7 text-primary" />
+            {/* <Ghost className="w-7 h-7 text-primary" />
             <span className="text-xl font-bold tracking-tight">
               Horror<span className="text-primary">in</span>
-            </span>
+            </span> */}
+            <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} className="w-50" />
           </Link>
 
           <div className="space-y-6 max-w-md">
@@ -98,13 +100,13 @@ function MasukInner() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Horrorin. Made with 💀 in Indonesia.
+            © {new Date().getFullYear()} HorrorIn.
           </p>
         </div>
       </div>
 
       {/* Right form */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col horror-gradient">
         <div className="lg:hidden p-4">
           <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
             <ArrowLeft className="w-4 h-4" /> Balik ke beranda
@@ -113,11 +115,12 @@ function MasukInner() {
 
         <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
           <div className="w-full max-w-md">
-            <div className="lg:hidden flex items-center gap-2 mb-8">
-              <Ghost className="w-8 h-8 text-primary" />
+            <div className="lg:hidden flex items-center gap-2 mb-sm">
+              {/* <Ghost className="w-8 h-8 text-primary" />
               <span className="text-2xl font-bold tracking-tight">
                 Horror<span className="text-primary">in</span>
-              </span>
+              </span> */}
+              <Image src="/assets/logo.svg" alt="Horrorin Logo" width={100} height={100} className="w-30" />
             </div>
 
             <div className="mb-8">
@@ -193,12 +196,15 @@ function MasukInner() {
               </Button>
             </form>
 
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
+            <div className="relative my-6 flex items-center">
+              <div className="flex items-center w-full">
                 <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-background px-3 text-xs text-muted-foreground">atau</span>
+                <span className="px-3 text-xs text-muted-foreground">atau</span>
+              </div>
+              <div className="flex items-center w-full">
+                <span className="w-full border-t border-border" />
               </div>
             </div>
 
