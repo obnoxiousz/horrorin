@@ -45,6 +45,8 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { formatDate, formatRelativeTime } from "@/utils/format";
 import { cn } from "@/lib/utils";
+import { adminQueries, adminApi } from "@/lib/api/admin";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function AdminUsersPage() {
   const { data: session, status } = useSession();
@@ -71,27 +73,16 @@ export default function AdminUsersPage() {
     return () => clearTimeout(t);
   }, [search]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["admin", "users", debouncedSearch],
-    queryFn: async () => {
-      const qs = debouncedSearch ? `?q=${encodeURIComponent(debouncedSearch)}` : "";
-      const r = await fetch(`/api/admin/users${qs}`);
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated" && session?.user?.role === "ADMIN",
-  });
+  const { data, isLoading } = useQuery(
+    adminQueries.users(
+      debouncedSearch,
+      status === "authenticated" && session?.user?.role === "ADMIN"
+    )
+  );
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, body }: { id: string; body: { role?: string; banned?: boolean } }) => {
-      const r = await fetch(`/api/admin/users/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: ({ id, body }: { id: string; body: { role?: string; banned?: boolean } }) =>
+      adminApi.updateUser(id, body),
     onSuccess: (_d, vars) => {
       const isBan = vars.body.banned !== undefined;
       const isRole = vars.body.role !== undefined;
@@ -100,7 +91,7 @@ export default function AdminUsersPage() {
       } else if (isBan) {
         toast.success(vars.body.banned ? "User ke-ban 🔨" : "User unban ✅");
       }
-      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+      qc.invalidateQueries({ queryKey: queryKeys.admin.users() });
     },
     onError: () => toast.error("Gagal update user, coba lagi ya"),
   });

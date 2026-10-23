@@ -43,6 +43,8 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { formatDate, formatNumber, formatRelativeTime } from "@/utils/format";
 import { cn } from "@/lib/utils";
+import { adminQueries, adminApi } from "@/lib/api/admin";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function AdminStoriesPage() {
   const { data: session, status } = useSession();
@@ -61,42 +63,24 @@ export default function AdminStoriesPage() {
     }
   }, [status, session, router]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["admin", "stories"],
-    queryFn: async () => {
-      const r = await fetch("/api/admin/stories");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated" && session?.user?.role === "ADMIN",
-  });
+  const { data, isLoading } = useQuery(
+    adminQueries.stories(status === "authenticated" && session?.user?.role === "ADMIN")
+  );
 
   const archiveMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const r = await fetch(`/api/admin/stories/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "ARCHIVED" }),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: (id: string) => adminApi.setStoryStatus(id, "ARCHIVED"),
     onSuccess: () => {
       toast.success("Cerita ke-archive 📦");
-      qc.invalidateQueries({ queryKey: ["admin", "stories"] });
+      qc.invalidateQueries({ queryKey: queryKeys.admin.stories() });
     },
     onError: () => toast.error("Gagal archive cerita"),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const r = await fetch(`/api/admin/stories/${id}`, { method: "DELETE" });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: (id: string) => adminApi.deleteStory(id),
     onSuccess: () => {
       toast.success("Cerita kehapus 🗑️");
-      qc.invalidateQueries({ queryKey: ["admin", "stories"] });
+      qc.invalidateQueries({ queryKey: queryKeys.admin.stories() });
     },
     onError: () => toast.error("Gagal hapus cerita"),
   });

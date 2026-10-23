@@ -1,5 +1,6 @@
 import { api, type ClientOptions } from "./client";
 import { queryKeys } from "@/lib/query-keys";
+import { queryOptions } from "@tanstack/react-query";
 import type { AdminStoryRow, AdminUserRow } from "@/types";
 
 export type AdminUserFilters = {
@@ -46,20 +47,21 @@ export const adminApi = {
 };
 
 export const adminQueries = {
-  users(search: string, enabled = true) {
-    return {
-      queryKey: queryKeys.admin.usersList(search),
+  users(search?: string, enabled = true) {
+    const normalized = search ?? "";
+    return queryOptions({
+      queryKey: queryKeys.admin.usersList(normalized),
       queryFn: (ctx: { signal?: AbortSignal }) =>
-        adminApi.users(search ? { q: search } : {}, { signal: ctx.signal }),
+        adminApi.users(normalized ? { q: normalized } : {}, { signal: ctx.signal }),
       enabled,
-    };
+    });
   },
   stories(enabled = true) {
-    return {
+    return queryOptions({
       queryKey: queryKeys.admin.stories(),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         adminApi.stories({ signal: ctx.signal }),
       enabled,
-    };
+    });
   },
 };

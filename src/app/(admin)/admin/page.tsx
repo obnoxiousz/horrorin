@@ -24,6 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
 import { formatNumber, formatRelativeTime } from "@/utils/format";
+import { adminQueries } from "@/lib/api/admin";
 
 export default function AdminDashboardPage() {
   const { data: session, status } = useSession();
@@ -41,25 +42,16 @@ export default function AdminDashboardPage() {
     }
   }, [status, session, router]);
 
-  const { data: usersData, isLoading: usersLoading } = useQuery({
-    queryKey: ["admin", "users", "dashboard"],
-    queryFn: async () => {
-      const r = await fetch("/api/admin/users?take=1000");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated" && session?.user?.role === "ADMIN",
-  });
+  const adminGate = status === "authenticated" && session?.user?.role === "ADMIN";
 
-  const { data: storiesData, isLoading: storiesLoading } = useQuery({
-    queryKey: ["admin", "stories", "dashboard"],
-    queryFn: async () => {
-      const r = await fetch("/api/admin/stories");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated" && session?.user?.role === "ADMIN",
-  });
+  // Same URL as the admin/users page — dashboard and list share one cache entry.
+  const { data: usersData, isLoading: usersLoading } = useQuery(
+    adminQueries.users(undefined, adminGate)
+  );
+
+  const { data: storiesData, isLoading: storiesLoading } = useQuery(
+    adminQueries.stories(adminGate)
+  );
 
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
