@@ -866,7 +866,7 @@ function RightPanel({
 
   return (
     <ScrollArea className="flex-1">
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 fixed">
         <div>
           <Badge variant="outline" className="border-primary/40 text-primary">
             Edit: {block.type}
