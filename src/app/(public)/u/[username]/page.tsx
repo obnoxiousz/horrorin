@@ -65,15 +65,15 @@ export default function ProfilePage({
   const followMutation = useMutation({
     mutationFn: () => profileApi.follow(data?.profile?.id),
     onSuccess: (d) => {
-      toast.success(d.following ? "Kamu mulai nge-follow 💀" : "Berhasil unfollow");
+      toast.success(d.following ? "Kamu mulai mengikuti profil ini." : "Kamu berhenti mengikuti profil ini.");
       qc.invalidateQueries({ queryKey: queryKeys.profile.byUsername(username) });
     },
     onError: () => {
       if (status !== "authenticated") {
-        toast.error("Login dulu yuk buat follow 💔");
+        toast.error("Masuk untuk mengikuti profil.");
         router.push("/masuk?next=/u/" + username);
       } else {
-        toast.error("Gagal follow, coba lagi ya");
+        toast.error("Gagal mengikuti profil. Coba lagi.");
       }
     },
   });
@@ -86,12 +86,12 @@ export default function ProfilePage({
       username: string;
     }) => profileApi.updateMe(body),
     onSuccess: () => {
-      toast.success("Profil ke-update! ✨");
+      toast.success("Profil berhasil diperbarui.");
       setEditOpen(false);
       qc.invalidateQueries({ queryKey: queryKeys.profile.byUsername(username) });
     },
     onError: () => {
-      toast.error("Gagal update profil, coba lagi ya");
+      toast.error("Profil gagal diperbarui. Coba lagi.");
     },
   });
 
@@ -117,8 +117,8 @@ export default function ProfilePage({
     return (
       <AppShell>
         <ErrorState
-          title="Profil nggak ketemu 👻"
-          description="Mungkin username salah, atau akunnya udah kehapus."
+          title="Profil tidak ditemukan"
+          description="Periksa kembali nama pengguna atau tautannya."
           onRetry={() => refetch()}
         />
       </AppShell>
@@ -179,8 +179,8 @@ export default function ProfilePage({
 
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-5">
                 <Stat label="Cerita" value={profile.storiesCount} />
-                <Stat label="Followers" value={profile.followersCount} />
-                <Stat label="Following" value={profile.followingCount} />
+                <Stat label="Pengikut" value={profile.followersCount} />
+                <Stat label="Mengikuti" value={profile.followingCount} />
               </div>
             </div>
 
@@ -243,8 +243,8 @@ export default function ProfilePage({
           <TabsContent value="cerita" className="mt-6">
             {publishedStories.length === 0 ? (
               <EmptyState
-                title={isOwn ? "Belum ada cerita nih 👻" : "Belum ada cerita published"}
-                description={isOwn ? "Mulai tulis cerita pertamamu dan tayangin ke ribuan pembaca!" : `${profile.name} belum publish cerita apa-apa.`}
+                title={isOwn ? "Belum ada cerita" : "Belum ada cerita terbit"}
+                description={isOwn ? "Cerita yang kamu terbitkan akan muncul di sini." : `${profile.name} belum menerbitkan cerita.`}
                 action={isOwn ? { label: "Mulai Cerita Baru ", href: "/editor" } : undefined}
               />
             ) : (
@@ -260,8 +260,8 @@ export default function ProfilePage({
             <TabsContent value="draft" className="mt-6">
               {myDrafts.length === 0 ? (
                 <EmptyState
-                  title="Belum ada draft nih 📝"
-                  description="Mulai nulis dan save sebagai draft. Bisa diterusin kapan aja!"
+                  title="Belum ada draft"
+                  description="Simpan tulisan sebagai draft untuk dilanjutkan nanti."
                   action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
                 />
               ) : (
@@ -280,7 +280,7 @@ export default function ProfilePage({
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="glass-strong border-border/50 max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Profil ✨</DialogTitle>
+            <DialogTitle>Edit Profil</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -320,7 +320,7 @@ export default function ProfilePage({
                 value={editForm.bio}
                 onChange={(e) => setEditForm((f) => ({ ...f, bio: e.target.value }))}
                 className="bg-background/60 resize-none min-h-[80px]"
-                placeholder="Cerita dikit tentang kamu..."
+                placeholder="Ceritakan tentang dirimu..."
                 maxLength={200}
               />
               <p className="text-xs text-muted-foreground text-right">{editForm.bio.length}/200</p>
@@ -338,7 +338,7 @@ export default function ProfilePage({
               {updateMutation.isPending ? (
                 <>
                   <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  Lagi simpan...
+                  Menyimpan...
                 </>
               ) : (
                 "Simpan"
@@ -388,7 +388,7 @@ function DraftCard({ story }: { story: any }) {
           <span className="text-xs text-muted-foreground">
             Diedit {formatDate(story.updatedAt)}
           </span>
-          <span className="text-xs text-primary font-medium">Lanjutin nulis →</span>
+          <span className="text-xs text-primary font-medium">Lanjutkan menulis →</span>
         </div>
       </div>
     </Link>

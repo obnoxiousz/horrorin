@@ -10,7 +10,7 @@ import { storyQueries } from "@/lib/api/stories";
 
 export default function TrendingPage() {
   useEffect(() => {
-    document.title = "Lagi Trending — Horrorin";
+    document.title = "Sedang Tren — Horrorin";
   }, []);
 
   const { data, isLoading, isError, refetch } = useQuery(
@@ -33,10 +33,10 @@ export default function TrendingPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                Lagi Trending 
+                Sedang Tren
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                Cerita horror yang paling banyak dibahas minggu ini. Jangan ketinggalan!
+                Cerita horor yang paling banyak dibaca minggu ini.
               </p>
             </div>
           </div>
@@ -53,8 +53,8 @@ export default function TrendingPage() {
           <ErrorState onRetry={() => refetch()} />
         ) : stories.length === 0 ? (
           <EmptyState
-            title="Masih sepi nih... 👻"
-            description="Belum ada cerita yang trending. Jadilah yang pertama bikin heboh!"
+            title="Belum ada cerita populer"
+            description="Belum ada cerita yang masuk daftar tren minggu ini."
             action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (

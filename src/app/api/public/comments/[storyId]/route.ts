@@ -14,7 +14,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ sto
   const { storyId } = await params;
   const { content, parentId } = await req.json();
   if (!content?.trim()) {
-    return NextResponse.json({ error: "Komen nggak boleh kosong" }, { status: 400 });
+    return NextResponse.json({ error: "Komentar tidak boleh kosong." }, { status: 400 });
   }
   const comment = await engagementRepository.createComment({
     storyId,

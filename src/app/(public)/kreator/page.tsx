@@ -53,7 +53,7 @@ export default function KreatorPage() {
                 Kreator Horrorin 
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                Sumber cerita serem favorit pembaca. Follow kreator favoritmu biar nggak ketinggalan cerita baru.
+                Temukan kreator dan ikuti profil mereka untuk melihat cerita terbaru.
               </p>
             </div>
           </div>
@@ -74,8 +74,8 @@ export default function KreatorPage() {
           <ErrorState onRetry={() => refetch()} />
         ) : creators.length === 0 ? (
           <EmptyState
-            title="Belum ada kreator nih 👻"
-            description="Jadilah kreator pertama dan mulai posting cerita seremmu!"
+            title="Belum ada kreator"
+            description="Kreator yang bergabung akan muncul di sini."
             action={{ label: "Gabung Horrorin", href: "/gabung" }}
           />
         ) : (

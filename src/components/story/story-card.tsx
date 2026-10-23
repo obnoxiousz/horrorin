@@ -44,7 +44,7 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
       invalidateCounts();
     } catch (e) {
       if (e instanceof ApiError && e.status === 401)
-        toast.error("Login dulu yuk buat like 💔");
+        toast.error("Masuk untuk menyukai cerita.");
     }
   };
   const onBookmark = async (e: React.MouseEvent) => {
@@ -54,10 +54,10 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
       const d = await storiesApi.bookmark(story.id);
       setBookmarked(d.bookmarked);
       invalidateCounts();
-      toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
+      toast.success(d.bookmarked ? "Cerita disimpan." : "Cerita dihapus dari simpanan.");
     } catch (e) {
       if (e instanceof ApiError && e.status === 401)
-        toast.error("Login dulu yuk buat simpan 📌");
+        toast.error("Masuk untuk menyimpan cerita.");
     }
   };
 

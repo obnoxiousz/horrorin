@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (response) return response;
   const { targetUserId } = await req.json();
   if (!targetUserId || targetUserId === user!.id) {
-    return NextResponse.json({ error: "Target nggak valid" }, { status: 400 });
+    return NextResponse.json({ error: "Profil tidak valid." }, { status: 400 });
   }
   const already = await userRepository.isFollowing(user!.id, targetUserId);
   if (already) {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     userId: targetUserId,
     type: "FOLLOW",
     actorId: user!.id,
-    title: `${user!.name ?? "Seseorang"} mulai nge-follow kamu`,
+    title: `${user!.name ?? "Seseorang"} mulai mengikuti kamu`,
   });
   return NextResponse.json({ following: true });
 }

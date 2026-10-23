@@ -87,7 +87,7 @@ export default function HomePage() {
         {/* ===== TRENDING ===== */}
         <section>
           <SectionHeader
-            title="Lagi Trending Nih "
+            title="Sedang Tren"
             subtitle="Cerita yang paling banyak dibahas minggu ini"
             icon={<Flame className="w-5 h-5 text-primary" />}
             href="/trending"
@@ -100,9 +100,9 @@ export default function HomePage() {
             </StoryRow>
           ) : trending.length === 0 ? (
             <EmptyState
-              title="Masih sepi nih..."
-              description="Jadilah orang pertama yang bikin cerita! 👻"
-              action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
+              title="Belum ada cerita populer"
+              description="Mulai menulis cerita untuk mengisi bagian ini."
+              action={{ label: "Tulis Cerita", href: "/editor" }}
             />
           ) : (
             <StoryRow>
@@ -116,8 +116,8 @@ export default function HomePage() {
         {/* ===== LATEST ===== */}
         <section>
           <SectionHeader
-            title="Cerita Terbaru 🆕"
-            subtitle="Fresh dari para kreator"
+            title="Cerita Terbaru"
+            subtitle="Cerita yang baru diterbitkan"
             icon={<Clock className="w-5 h-5 text-primary" />}
             href="/terbaru"
           />
@@ -147,11 +147,10 @@ export default function HomePage() {
           <div className="relative p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <h3 className="text-2xl sm:text-3xl font-extrabold mb-2">
-                Punya cerita serem yang keluar kepala?
+                Punya cerita horor untuk dibagikan?
               </h3>
               <p className="text-muted-foreground max-w-lg">
-                Bagikan ke ribuan pembaca. Pilih template, edit konten,
-                tayangin. Semudah posting story Instagram.
+                Pilih template, susun cerita, lalu terbitkan di Horrorin.
               </p>
             </div>
             <Link href={session ? "/editor" : "/gabung"}>
@@ -160,7 +159,7 @@ export default function HomePage() {
                 className="gap-2 rounded-full bg-primary hover:bg-primary/90 font-bold h-12 px-8 whitespace-nowrap"
               >
                 <PenTool className="w-5 h-5" />{" "}
-                {session ? "Mulai Cerita Baru" : "Gabung Sekarang"}
+                {session ? "Tulis Cerita" : "Buat Akun"}
               </Button>
             </Link>
           </div>
@@ -169,7 +168,7 @@ export default function HomePage() {
         {/* ===== RECOMMENDED ===== */}
         <section>
           <SectionHeader
-            title="Rekomendasi Buat Kamu ✨"
+            title="Rekomendasi untuk Kamu"
             subtitle="Berdasarkan yang paling banyak disimpan"
             icon={<TrendingUp className="w-5 h-5 text-primary" />}
           />
@@ -194,7 +193,7 @@ export default function HomePage() {
         {categories.length > 0 && (
           <section>
             <SectionHeader
-              title="Kategori Populer 🎨"
+              title="Kategori Populer"
               subtitle="Pilih topik favoritmu"
               icon={<Sparkles className="w-5 h-5 text-primary" />}
               href="/kategori"
@@ -234,8 +233,8 @@ export default function HomePage() {
         {/* ===== POPULAR CREATORS ===== */}
         <section>
           <SectionHeader
-            title="Kreator Paling Liris "
-            subtitle="Sumber cerita serem favorit pembaca"
+            title="Kreator Populer"
+            subtitle="Kreator dengan cerita yang banyak dibaca"
             icon={<Users className="w-5 h-5 text-primary" />}
             href="/kreator"
           />
@@ -262,13 +261,13 @@ export default function HomePage() {
                 Indonesia
               </Badge> */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight">
-                Bikin cerita{" "}
-                <span className="text-primary text-glow">horror</span> kek pros. Tanpa design skill.
+                Tulis dan bagikan{" "}
+                <span className="text-primary text-glow">cerita horor</span>
+                {" "}di Horrorin.
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Pilih template kece, edit konten, tayangin ke ribuan pembaca.
-                Horrorin gabungin Canva + Reddit + Medium buat para pencinta
-                urban legend Indonesia.
+                Gunakan template untuk menyusun cerita, lalu bagikan kepada
+                pembaca yang menyukai kisah horor, urban legend, dan misteri Indonesia.
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {session ? (
@@ -296,7 +295,7 @@ export default function HomePage() {
                     variant="outline"
                     className="gap-2 rounded-full h-12 px-6 font-semibold"
                   >
-                    <Flame className="w-5 h-5 text-primary" /> Liat yang
+                    <Flame className="w-5 h-5 text-primary" /> Lihat yang
                     Trending
                   </Button>
                 </Link>

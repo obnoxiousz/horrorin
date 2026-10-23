@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const ADMIN_LINKS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/users", label: "Pengguna", icon: Users },
   { href: "/admin/stories", label: "Cerita", icon: FileText },
   { href: "/admin/reports", label: "Laporan", icon: Flag },
 ];

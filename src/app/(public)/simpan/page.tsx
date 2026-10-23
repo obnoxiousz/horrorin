@@ -60,7 +60,7 @@ export default function SimpanPage() {
               <Bookmark className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold">Simpan Dulu 📌</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold">Cerita Tersimpan</h1>
               <p className="text-sm text-muted-foreground">
                 {bookmarks.length > 0
                   ? `${bookmarks.length} cerita yang kamu simpan buat dibaca nanti`
@@ -73,10 +73,10 @@ export default function SimpanPage() {
         {/* ===== Grid ===== */}
         {bookmarks.length === 0 ? (
           <EmptyState
-            title="Belum ada simpanan nih 📌"
-            description="Simpen cerita yang menarik buat kamu baca nanti. Cukup klik ikon bookmark di setiap cerita!"
+            title="Belum ada cerita tersimpan"
+            description="Simpan cerita untuk membacanya nanti dengan memilih ikon bookmark."
             icon={<Bookmark className="w-10 h-10 text-primary" />}
-            action={{ label: "Jelajah cerita ", href: "/trending" }}
+            action={{ label: "Jelajahi Cerita", href: "/trending" }}
           />
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">

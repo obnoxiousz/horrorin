@@ -14,7 +14,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-background max-w-sm leading-relaxed">
-              Tempatnya komunitas cerita horror Indonesia. Bikin cerita kek pros pake template kece, tayangin ke ribuan pembaca. Tanpa perlu skill desain.
+              Komunitas untuk menulis, membaca, dan berbagi cerita horor Indonesia. Gunakan template yang tersedia untuk menyusun cerita tanpa perlu keahlian desain.
             </p>
             <div className="flex items-center gap-3 mt-5">
               <a href="#" className="w-9 h-9 rounded-full glass flex items-center justify-center hover:bg-secondary/20 transition-colors">
@@ -52,7 +52,7 @@ export function Footer() {
 
         <div className="mt-10 pt-6 border-t border-border/40 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background">
           <p>© {new Date().getFullYear()} Horrorin.</p>
-          <p>Yang dibaca disini, tinggal disini. Jangan sampai ikut ke rumah</p>
+          <p>Cerita horor cukup dibaca di sini. Jangan dibawa pulang.</p>
         </div>
       </div>
     </footer>

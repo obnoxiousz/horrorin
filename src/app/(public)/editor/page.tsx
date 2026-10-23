@@ -32,7 +32,7 @@ export default function EditorPage() {
     <Suspense
       fallback={
         <AppShell>
-          <LoadingState text="Lagi nyiapin editor... 👀" variant="skeleton" />
+          <LoadingState text="Memuat editor..." variant="skeleton" />
         </AppShell>
       }
     >
@@ -70,13 +70,13 @@ function EditorContent() {
 
   useEffect(() => {
     if (draftError) {
-      toast.error((draftError as Error).message || "Draft nggak ketemu 😢");
+      toast.error((draftError as Error).message || "Draft tidak ditemukan.");
       router.push(session?.user?.username ? `/u/${session.user.username}` : "/");
     }
   }, [draftError, router, session?.user?.username]);
 
   if (status === "loading" || status === "unauthenticated") {
-    return <AppShell><LoadingState text="Lagi nyiapin editor... 👀" variant="skeleton" /></AppShell>;
+    return <AppShell><LoadingState text="Memuat editor..." variant="skeleton" /></AppShell>;
   }
 
   // ===== EDIT MODE: opening an existing draft =====
@@ -115,10 +115,10 @@ function EditorContent() {
               <Sparkles className="w-3 h-3 mr-1" /> Langkah 1 dari 2
             </Badge>
             <h1 className="text-3xl sm:text-4xl font-extrabold mb-3">
-              Pilih Template Favoritmu 🎨
+              Pilih Template
             </h1>
             <p className="text-muted-foreground">
-              Template adalah jimat Horrorin. Mau gaya Canva, Chat WA, Police File, atau Diary — tinggal pilih, kita auto-generate blok-nya buat kamu.
+              Pilih template seperti chat, laporan polisi, atau buku harian. Editor akan menyiapkan susunan blok untuk ceritamu.
             </p>
           </div>
 
@@ -131,7 +131,7 @@ function EditorContent() {
                 onSelect={() => {
                   setSelectedTemplate(tpl);
                   setStep("edit");
-                  toast.success(`Template "${tpl.name}" dipilih! 🎨`);
+                  toast.success(`Template "${tpl.name}" dipilih.`);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               />
@@ -141,7 +141,7 @@ function EditorContent() {
           {/* Info */}
           <div className="mt-12 p-6 rounded-3xl glass max-w-3xl mx-auto text-center">
             <p className="text-sm text-muted-foreground">
-              💡 <span className="text-foreground font-medium">Tips:</span> Setiap template bisa kamu edit bebas — add, hapus, atau duplikat blok. Template cuma titik mulai, kamu yang ngatur cerita.
+              <span className="text-foreground font-medium">Tips:</span> Kamu bisa menambah, menghapus, atau menggandakan blok di setiap template. Susun cerita sesuai keinginanmu.
             </p>
           </div>
         </div>

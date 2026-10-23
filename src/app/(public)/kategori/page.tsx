@@ -53,7 +53,7 @@ export default function KategoriPage() {
         ) : categories.length === 0 ? (
           <EmptyState
             title="Belum ada kategori"
-            description="Mungkin lagi maintenance. Coba lagi nanti ya."
+            description="Kategori gagal dimuat. Coba lagi nanti."
           />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">

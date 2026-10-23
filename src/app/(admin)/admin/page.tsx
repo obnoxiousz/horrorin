@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
+        <LoadingState text="Memeriksa akses admin..." variant="skeleton" />
       </AppShell>
     );
   }
@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
             <h1 className="text-2xl sm:text-3xl font-extrabold">Dashboard Admin</h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            Halo <span className="font-semibold text-foreground">{session.user.name}</span>! Welcome ke panel admin Horrorin.
+            Halo, <span className="font-semibold text-foreground">{session.user.name}</span>. Ini panel admin Horrorin.
           </p>
         </header>
 
@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
             {/* ===== Stat cards ===== */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <StatCard
-                label="Total Users"
+                label="Total Pengguna"
                 value={totalUsers}
                 icon={<Users className="w-5 h-5" />}
                 color="#06b6d4"
@@ -109,7 +109,7 @@ export default function AdminDashboardPage() {
                 href="/admin/stories"
               />
               <StatCard
-                label="Published"
+                label="Terbit"
                 value={publishedCount}
                 icon={<Eye className="w-5 h-5" />}
                 color="#84cc16"
@@ -126,16 +126,16 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
               <MiniStat label="Total Views" value={totalViews} icon={<Eye className="w-4 h-4" />} />
               <MiniStat label="Total Likes" value={totalLikes} icon={<Heart className="w-4 h-4" />} />
-              <MiniStat label="Total Komen" value={totalComments} icon={<MessageCircle className="w-4 h-4" />} />
+              <MiniStat label="Total Komentar" value={totalComments} icon={<MessageCircle className="w-4 h-4" />} />
             </div>
 
             {/* ===== Quick links + recent activity ===== */}
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Quick links */}
               <div className="glass rounded-3xl p-6">
-                <h2 className="font-bold text-lg mb-4">Quick Links</h2>
+                <h2 className="font-bold text-lg mb-4">Tautan Cepat</h2>
                 <div className="space-y-2">
-                  <QuickLink href="/admin/users" label="Kelola Users" desc={`${totalUsers} user terdaftar`} icon={<Users className="w-4 h-4" />} />
+                  <QuickLink href="/admin/users" label="Kelola Pengguna" desc={`${totalUsers} pengguna terdaftar`} icon={<Users className="w-4 h-4" />} />
                   <QuickLink href="/admin/stories" label="Kelola Cerita" desc={`${totalStories} cerita total`} icon={<FileText className="w-4 h-4" />} />
                   <QuickLink href="/admin/reports" label="Laporan Komunitas" desc="Cek laporan masuk" icon={<AlertCircle className="w-4 h-4" />} />
                 </div>
@@ -272,7 +272,7 @@ function QuickLink({
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; className: string }> = {
-    PUBLISHED: { label: "Published", className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+    PUBLISHED: { label: "Terbit", className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
     DRAFT: { label: "Draft", className: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
     ARCHIVED: { label: "Archived", className: "bg-zinc-500/20 text-zinc-400 border-zinc-500/30" },
   };

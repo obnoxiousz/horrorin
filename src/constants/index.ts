@@ -83,7 +83,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "kutipan-berkesan",
     name: "Kutipan Berkesan",
-    description: "Sisipkan quote dramatic di tengah cerita biar makin bikin merinding.",
+    description: "Sisipkan kutipan di antara bagian cerita.",
     emoji: "💀",
     accent: "#dc2626",
     structure: [
@@ -98,7 +98,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "galeri-foto",
     name: "Galeri Foto",
-    description: "Cover kuat + galeri gambar. Cocok buat dokumentasi tempangker.",
+    description: "Awali cerita dengan gambar sampul dan lanjutkan dengan galeri.",
     emoji: "📷",
     accent: "#06b6d4",
     structure: [
@@ -112,7 +112,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "tulisan-saja",
     name: "Tulisan Saja",
-    description: "Fokus ke kata-kata. Buat kalian yang bisa bikin bulu kuduk ngeri cuma lewat teks.",
+    description: "Fokus pada tulisan untuk menyampaikan cerita melalui kata-kata.",
     emoji: "",
     accent: "#a855f7",
     structure: [
@@ -125,7 +125,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "split-layout",
     name: "Split Layout",
-    description: "Gambar kiri, teks kanan. Vibes kayak magazine premium.",
+    description: "Tampilkan gambar di kiri dan teks di kanan.",
     emoji: "📰",
     accent: "#ec4899",
     structure: [
@@ -152,7 +152,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "conversation",
     name: "Conversation",
-    description: "Style obrolan dua arah. Vibes cerita lewat dialog.",
+    description: "Sampaikan cerita melalui dialog dua arah.",
     emoji: "💬",
     accent: "#3b82f6",
     structure: [
@@ -165,7 +165,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "chat-whatsapp",
     name: "Chat WhatsApp",
-    description: "Cerita lewat screenshot chat WA. Paling serem karna kerasa nyata.",
+    description: "Sampaikan cerita melalui percakapan bergaya chat WhatsApp.",
     emoji: "📱",
     accent: "#22c55e",
     structure: [
@@ -178,7 +178,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "investigation",
     name: "Investigation Report",
-    description: "Gaya laporan investigasi. Casenya kayak file rahasia.",
+    description: "Sajikan cerita dalam format laporan investigasi.",
     emoji: "🔍",
     accent: "#6366f1",
     structure: [
@@ -192,7 +192,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "diary",
     name: "Diary",
-    description: "Gaya buku harian. Personal banget, berasa baca rahasia seseorang.",
+    description: "Susun cerita dalam format buku harian.",
     emoji: "📔",
     accent: "#f59e0b",
     structure: [
@@ -205,7 +205,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "news-report",
     name: "News Report",
-    description: "Gaya berita media. Serasa baca artikel daring kayanya kejadian beneran.",
+    description: "Sajikan cerita dalam format artikel berita.",
     emoji: "📺",
     accent: "#0ea5e9",
     structure: [
@@ -219,7 +219,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "police-case",
     name: "Police Case File",
-    description: "Gaya file kasus polisi. Redacted, misterius, kerasa classified banget.",
+    description: "Susun cerita dalam format berkas kasus kepolisian.",
     emoji: "🚔",
     accent: "#1e40af",
     structure: [
@@ -233,7 +233,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "cctv-report",
     name: "CCTV Report",
-    description: "Gaya laporan CCTV. Timestamp, footage, kerasa kayak evidence file.",
+    description: "Susun cerita dengan catatan waktu dan rekaman kamera pengawas.",
     emoji: "📹",
     accent: "#7c3aed",
     structure: [
@@ -247,7 +247,7 @@ export const TEMPLATES: TemplateDef[] = [
   {
     slug: "paranormal",
     name: "Paranormal Investigation",
-    description: "Gaya laporan tim paranormal. EMF reading, suhu, observation notes.",
+    description: "Sajikan cerita dalam format laporan investigasi paranormal.",
     emoji: "🕯️",
     accent: "#be123c",
     structure: [

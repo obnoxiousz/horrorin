@@ -70,25 +70,25 @@ export default function AdminStoriesPage() {
   const archiveMutation = useMutation({
     mutationFn: (id: string) => adminApi.setStoryStatus(id, "ARCHIVED"),
     onSuccess: () => {
-      toast.success("Cerita ke-archive 📦");
+      toast.success("Cerita diarsipkan.");
       qc.invalidateQueries({ queryKey: queryKeys.admin.stories() });
     },
-    onError: () => toast.error("Gagal archive cerita"),
+    onError: () => toast.error("Gagal mengarsipkan cerita."),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => adminApi.deleteStory(id),
     onSuccess: () => {
-      toast.success("Cerita kehapus 🗑️");
+      toast.success("Cerita dihapus.");
       qc.invalidateQueries({ queryKey: queryKeys.admin.stories() });
     },
-    onError: () => toast.error("Gagal hapus cerita"),
+    onError: () => toast.error("Gagal menghapus cerita."),
   });
 
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
+        <LoadingState text="Memeriksa akses admin..." variant="skeleton" />
       </AppShell>
     );
   }
@@ -121,7 +121,7 @@ export default function AdminStoriesPage() {
           </>
         ) : stories.length === 0 ? (
           <div className="glass rounded-3xl p-10 text-center">
-            <p className="text-sm text-muted-foreground">Belum ada cerita di database 👻</p>
+            <p className="text-sm text-muted-foreground">Belum ada cerita.</p>
           </div>
         ) : (
           <>
@@ -135,7 +135,7 @@ export default function AdminStoriesPage() {
                     <TableHead>Status</TableHead>
                     <TableHead className="text-center">Views</TableHead>
                     <TableHead className="text-center">Likes</TableHead>
-                    <TableHead className="text-center">Komen</TableHead>
+                    <TableHead className="text-center">Komentar</TableHead>
                     <TableHead>Dibuat</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
@@ -226,7 +226,7 @@ export default function AdminStoriesPage() {
                               <AlertDialogHeader>
                                 <AlertDialogTitle>Hapus permanen cerita ini?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Cerita <span className="font-semibold text-foreground">"{s.title}"</span> bakal kehapus permanen dan nggak bisa dikembalikan. Yakin?
+                                  Cerita <span className="font-semibold text-foreground">"{s.title}"</span> akan dihapus permanen dan tidak dapat dipulihkan. Lanjutkan?
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -300,14 +300,14 @@ export default function AdminStoriesPage() {
                             className="flex-1 rounded-full text-xs h-8"
                             disabled={archiveMutation.isPending}
                           >
-                            <Archive className="w-3 h-3" /> Archive
+                            <Archive className="w-3 h-3" /> Arsipkan
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="glass-strong border-border/50">
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Archive cerita ini?</AlertDialogTitle>
+                            <AlertDialogTitle>Arsipkan cerita ini?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Cerita bakal di-hide dari publik. Bisa di-restore nanti.
+                              Cerita tidak akan tampil kepada publik. Kamu bisa memulihkannya nanti.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -316,7 +316,7 @@ export default function AdminStoriesPage() {
                               className="rounded-full"
                               onClick={() => archiveMutation.mutate(s.id)}
                             >
-                              Ya, archive 📦
+                              Ya, arsipkan
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -337,7 +337,7 @@ export default function AdminStoriesPage() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Hapus permanen?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Cerita bakal kehapus permanen dan nggak bisa dikembalikan. Yakin?
+                            Cerita akan dihapus permanen dan tidak dapat dipulihkan. Lanjutkan?
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -364,9 +364,9 @@ export default function AdminStoriesPage() {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { label: string; className: string }> = {
-    PUBLISHED: { label: "Published", className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+    PUBLISHED: { label: "Terbit", className: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
     DRAFT: { label: "Draft", className: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-    ARCHIVED: { label: "Archived", className: "bg-zinc-500/20 text-zinc-400 border-zinc-500/30" },
+    ARCHIVED: { label: "Diarsipkan", className: "bg-zinc-500/20 text-zinc-400 border-zinc-500/30" },
   };
   const cfg = map[status] ?? { label: status, className: "" };
   return (

@@ -11,8 +11,8 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "Yah... belum ada cerita nih 👻",
-  description = "Jadilah orang pertama yang bikin cerita di sini!",
+  title = "Belum ada cerita",
+  description = "Cerita akan muncul di sini.",
   icon,
   action,
   className,
@@ -49,8 +49,8 @@ export function EmptyState({
 }
 
 export function ErrorState({
-  title = "Yah... ada yang error nih",
-  description = "Coba refresh halaman, atau balik lagi nanti.",
+  title = "Terjadi kesalahan",
+  description = "Muat ulang halaman atau coba lagi nanti.",
   onRetry,
 }: {
   title?: string;
@@ -105,7 +105,7 @@ export function StoryCardSkeleton({ variant = "default" }: { variant?: "default"
 }
 
 export function LoadingState({
-  text = "Lagi nyiapin cerita... 👀",
+  text = "Memuat cerita...",
   variant = "spinner",
 }: {
   text?: string;

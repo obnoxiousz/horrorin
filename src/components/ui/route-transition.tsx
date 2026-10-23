@@ -133,7 +133,7 @@ export function RouteTransition() {
       )}
       style={{ transitionDuration: `${FADE_MS}ms` }}
     >
-      <span className="sr-only">Lagi pindah halaman...</span>
+      <span className="sr-only">Memuat halaman...</span>
       <Image
         src="/assets/logo.svg"
         alt=""

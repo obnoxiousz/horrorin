@@ -21,7 +21,7 @@ export async function requireUser() {
     return {
       user: null,
       response: NextResponse.json(
-        { error: "Belum login nih" },
+        { error: "Silakan masuk untuk melanjutkan." },
         { status: 401 },
       ),
     };
@@ -35,7 +35,7 @@ export async function requireAdmin() {
     return {
       user: null,
       response: NextResponse.json(
-        { error: "Belum login nih" },
+        { error: "Silakan masuk untuk melanjutkan." },
         { status: 401 },
       ),
     };
@@ -44,7 +44,7 @@ export async function requireAdmin() {
     return {
       user: null,
       response: NextResponse.json(
-        { error: "Khusus admin 👮" },
+        { error: "Akses hanya tersedia untuk admin." },
         { status: 403 },
       ),
     };

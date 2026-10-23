@@ -41,7 +41,7 @@ export function SkeletonCardGrid({
 }) {
   return (
     <SkeletonStatus
-      label="Lagi nyiapin deretan cerita... 👀"
+      label="Memuat cerita..."
       className={cn("grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4", className)}
     >
       {Array.from({ length: count }).map((_, i) => (
@@ -59,7 +59,7 @@ export function SkeletonList({
   className?: string;
 }) {
   return (
-    <SkeletonStatus label="Lagi nyiapin daftarnya... 👀" className={cn("space-y-2", className)}>
+    <SkeletonStatus label="Memuat daftar..." className={cn("space-y-2", className)}>
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex items-start gap-3 p-4 rounded-2xl glass">
           <Skeleton className="w-10 h-10 rounded-full shrink-0" />
@@ -84,7 +84,7 @@ export function SkeletonTable({
 }) {
   const colKeys = Array.from({ length: Math.max(1, cols) });
   return (
-    <SkeletonStatus label="Lagi nyiapin datanya... 👀" className={className}>
+    <SkeletonStatus label="Memuat data..." className={className}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -125,7 +125,7 @@ export function SkeletonTable({
 
 export function SkeletonDetail() {
   return (
-    <SkeletonStatus label="Lagi buka ceritanya... 👀" className="pb-20">
+    <SkeletonStatus label="Memuat cerita..." className="pb-20">
       <article>
         <div className="container mx-auto max-w-3xl px-4 pt-6">
           <Skeleton className="h-4 w-32" />
@@ -222,7 +222,7 @@ export function SkeletonForm({
   className?: string;
 }) {
   return (
-    <SkeletonStatus label="Lagi nyiapin formnya... 👀" className={cn("space-y-5", className)}>
+    <SkeletonStatus label="Memuat formulir..." className={cn("space-y-5", className)}>
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="space-y-2">
           <Skeleton className="h-4 w-24" />
@@ -242,7 +242,7 @@ export function SkeletonForm({
 
 export function SkeletonProfile() {
   return (
-    <SkeletonStatus label="Lagi buka profilnya... 👀">
+    <SkeletonStatus label="Memuat profil...">
       <header className="relative overflow-hidden border-b border-border/40">
         <div className="container mx-auto max-w-5xl px-4 py-8 sm:py-12 relative">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
@@ -282,7 +282,7 @@ export function SkeletonStats({
 }) {
   return (
     <SkeletonStatus
-      label="Lagi nyiapin statistiknya... 👀"
+      label="Memuat statistik..."
       className={cn("grid grid-cols-2 lg:grid-cols-4 gap-4", className)}
     >
       {Array.from({ length: count }).map((_, i) => (
@@ -298,7 +298,7 @@ export function SkeletonStats({
 
 export function SkeletonPageHeader({ className }: { className?: string }) {
   return (
-    <SkeletonStatus label="Lagi nyiapin halamannya... 👀" className={cn("flex items-center gap-3", className)}>
+    <SkeletonStatus label="Memuat halaman..." className={cn("flex items-center gap-3", className)}>
       <Skeleton className="w-10 h-10 rounded-xl shrink-0" />
       <div className="space-y-2">
         <Skeleton className="h-6 w-40" />

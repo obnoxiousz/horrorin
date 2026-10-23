@@ -10,7 +10,7 @@ export async function GET(
   const { slug } = await params;
   const story = await storyRepository.findBySlug(slug);
   if (!story || story.status !== "PUBLISHED") {
-    return NextResponse.json({ error: "Cerita nggak ketemu 👻" }, { status: 404 });
+    return NextResponse.json({ error: "Cerita tidak ditemukan." }, { status: 404 });
   }
 
   // Fire-and-forget view increment

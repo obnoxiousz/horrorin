@@ -40,10 +40,10 @@ export async function POST(req: NextRequest) {
   try {
     ({ dataUrl } = await req.json());
   } catch {
-    return NextResponse.json({ error: "Body JSON nggak valid" }, { status: 400 });
+    return NextResponse.json({ error: "Format data tidak valid." }, { status: 400 });
   }
   if (typeof dataUrl !== "string") {
-    return NextResponse.json({ error: "dataUrl wajib ada" }, { status: 400 });
+    return NextResponse.json({ error: "Data URL wajib diisi." }, { status: 400 });
   }
 
   const match = /^data:([a-z0-9.+-]+\/[a-z0-9.+-]+);base64,([A-Za-z0-9+/=\s]+)$/i.exec(
@@ -51,27 +51,27 @@ export async function POST(req: NextRequest) {
   );
   if (!match) {
     return NextResponse.json(
-      { error: "Format nggak didukung, harus data URL base64" },
+      { error: "Format tidak didukung. Gunakan data URL base64." },
       { status: 400 }
     );
   }
   const mime = match[1].toLowerCase();
   if (!ALLOWED.has(mime)) {
     return NextResponse.json(
-      { error: "Tipe file nggak didukung (png/jpg/webp/gif aja)" },
+      { error: "Tipe file tidak didukung. Gunakan PNG, JPG, WebP, atau GIF." },
       { status: 415 }
     );
   }
   const bytes = Buffer.from(match[2], "base64");
   if (bytes.length === 0 || bytes.length > MAX_BYTES) {
     return NextResponse.json(
-      { error: "Ukuran file kegedean (maks 3MB)" },
+      { error: "Ukuran file melebihi batas 3 MB." },
       { status: 413 }
     );
   }
   if (!magicBytesMatch(mime, bytes)) {
     return NextResponse.json(
-      { error: "Isi file nggak cocok sama tipenya" },
+      { error: "Isi file tidak sesuai dengan tipe file." },
       { status: 415 }
     );
   }
@@ -83,13 +83,13 @@ export async function POST(req: NextRequest) {
   ]);
   if (count >= MAX_UPLOADS_PER_USER) {
     return NextResponse.json(
-      { error: "Kuota upload habis (maks 50 gambar per akun)" },
+      { error: "Batas unggahan tercapai. Maksimal 50 gambar per akun." },
       { status: 429 }
     );
   }
   if ((stored._sum.size ?? 0) + bytes.length > MAX_TOTAL_BYTES_PER_USER) {
     return NextResponse.json(
-      { error: "Kuota total gambar penuh (maks 100MB per akun)" },
+      { error: "Batas penyimpanan gambar tercapai. Maksimal 100 MB per akun." },
       { status: 413 }
     );
   }

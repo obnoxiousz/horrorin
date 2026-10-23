@@ -105,7 +105,7 @@ export default function StoryDetailPage({
     onError: () => {
       setLiked((v) => !v);
       setLikeCount((c) => c + (liked ? 1 : -1));
-      if (!session) toast.error("Login dulu yuk buat like 💔");
+      if (!session) toast.error("Masuk untuk menyukai cerita.");
     },
   });
 
@@ -130,10 +130,10 @@ export default function StoryDetailPage({
       }
       qc.invalidateQueries({ queryKey: queryKeys.home.all, refetchType: "none" });
       qc.invalidateQueries({ queryKey: queryKeys.stories.lists(), refetchType: "none" });
-      toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
+      toast.success(d.bookmarked ? "Cerita disimpan." : "Cerita dihapus dari simpanan.");
     },
     onError: () => {
-      if (!session) toast.error("Login dulu yuk buat simpan 📌");
+      if (!session) toast.error("Masuk untuk menyimpan cerita.");
     },
   });
 
@@ -152,10 +152,10 @@ export default function StoryDetailPage({
           story: { ...prev.story, commentCount: prev.story.commentCount + 1 },
         });
       }
-      toast.success("Komen terkirim! 💬");
+      toast.success("Komentar terkirim.");
     },
     onError: () => {
-      if (!session) toast.error("Login dulu yuk buat komen 💬");
+      if (!session) toast.error("Masuk untuk menulis komentar.");
     },
   });
 
@@ -164,8 +164,8 @@ export default function StoryDetailPage({
     return (
       <AppShell>
         <ErrorState
-          title="Cerita nggak ketemu 👻"
-          description="Mungkin kehapus, atau link-nya salah."
+          title="Cerita tidak ditemukan"
+          description="Cerita mungkin sudah dihapus atau tautannya salah."
           onRetry={() => refetch()}
         />
       </AppShell>
@@ -184,7 +184,7 @@ export default function StoryDetailPage({
       } catch {}
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success("Link disalin! Share ke temen yuk 🔗");
+      toast.success("Tautan disalin.");
     }
   };
 
@@ -208,7 +208,7 @@ export default function StoryDetailPage({
             </Link>
             {story.template && (
               <Badge variant="outline" className="border-primary/40 text-primary">
-                🎨 {story.template.name}
+                {story.template.name}
               </Badge>
             )}
           </div>
@@ -321,7 +321,7 @@ export default function StoryDetailPage({
                 </DialogTrigger>
                 <DialogContent className="glass-strong border-border/50">
                   <DialogHeader>
-                    <DialogTitle>Share cerita ini 📣</DialogTitle>
+                    <DialogTitle>Bagikan cerita</DialogTitle>
                   </DialogHeader>
                   <div className="grid grid-cols-3 gap-3 mt-3">
                     <ShareBtn label="Twitter" icon={<Twitter className="w-5 h-5" />} onClick={onShare} />
@@ -360,7 +360,7 @@ export default function StoryDetailPage({
           <section id="comments" className="mt-12 scroll-mt-32">
             <h2 className="text-xl font-bold mb-5 flex items-center gap-2">
               <MessageCircle className="w-5 h-5 text-primary" />
-              Komen ({formatNumber(story.commentCount)})
+              Komentar ({formatNumber(story.commentCount)})
             </h2>
 
             {/* Comment input */}
@@ -375,7 +375,7 @@ export default function StoryDetailPage({
                   </Avatar>
                   <div className="flex-1">
                     <Textarea
-                      placeholder="Tambahin komentarmu..."
+                      placeholder="Tulis komentar..."
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       className="resize-none min-h-[80px] bg-background/60"
@@ -396,9 +396,9 @@ export default function StoryDetailPage({
                 </div>
               ) : (
                 <div className="p-5 rounded-2xl glass text-center">
-                  <p className="text-sm text-muted-foreground mb-3">Masuk dulu buat ikutan ngekomen 💬</p>
+                <p className="text-sm text-muted-foreground mb-3">Masuk untuk menulis komentar.</p>
                   <Link href="/masuk">
-                    <Button className="rounded-full bg-primary">Masuk dulu </Button>
+                    <Button className="rounded-full bg-primary">Masuk</Button>
                   </Link>
                 </div>
               )}
@@ -407,7 +407,7 @@ export default function StoryDetailPage({
             {/* Comments list */}
             <div className="space-y-4">
               {comments.length === 0 ? (
-                <p className="text-center text-sm text-muted-foreground py-6">Belum ada komen. Jadilah yang pertama! 👻</p>
+                <p className="text-center text-sm text-muted-foreground py-6">Belum ada komentar.</p>
               ) : (
                 comments.map((c: any) => (
                   <div key={c.id} className="flex gap-3">

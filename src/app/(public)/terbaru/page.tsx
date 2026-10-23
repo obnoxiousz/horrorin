@@ -33,10 +33,10 @@ export default function TerbaruPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-                Cerita Terbaru 🆕
+                Cerita Terbaru
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                Fresh dari para kreator. Cek cerita horror yang baru tayang hari ini!
+                Cerita horor yang baru diterbitkan oleh para kreator.
               </p>
             </div>
           </div>
@@ -53,8 +53,8 @@ export default function TerbaruPage() {
           <ErrorState onRetry={() => refetch()} />
         ) : stories.length === 0 ? (
           <EmptyState
-            title="Masih sepi nih... 👻"
-            description="Belum ada cerita baru. Jadilah yang pertama!"
+            title="Belum ada cerita baru"
+            description="Cerita yang baru diterbitkan akan muncul di sini."
             action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (

@@ -149,7 +149,7 @@ const defaultDataFor = (type: BlockType): StoryBlockData => {
     case "cover-image":
       return { imageUrl: "", caption: "" };
     case "quote":
-      return { text: "Kutipan serammu di sini...", author: "Anonim" };
+      return { text: "Tulis kutipan di sini...", author: "Anonim" };
     case "gallery":
       return { images: [{ url: "", caption: "" }] };
     case "timeline":
@@ -244,7 +244,7 @@ export function StoryEditor({
     const b: Block = { id: genId(), type, data: defaultDataFor(type) };
     setBlocks((arr) => [...arr, b]);
     setSelectedBlockId(b.id);
-    toast.success(`Blok ${type} ditambah 🎨`);
+    toast.success(`Blok ${type} ditambahkan.`);
   };
   const deleteBlock = (id: string) => {
     setBlocks((arr) => arr.filter((b) => b.id !== id));
@@ -263,7 +263,7 @@ export function StoryEditor({
       next.splice(idx + 1, 0, copy);
       return next;
     });
-    toast.success("Blok diduplikat ✨");
+    toast.success("Blok berhasil diduplikasi.");
   };
   const moveBlock = (id: string, dir: -1 | 1) => {
     setBlocks((arr) => {
@@ -295,7 +295,7 @@ export function StoryEditor({
     const t = tagInput.trim().toLowerCase().replace(/\s+/g, "-");
     if (!t) return;
     if (tags.includes(t)) {
-      toast.error("Tag udah ada");
+      toast.error("Tag tersebut sudah ada.");
       return;
     }
     setTags((arr) => [...arr, t]);
@@ -311,8 +311,8 @@ export function StoryEditor({
           const d = await uploadApi.acceptDataUrl(reader.result as string);
           resolve(d.url);
         } catch (e) {
-          if (e instanceof ApiError) toast.error("Upload gagal 😢");
-          else toast.error("Upload error");
+          if (e instanceof ApiError) toast.error("Gagal mengunggah file.");
+          else toast.error("Terjadi kesalahan saat mengunggah file.");
           resolve(null);
         }
       };
@@ -349,11 +349,11 @@ export function StoryEditor({
 
   const handleSave = async (publish = false) => {
     if (!title.trim()) {
-      toast.error("Judul wajib diisi dulu 🙏");
+      toast.error("Judul wajib diisi.");
       return;
     }
     if (blocks.length === 0) {
-      toast.error("Minimal 1 blok cerita");
+      toast.error("Tambahkan setidaknya satu blok cerita.");
       return;
     }
     setSaving(true);
@@ -368,19 +368,19 @@ export function StoryEditor({
       qc.invalidateQueries({ queryKey: queryKeys.stories.all });
       qc.invalidateQueries({ queryKey: queryKeys.home.all });
       if (publish) {
-        toast.success("Ceritamu berhasil tayang! ");
+        toast.success("Cerita berhasil diterbitkan.");
         setTimeout(
           () => (window.location.href = `/cerita/${d.story.slug}`),
           1500,
         );
       } else {
-        toast.success("Draft berhasil disimpan ✨");
+        toast.success("Draft berhasil disimpan.");
       }
     } catch (e) {
       if (e instanceof ApiError) {
-        toast.error((e.data as { error?: string } | undefined)?.error ?? "Gagal simpan");
+        toast.error((e.data as { error?: string } | undefined)?.error ?? "Gagal menyimpan cerita.");
       } else {
-        toast.error("Error simpan");
+        toast.error("Terjadi kesalahan saat menyimpan cerita.");
       }
     } finally {
       setSaving(false);
@@ -500,12 +500,12 @@ export function StoryEditor({
               </div>
               <div>
                 <Label className="text-xs">
-                  Excerpt (1 kalimat serem buat preview)
+                  Ringkasan (satu kalimat untuk pratinjau)
                 </Label>
                 <Textarea
                   value={excerpt}
                   onChange={(e) => setExcerpt(e.target.value)}
-                  placeholder="Contoh: Malam itu, gue lewat jembatan. Bau kemeko mulai tercium..."
+                  placeholder="Contoh: Malam itu, aku melewati jembatan tua..."
                   className="resize-none min-h-[60px]"
                   maxLength={280}
                 />
@@ -527,7 +527,7 @@ export function StoryEditor({
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-xs">Tags (pisahkan enter)</Label>
+                  <Label className="text-xs">Tag (pisahkan dengan Enter)</Label>
                   <div className="flex gap-1">
                     <Input
                       value={tagInput}
@@ -568,7 +568,7 @@ export function StoryEditor({
 
             {/* Title preview */}
             <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight mb-6">
-              {title || "Judul Ceritamu Muncul di Sini 👻"}
+              {title || "Judul cerita akan muncul di sini"}
             </h1>
 
             {/* Blocks */}
@@ -909,7 +909,7 @@ function RightPanel({
                   className="resize-none min-h-[120px] bg-background/60"
                 />
               </Field>
-              <Field label="Align">
+              <Field label="Perataan">
                 <div className="flex gap-1">
                   {(["left", "center", "right"] as const).map((a) => (
                     <Button
@@ -965,7 +965,7 @@ function RightPanel({
                   aspect="aspect-video"
                 />
               </Field>
-              <Field label="Caption (opsional)">
+              <Field label="Keterangan (opsional)">
                 <Input
                   value={d.caption ?? ""}
                   onChange={(e) => onUpdate({ caption: e.target.value })}
@@ -1218,14 +1218,14 @@ function RightPanel({
           {/* REPORT (news / police / cctv / investigation) */}
           {["news", "police", "cctv", "investigation"].includes(block.type) && (
             <>
-              <Field label="Case Number">
+              <Field label="Nomor Kasus">
                 <Input
                   value={d.caseNumber ?? ""}
                   onChange={(e) => onUpdate({ caseNumber: e.target.value })}
                   className="bg-background/60 font-mono text-xs"
                 />
               </Field>
-              <Field label="Classification">
+              <Field label="Klasifikasi">
                 <Input
                   value={d.classification ?? ""}
                   onChange={(e) => onUpdate({ classification: e.target.value })}
@@ -1255,7 +1255,7 @@ function RightPanel({
                   className="bg-background/60 text-xs"
                 />
               </Field>
-              <Field label={`Readings (${d.readings?.length ?? 0})`}>
+              <Field label={`Catatan Pengukuran (${d.readings?.length ?? 0})`}>
                 <div className="space-y-1.5">
                   {(d.readings ?? []).map((r, i) => (
                     <div key={i} className="flex gap-1">
@@ -1276,7 +1276,7 @@ function RightPanel({
                           next[i] = { ...next[i], value: e.target.value };
                           onUpdate({ readings: next });
                         }}
-                        placeholder="Value"
+                        placeholder="Nilai"
                         className="bg-background/60 text-xs"
                       />
                       <Select
@@ -1502,14 +1502,14 @@ function ImageInput({
         >
           <ImagePlus className="w-6 h-6 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">
-            {uploading ? "Lagi upload..." : "Tambah Foto 📷"}
+            {uploading ? "Mengunggah..." : "Tambah Foto"}
           </span>
         </button>
       )}
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="atau paste URL gambar..."
+        placeholder="atau tempel URL gambar..."
         className="bg-background/60 text-xs"
       />
       <input

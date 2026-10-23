@@ -77,7 +77,7 @@ export default function CategoryDetailPage({
               <p className="text-sm sm:text-base text-muted-foreground mt-1">
                 {stories.length > 0
                   ? `${stories.length} cerita horror tentang ${category?.name ?? "ini"}`
-                  : `Belum ada cerita di kategori ${category?.name ?? "ini"}. Jadilah yang pertama!`}
+                  : `Belum ada cerita di kategori ${category?.name ?? "ini"}.`}
               </p>
             </div>
           </div>
@@ -112,8 +112,8 @@ export default function CategoryDetailPage({
           <ErrorState onRetry={() => refetch()} />
         ) : stories.length === 0 ? (
           <EmptyState
-            title="Yah... belum ada cerita nih 👻"
-            description={`Jadilah orang pertama yang bikin cerita di kategori ${category?.name ?? "ini"}!`}
+            title="Belum ada cerita di kategori ini"
+            description="Cerita dalam kategori ini akan muncul di sini."
             action={{ label: "Mulai Cerita Baru ", href: "/editor" }}
           />
         ) : (

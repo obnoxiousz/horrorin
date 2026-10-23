@@ -56,7 +56,7 @@ export default function AdminUsersPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {
-    document.title = "Kelola Users — Admin Horrorin";
+    document.title = "Kelola Pengguna — Admin Horrorin";
   }, []);
 
   useEffect(() => {
@@ -87,19 +87,19 @@ export default function AdminUsersPage() {
       const isBan = vars.body.banned !== undefined;
       const isRole = vars.body.role !== undefined;
       if (isRole) {
-        toast.success(vars.body.role === "ADMIN" ? "User dipromote jadi admin 🛡️" : "Admin diturunkan jadi user");
+        toast.success(vars.body.role === "ADMIN" ? "Pengguna dijadikan admin." : "Akses admin dicabut.");
       } else if (isBan) {
-        toast.success(vars.body.banned ? "User ke-ban 🔨" : "User unban ✅");
+        toast.success(vars.body.banned ? "Pengguna diblokir." : "Pemblokiran pengguna dicabut.");
       }
       qc.invalidateQueries({ queryKey: queryKeys.admin.users() });
     },
-    onError: () => toast.error("Gagal update user, coba lagi ya"),
+    onError: () => toast.error("Gagal memperbarui pengguna. Coba lagi."),
   });
 
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
+        <LoadingState text="Memeriksa akses admin..." variant="skeleton" />
       </AppShell>
     );
   }
@@ -112,10 +112,10 @@ export default function AdminUsersPage() {
         <header className="mb-6">
           <div className="flex items-center gap-3 mb-1">
             <Users className="w-7 h-7 text-primary" />
-            <h1 className="text-2xl sm:text-3xl font-extrabold">Kelola Users</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold">Kelola Pengguna</h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            Cari, ban, atau promote jadi admin. Total {users.length} user terdaftar.
+            Cari pengguna, blokir akun, atau ubah peran admin. Total {users.length} pengguna.
           </p>
         </header>
 
@@ -145,7 +145,7 @@ export default function AdminUsersPage() {
         ) : users.length === 0 ? (
           <div className="glass rounded-3xl p-10 text-center">
             <p className="text-sm text-muted-foreground">
-              {debouncedSearch ? `Nggak ketemu user buat "${debouncedSearch}"` : "Belum ada user terdaftar 👻"}
+              {debouncedSearch ? `Tidak ada pengguna untuk "${debouncedSearch}"` : "Belum ada pengguna terdaftar."}
             </p>
           </div>
         ) : (
@@ -155,12 +155,12 @@ export default function AdminUsersPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>User</TableHead>
+                    <TableHead>Pengguna</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
+                    <TableHead>Peran</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-center">Cerita</TableHead>
-                    <TableHead>Joined</TableHead>
+                    <TableHead>Bergabung</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -200,7 +200,7 @@ export default function AdminUsersPage() {
                       <TableCell>
                         {u.banned ? (
                           <Badge variant="destructive" className="gap-1">
-                            <Ban className="w-3 h-3" /> Banned
+                            <Ban className="w-3 h-3" /> Diblokir
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="gap-1 text-emerald-400 border-emerald-500/30">
@@ -220,7 +220,7 @@ export default function AdminUsersPage() {
                               disabled={updateMutation.isPending || u.id === session.user.id}
                               onClick={() => updateMutation.mutate({ id: u.id, body: { role: "USER" } })}
                             >
-                              <Shield className="w-3 h-3" /> Demote
+                              <Shield className="w-3 h-3" /> Cabut akses admin
                             </Button>
                           ) : (
                             <Button
@@ -230,7 +230,7 @@ export default function AdminUsersPage() {
                               disabled={updateMutation.isPending}
                               onClick={() => updateMutation.mutate({ id: u.id, body: { role: "ADMIN" } })}
                             >
-                              <ShieldCheck className="w-3 h-3" /> Promote
+                              <ShieldCheck className="w-3 h-3" /> Jadikan admin
                             </Button>
                           )}
                           {u.banned ? (
@@ -241,7 +241,7 @@ export default function AdminUsersPage() {
                               disabled={updateMutation.isPending}
                               onClick={() => updateMutation.mutate({ id: u.id, body: { banned: false } })}
                             >
-                              Unban
+                              Buka blokir
                             </Button>
                           ) : (
                             <AlertDialog>
@@ -257,9 +257,9 @@ export default function AdminUsersPage() {
                               </AlertDialogTrigger>
                               <AlertDialogContent className="glass-strong border-border/50">
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Ban user ini?</AlertDialogTitle>
+                                  <AlertDialogTitle>Blokir pengguna ini?</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    User <span className="font-semibold text-foreground">{u.name}</span> nggak akan bisa login lagi sampai di-unban. Yakin?
+                                    Pengguna <span className="font-semibold text-foreground">{u.name}</span> tidak dapat masuk sampai pemblokiran dicabut. Lanjutkan?
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -334,7 +334,7 @@ export default function AdminUsersPage() {
                         disabled={updateMutation.isPending || u.id === session.user.id}
                         onClick={() => updateMutation.mutate({ id: u.id, body: { role: "USER" } })}
                       >
-                        <Shield className="w-3 h-3" /> Demote
+                        <Shield className="w-3 h-3" /> Cabut akses admin
                       </Button>
                     ) : (
                       <Button
@@ -344,7 +344,7 @@ export default function AdminUsersPage() {
                         disabled={updateMutation.isPending}
                         onClick={() => updateMutation.mutate({ id: u.id, body: { role: "ADMIN" } })}
                       >
-                        <ShieldCheck className="w-3 h-3" /> Promote
+                        <ShieldCheck className="w-3 h-3" /> Jadikan admin
                       </Button>
                     )}
                     {u.banned ? (
@@ -355,7 +355,7 @@ export default function AdminUsersPage() {
                         disabled={updateMutation.isPending}
                         onClick={() => updateMutation.mutate({ id: u.id, body: { banned: false } })}
                       >
-                        Unban
+                        Buka blokir
                       </Button>
                     ) : (
                       <AlertDialog>
@@ -366,14 +366,14 @@ export default function AdminUsersPage() {
                             className="flex-1 rounded-full text-xs h-8 text-destructive"
                             disabled={updateMutation.isPending || u.id === session.user.id}
                           >
-                            <Ban className="w-3 h-3" /> Ban
+                            <Ban className="w-3 h-3" /> Blokir
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="glass-strong border-border/50">
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Ban user ini?</AlertDialogTitle>
+                            <AlertDialogTitle>Blokir pengguna ini?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              User <span className="font-semibold text-foreground">{u.name}</span> nggak akan bisa login lagi. Yakin?
+                              Pengguna <span className="font-semibold text-foreground">{u.name}</span> tidak dapat masuk lagi. Lanjutkan?
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>

@@ -7,7 +7,7 @@ import { slugify } from "@/utils/format";
 import { z } from "zod";
 
 const schema = z.object({
-  title: z.string().min(3, "Judul minimal 3 karakter").max(120),
+  title: z.string().min(3, "Judul minimal 3 karakter.").max(120),
   excerpt: z.string().max(280).optional().nullable(),
   categoryId: z.string().min(1, "Kategori wajib"),
   templateId: z.string().optional().nullable(),
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "Data nggak valid" },
+      { error: parsed.error.issues[0]?.message ?? "Data tidak valid." },
       { status: 400 }
     );
   }
@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   const story = id ? await storyRepository.findById(id) : null;
   if (!story || story.authorId !== user!.id) {
-    return NextResponse.json({ error: "Draft nggak ketemu 😢" }, { status: 404 });
+    return NextResponse.json({ error: "Draft tidak ditemukan." }, { status: 404 });
   }
 
   return NextResponse.json({ story });
@@ -114,11 +114,11 @@ export async function PATCH(req: NextRequest) {
   if (response) return response;
   const body = await req.json().catch(() => ({}));
   const { id, title, excerpt, categoryId, templateId, templateSlug, thumbnailUrl, tags, blocks, status } = body ?? {};
-  if (!id) return NextResponse.json({ error: "Id wajib" }, { status: 400 });
+  if (!id) return NextResponse.json({ error: "ID cerita wajib diisi." }, { status: 400 });
 
   const existing = await storyRepository.findById(id);
   if (!existing || existing.authorId !== user!.id) {
-    return NextResponse.json({ error: "Cerita nggak ketemu" }, { status: 404 });
+    return NextResponse.json({ error: "Cerita tidak ditemukan." }, { status: 404 });
   }
 
   let tplId: string | undefined = templateId;

@@ -27,7 +27,7 @@ export default function AdminReportsPage() {
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
     return (
       <AppShell>
-        <LoadingState text="Lagi cek akses admin... 👀" variant="skeleton" />
+        <LoadingState text="Memeriksa akses admin..." variant="skeleton" />
       </AppShell>
     );
   }
@@ -48,8 +48,8 @@ export default function AdminReportsPage() {
         <AdminNav />
 
         <EmptyState
-          title="Belum ada laporan masuk 👻"
-          description="Mantap! Komunitas lagi sepi dari laporan. Cek lagi nanti ya."
+          title="Belum ada laporan"
+          description="Laporan yang masuk akan muncul di sini."
           icon={<Flag className="w-10 h-10 text-primary" />}
         />
       </div>

@@ -41,7 +41,7 @@ function MasukInner() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password) {
-      toast.error("Email & password wajib diisi ya");
+      toast.error("Email dan kata sandi wajib diisi.");
       return;
     }
     setLoading(true);
@@ -52,16 +52,16 @@ function MasukInner() {
         redirect: false,
       });
       if (res?.error) {
-        toast.error("Email atau password salah nih 🤔");
+        toast.error("Email atau kata sandi salah.");
         setLoading(false);
         return;
       }
-      toast.success("Berhasil masuk! ");
+      toast.success("Berhasil masuk.");
       start();
       router.push(callbackUrl);
       router.refresh();
     } catch {
-      toast.error("Ada yang error, coba lagi ya");
+      toast.error("Terjadi kesalahan. Coba lagi.");
       setLoading(false);
     }
   };
@@ -85,10 +85,10 @@ function MasukInner() {
 
           <div className="space-y-6 max-w-md">
             <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight">
-              Balik lagi ke <span className="text-primary text-glow">Horrorin</span> 
+              Selamat datang kembali di <span className="text-primary text-glow">Horrorin</span>
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
-              Lanjutin ngebaca cerita serem yang belum kelar, atau mulai posting pengalaman gaibmu sendiri.
+              Lanjutkan membaca atau bagikan cerita horor yang kamu tulis.
             </p>
             <div className="flex items-center gap-4 pt-2">
               <Stat value="2.4K+" label="Cerita tayang" />
@@ -124,7 +124,7 @@ function MasukInner() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Masuk dulu </h2>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold mb-2">Masuk</h2>
               <p className="text-sm text-muted-foreground">
                 Belum punya akun?{" "}
                 <Link href="/gabung" className="text-primary hover:underline font-medium">
@@ -188,7 +188,7 @@ function MasukInner() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Lagi masuk...
+                    Sedang masuk...
                   </>
                 ) : (
                   "Masuk dulu "

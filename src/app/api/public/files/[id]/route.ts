@@ -16,7 +16,7 @@ export async function GET(
     select: { mime: true, data: true },
   });
   if (!upload) {
-    return NextResponse.json({ error: "File nggak ketemu" }, { status: 404 });
+    return NextResponse.json({ error: "File tidak ditemukan." }, { status: 404 });
   }
   return new NextResponse(new Uint8Array(upload.data), {
     status: 200,

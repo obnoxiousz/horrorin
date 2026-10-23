@@ -24,13 +24,13 @@ const schema = z
       .string()
       .min(3, "Username minimal 3 karakter")
       .max(20, "Username maksimal 20 karakter")
-      .regex(/^[a-z0-9_]+$/, "Username cuma huruf kecil, angka, underscore"),
-    email: z.string().email("Email nggak valid"),
+      .regex(/^[a-z0-9_]+$/, "Nama pengguna hanya boleh berisi huruf kecil, angka, dan garis bawah."),
+    email: z.string().email("Masukkan alamat email yang valid."),
     password: z.string().min(6, "Password minimal 6 karakter"),
     confirm: z.string(),
   })
   .refine((d) => d.password === d.confirm, {
-    message: "Password nggak sama",
+    message: "Kata sandi tidak cocok.",
     path: ["confirm"],
   });
 
@@ -62,7 +62,7 @@ export default function GabungPage() {
         if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
-      toast.error(fieldErrors[Object.keys(fieldErrors)[0]] ?? "Cek lagi formnya ya");
+      toast.error(fieldErrors[Object.keys(fieldErrors)[0]] ?? "Periksa kembali formulir.");
       return;
     }
 
@@ -75,27 +75,27 @@ export default function GabungPage() {
         password: form.password,
       });
 
-      toast.success("Akun berhasil dibuat! Lagi masuk...");
+      toast.success("Akun berhasil dibuat. Sedang masuk...");
       const res = await signIn("credentials", {
         email: form.email,
         password: form.password,
         redirect: false,
       });
       if (res?.error) {
-        toast.error("Akun dibuat, tapi gagal auto-login. Masuk manual ya");
+        toast.error("Akun berhasil dibuat, tetapi kamu perlu masuk secara manual.");
         start();
         router.push("/masuk");
         return;
       }
-      toast.success("Selamat datang di Horrorin! ");
+      toast.success("Selamat datang di Horrorin.");
       start();
       router.push("/");
       router.refresh();
     } catch (e) {
       if (e instanceof ApiError) {
-        toast.error((e.data as { error?: string } | undefined)?.error ?? "Gagal daftar nih");
+        toast.error((e.data as { error?: string } | undefined)?.error ?? "Pendaftaran gagal. Coba lagi.");
       } else {
-        toast.error("Ada yang error, coba lagi ya");
+        toast.error("Terjadi kesalahan. Coba lagi.");
       }
       setLoading(false);
     }
@@ -121,15 +121,15 @@ export default function GabungPage() {
 
           <div className="space-y-6 max-w-md">
             <h1 className="text-4xl xl:text-5xl font-extrabold leading-tight">
-              Gabung komunitas horror paling <span className="text-primary text-glow">ngeri</span> di Indonesia
+              Bergabung dengan komunitas cerita horor Indonesia
             </h1>
             <p className="text-base text-muted-foreground leading-relaxed">
-              Bagikan cerita seremmu ke ribuan pembaca. Pilih template kece, edit konten, tayangin. Semudah posting story IG.
+              Tulis dan bagikan cerita horor. Pilih template, susun ceritamu, lalu terbitkan.
             </p>
             <ul className="space-y-3 pt-2">
-              <Feature text="Akses ke semua template horror premium" />
-              <Feature text="Notifikasi real-time pas ceritamu di-like" />
-              <Feature text="Simpan cerita favorit, baca kapan aja" />
+              <Feature text="Gunakan berbagai template cerita" />
+              <Feature text="Dapatkan notifikasi saat ceritamu disukai" />
+              <Feature text="Simpan cerita untuk dibaca nanti" />
             </ul>
           </div>
 
@@ -250,7 +250,7 @@ export default function GabungPage() {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Lagi bikin akun...
+                    Membuat akun...
                   </>
                 ) : (
                   "Gabung Horrorin"
@@ -259,7 +259,7 @@ export default function GabungPage() {
             </form>
 
             <p className="text-center text-xs text-muted-foreground mt-6">
-              Dengan bergabung, kamu setuju sama Aturan Kebijakan Privasi platform HorrorIn.
+              Dengan membuat akun, kamu menyetujui Kebijakan Privasi Horrorin.
             </p>
           </div>
         </div>

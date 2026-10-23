@@ -49,10 +49,10 @@ export default function NotifikasiPage() {
   const markAllReadMutation = useMutation({
     mutationFn: () => notificationsApi.markRead(),
     onSuccess: () => {
-      toast.success("Semua notifikasi udah dibaca ✅");
+      toast.success("Semua notifikasi sudah dibaca.");
       qc.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
-    onError: () => toast.error("Gagal mark read, coba lagi ya"),
+    onError: () => toast.error("Notifikasi gagal ditandai. Coba lagi."),
   });
 
   if (status === "loading" || status === "unauthenticated" || isLoading) {
@@ -97,7 +97,7 @@ export default function NotifikasiPage() {
               <p className="text-sm text-muted-foreground">
                 {unread > 0
                   ? `${unread} notifikasi belum dibaca`
-                  : "Kamu udah baca semua 🎉"}
+                  : "Semua notifikasi sudah dibaca."}
               </p>
             </div>
           </div>
@@ -151,14 +151,14 @@ export default function NotifikasiPage() {
         {/* ===== List ===== */}
         {filtered.length === 0 ? (
           <EmptyState
-            title="Sepi nih... 👻"
+            title="Belum ada notifikasi"
             description={
               filter === "unread"
-                ? "Nggak ada notifikasi belum dibaca. Mantap!"
-                : "Belum ada notifikasi. Mulai interaksi sama cerita atau kreator lain biar dapet notif!"
+                ? "Tidak ada notifikasi yang belum dibaca."
+                : "Notifikasi akan muncul saat ada aktivitas pada cerita atau profilmu."
             }
             icon={<Bell className="w-10 h-10 text-primary" />}
-            action={{ label: "Jelajah cerita ", href: "/trending" }}
+            action={{ label: "Jelajahi Cerita", href: "/trending" }}
           />
         ) : (
           <div className="space-y-2">
@@ -279,13 +279,13 @@ function getEmoji(type: string) {
 function getActionText(n: any) {
   switch (n.type) {
     case "LIKE":
-      return "nge-like ceritamu";
+      return "menyukai ceritamu";
     case "COMMENT":
-      return "ngomen di ceritamu";
+      return "mengomentari ceritamu";
     case "FOLLOW":
-      return "mulai nge-follow kamu";
+      return "mulai mengikutimu";
     case "STORY_PUBLISHED":
-      return "baru aja publish cerita baru:";
+      return "menerbitkan cerita baru:";
     case "SYSTEM":
       return n.body ?? n.title;
     default:

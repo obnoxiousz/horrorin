@@ -22,7 +22,7 @@ export default function LupaPasswordPage() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      toast.error("Email wajib diisi ya");
+      toast.error("Email wajib diisi.");
       return;
     }
     setLoading(true);
@@ -30,7 +30,7 @@ export default function LupaPasswordPage() {
     await new Promise((r) => setTimeout(r, 700));
     setLoading(false);
     setSent(true);
-    toast.success("Link reset udah dikirim (simulasi) 📧");
+      toast.success("Tautan untuk mengatur ulang kata sandi telah dikirim (simulasi).");
   };
 
   return (
@@ -56,12 +56,12 @@ export default function LupaPasswordPage() {
               <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-8 h-8 text-primary" />
               </div>
-              <h1 className="text-2xl font-extrabold">Cek email kamu ya 📧</h1>
+              <h1 className="text-2xl font-extrabold">Periksa email kamu</h1>
               <p className="text-sm text-muted-foreground">
-                Link reset password udah dikirim ke <span className="font-semibold text-foreground">{email}</span>. Link ini valid 1 jam.
+                Tautan untuk mengatur ulang kata sandi telah dikirim ke <span className="font-semibold text-foreground">{email}</span>. Tautan berlaku selama 1 jam.
               </p>
               <p className="text-xs text-muted-foreground">
-                Psst... ini cuma simulasi ya. Belum ada email beneran yang dikirim 👻
+                Fitur pengiriman email belum tersedia. Tautan ini hanya simulasi.
               </p>
               <div className="flex flex-col gap-2 pt-2">
                 <Link href="/masuk">
@@ -88,7 +88,7 @@ export default function LupaPasswordPage() {
                 <ArrowLeft className="w-4 h-4" /> Balik ke masuk
               </Link>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold mb-2">Lupa password? 🤔</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold mb-2">Lupa kata sandi?</h1>
               <p className="text-sm text-muted-foreground mb-6">
                 santai, masukin email kamu. Nanti kita kirim link buat reset password.
               </p>
@@ -118,10 +118,10 @@ export default function LupaPasswordPage() {
                   {loading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                      Lagi ngirim link...
+                      Mengirim tautan...
                     </>
                   ) : (
-                    "Kirim Link Reset 📧"
+                    "Kirim Tautan Reset"
                   )}
                 </Button>
               </form>

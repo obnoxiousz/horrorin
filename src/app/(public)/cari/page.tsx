@@ -60,7 +60,7 @@ function CariInner() {
           <div className="relative max-w-2xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
-              placeholder="Cari cerita horror serem..."
+              placeholder="Cari cerita horor..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="pl-12 pr-12 h-14 rounded-full bg-background/60 text-base"
@@ -82,8 +82,8 @@ function CariInner() {
         {/* ===== Results ===== */}
         {!hasQuery ? (
           <EmptyState
-            title="Cari cerita horror favoritmu 🔍"
-            description="Ketik kata kunci di atas. Coba: 'rumah angker', 'urban legend', 'pengalaman gaib'..."
+            title="Cari cerita"
+            description="Masukkan judul, nama kreator, atau kata kunci."
             icon={<Search className="w-10 h-10 text-primary" />}
           />
         ) : isLoading ? (
@@ -96,9 +96,9 @@ function CariInner() {
           <ErrorState onRetry={() => refetch()} />
         ) : stories.length === 0 ? (
           <EmptyState
-            title={`Yah... nggak ada hasil buat "${q}" 👻`}
-            description="Coba kata kunci lain, atau cek yang lagi trending!"
-            action={{ label: "Liat yang Trending ", href: "/trending" }}
+            title={`Tidak ada hasil untuk "${q}"`}
+            description="Coba kata kunci lain atau lihat cerita yang sedang tren."
+            action={{ label: "Lihat Cerita Populer", href: "/trending" }}
           />
         ) : (
           <>

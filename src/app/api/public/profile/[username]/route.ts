@@ -6,7 +6,7 @@ import { getSessionUser } from "@/auth/session";
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   const u = await userRepository.findByUsername(username);
-  if (!u) return NextResponse.json({ error: "User nggak ketemu" }, { status: 404 });
+  if (!u) return NextResponse.json({ error: "Pengguna tidak ditemukan." }, { status: 404 });
 
   const [followersCount, followingCount, stories, session] = await Promise.all([
     userRepository.followersCount(u.id),

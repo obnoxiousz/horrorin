@@ -13,14 +13,14 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Horrorin — Komunitas Cerita Horror Paling Ngeri di Indonesia",
+  title: "Horrorin — Komunitas Cerita Horor Indonesia",
   description:
-    "Bikin cerita horror kek pros. Pilih template, edit konten, tayangin ke ribuan pembaca. Tempatnya urban legend, pengalaman gaib, dan misteri Indonesia.",
+    "Tulis, baca, dan bagikan cerita horor Indonesia. Temukan kisah urban legend, pengalaman gaib, dan misteri dari berbagai kreator.",
   keywords: ["horror", "cerita horror", "urban legend", "indonesia", "mistis", "gaib", "horrorin"],
   authors: [{ name: "Horrorin" }],
   openGraph: {
     title: "Horrorin",
-    description: "Bikin cerita horror kek pros. Pilih template, edit konten, tayangin.",
+    description: "Tulis, baca, dan bagikan cerita horor Indonesia tentang urban legend, pengalaman gaib, dan misteri.",
     siteName: "Horrorin",
     type: "website",
     locale: "id_ID",

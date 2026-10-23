@@ -128,7 +128,7 @@ export function Navbar() {
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
-                placeholder="Cari cerita serem..."
+                placeholder="Cari cerita horor..."
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 className="pl-9 h-9 bg-background/60 border-border/50 focus-visible:border-primary/50"
@@ -201,7 +201,7 @@ export function Navbar() {
                       onClick={async () => {
                         const { signOut } = await import("next-auth/react");
                         signOut({ callbackUrl: "/" });
-                        toast.success("Sampai jumpa lagi ");
+                        toast.success("Kamu berhasil keluar.");
                       }}
                     >
                       Keluar
@@ -212,7 +212,7 @@ export function Navbar() {
             ) : status === "unauthenticated" ? (
               <div className="flex items-center gap-2">
                 <Link href="/masuk" className="hidden sm:block">
-                  <Button variant="ghost" className="rounded-full">Masuk dulu </Button>
+                  <Button variant="ghost" className="rounded-full">Masuk</Button>
                 </Link>
                 <Link href="/gabung">
                   <Button className="rounded-full bg-primary hover:bg-primary/90 font-semibold">Gabung Horrorin</Button>
@@ -239,7 +239,7 @@ export function Navbar() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Cari cerita serem..."
+                  placeholder="Cari cerita horor..."
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   className="pl-9 bg-background/60"
