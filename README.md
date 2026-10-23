@@ -11,9 +11,9 @@ Horrorin adalah platform komunitas untuk menulis, membaca, dan berbagi cerita ho
 | [Next.js 16](https://nextjs.org) | App Router, route groups `(auth)` / `(public)` / `(admin)` |
 | [React 19](https://react.dev) + TypeScript | UI library |
 | [Tailwind CSS 4](https://tailwindcss.com) + shadcn/ui | Styling + komponen (Radix UI, glassmorphism) |
-| [Prisma 7](https://www.prisma.io) + PostgreSQL | Database (via `@prisma/adapter-pg`) |
+| [Prisma 7](https://www.prisma.io) + PostgreSQL | Database (via `@prisma/adapter-pg`, siap deploy serverless) |
 | [NextAuth v4](https://next-auth.js.org) | Auth credentials provider, JWT session, role USER/ADMIN |
-| [React Query](https://tanstack.com/query) | Data fetching di sisi klien |
+| [React Query](https://tanstack.com/query) | Data fetching sisi klien — semua kunci query terdaftar di satu registry |
 | [Zod](https://zod.dev) | Validasi skema |
 | Sonner, bcryptjs, lucide-react | Toast, hashing password, ikon |
 
@@ -52,11 +52,44 @@ Horrorin adalah platform komunitas untuk menulis, membaca, dan berbagi cerita ho
 
 Semua handler REST berada di `src/app/api`:
 
-- **`/api/public`** — stories (list, detail, create, me, related, like, bookmark), categories, templates, comments, profile (me, [username], follow), notifications (+ read), auth/register.
-- **`/api/admin`** — users (list, [id] promote/demote/ban/unban), stories (list, [id] archive/delete).
+- **`/api/public`**
+  - `stories` — list (filter sort/category/tag/q), `[slug]` detail, `create` (GET draft + POST buat + PATCH update), `me`, `related/[slug]`, `like`, `bookmark` (+ `bookmark/list`).
+  - `home` — payload landing gabungan (cerita latest/trending/recommended + kategori + kreator top) dalam **satu request**.
+  - `comments/[storyId]` — daftar & komentar baru; `comments?slug=` — daftar komentar lewat slug (dipakai halaman detail agar 3 request jalan paralel).
+  - `categories`, `templates`.
+  - `profile/me` (update), `profile/[username]`, `profile/follow`.
+  - `notifications`, `notifications/read` (POST tanda baca), `notifications/unread-count` (badge navbar).
+  - `upload` (POST data URL gambar ≤3MB) dan `files/[id]` (melayani gambarnya).
+  - `auth/register`.
+- **`/api/admin`** — `users` (+`[id]` promote/demote/ban/unban), `stories` (+`[id]` archive/delete), `stats` (dashboard agregat angka sesungguhnya dalam satu request).
 - **`/api/auth`** — NextAuth handlers (`[...nextauth]`).
 
-Data layer memakai repository pattern di `src/repositories` (story, user, engagement, category, template, notification).
+Data layer memakai repository pattern di `src/repositories` (story, user, engagement, notification, template).
+
+## Arsitektur Data (sisi klien)
+
+Semua panggilan jaringan lewat modul `src/lib/api/*`:
+
+- `client.ts` — `fetch` tunggal pembungkus JSON, query string, dan error (`ApiError` berisi status + body).
+- Satu modul per domain (`stories.ts`, `home.ts`, dst.) berisi endpoint + factory `queryOptions`.
+- `src/lib/query-keys.ts` — registry kunci query terpusat; invalidasi harus lewat factory di registry ini.
+
+Aturan lint (`eslint.config.mjs`) memblokir `fetch` di luar modul `lib/api` dan kunci query yang ditulis manual — biar data tetap konsisten lewat satu pintu.
+
+Praktik caching:
+
+- Default `staleTime` 60 detik, `refetchOnWindowFocus` mati (React Query & sesi NextAuth).
+- Bacaan lambat berubah lebih rileks: list cerita & detail (`2 menit`), kategori (`5 menit`), payload home (`2 menit`).
+- Data milik user (draft, bookmark, notifikasi, admin) tetap 60 detik — sering berubah.
+- Aksi user (like, bookmark, komentar, simpan draft) memicu invalidasi presisi: badge, payload home, list, dan detail terkait, tanpa merefresh halaman lain.
+
+Efeknya, beban request turun:
+
+| Halaman | Sebelum | Sesudah (login) |
+| --- | --- | --- |
+| `/` | ±7 data request | 1 (payload home) + badge + sesi |
+| `/cerita/[slug]` | 4–5 request berantai | 3 paralel + badge + sesi |
+| `/admin` | 2 list query | 1 (`/admin/stats`) |
 
 ## Struktur Folder
 
@@ -75,7 +108,7 @@ src/
 │   └── ui/              # shadcn/ui components
 ├── constants/           # kategori & template cerita
 ├── hooks/               # use-toast, use-mobile
-├── lib/                 # prisma client, utils
+├── lib/                 # prisma client + pool, modul API client, registry query-keys
 ├── repositories/        # data layer (story, user, engagement, dst.)
 ├── types/               # type global & next-auth type extension
 └── utils/               # helper format
@@ -108,7 +141,7 @@ src/
 
    ```bash
    npm run db:generate       # generate Prisma client
-   npm run db:push           # push schema ke database
+   npm run db:migrate        # jalankan migrasi Prisma (folder prisma/migrations)
    npx tsx prisma/seed.ts    # seed kategori, template, user & cerita
    ```
 
@@ -133,17 +166,20 @@ Buka [http://localhost:3000](http://localhost:3000) 🎉
 
 | Perintah | Deskripsi |
 | --- | --- |
-| `npm run dev` | Jalankan server development (bersihkan cache `.next` dulu) |
-| `npm run build` | Build production |
+| `npm run dev` | Jalankan server development |
+| `npm run build` | Build production (prisma generate + next build) |
 | `npm run start` | Jalankan server production |
 | `npm run lint` | ESLint |
-| `npm run db:push` | Push schema Prisma ke database |
 | `npm run db:generate` | Generate Prisma client |
 | `npm run db:migrate` | Prisma migrate dev |
+| `npm run db:push` | Push schema Prisma ke database |
 | `npm run db:reset` | Reset database + jalankan seed |
 
 ## Catatan
 
 - Seluruh UI berbahasa Indonesia dengan tone Gen Z.
 - `Caddyfile` di root dipakai sebagai reverse proxy (default `:81` → `localhost:3000`), mendukung per-rute transform port lewat query `XTransformPort`.
-- Log pengembangan lengkap ada di `worklog.md`.
+- Deploy serverless (Vercel): pool koneksi `pg` di `src/lib/db.ts` menyesuaikan otomatis (maks 3 koneksi per lambda, bisa dioverride lewat env `PG_POOL_MAX`).
+- Gambar editor tersimpan di tabel `Upload` (bukan filesystem — filesystem serverless read-only) dan dilayani `/api/public/files/[id]` dengan id acak sebagai capability.
+- Indeks composite untuk urutan sort cerita & notifikasi ada di `prisma/migrations/20261023010936_story_notification_sort_indexes`.
+- Log pengembangan ada di `worklog.md` (bisa jadi tidak mutakhir — kode tetap sumber kebenarannya).
