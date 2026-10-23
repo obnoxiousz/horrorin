@@ -25,12 +25,13 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
   const [likeCount, setLikeCount] = useState<number>(story.likeCount ?? 0);
   const qc = useQueryClient();
 
-  // Engagement hits every surface that shows this story's counts; pages not
-  // mounted simply refresh on their next visit (they stay 2-min stale otherwise).
+  // Engagement mutates only this card's local state; nothing refetches on the
+  // current page (refetchType "none" just marks caches stale — they refresh
+  // on their next visit).
   const invalidateCounts = () => {
-    qc.invalidateQueries({ queryKey: queryKeys.home.all });
-    qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
-    qc.invalidateQueries({ queryKey: queryKeys.stories.detail(story.slug) });
+    qc.invalidateQueries({ queryKey: queryKeys.home.all, refetchType: "none" });
+    qc.invalidateQueries({ queryKey: queryKeys.stories.lists(), refetchType: "none" });
+    qc.invalidateQueries({ queryKey: queryKeys.stories.detail(story.slug), refetchType: "none" });
   };
 
   const onLike = async (e: React.MouseEvent) => {

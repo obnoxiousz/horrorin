@@ -81,12 +81,26 @@ export default function StoryDetailPage({
     },
     onSuccess: (d) => {
       setLiked(d.liked);
-      setLikeCount((c) => c + (d.liked ? 1 : -1) - (liked ? 1 : -1) * -1);
-      qc.invalidateQueries({
-        queryKey: queryKeys.stories.detail(slug),
-      });
-      qc.invalidateQueries({ queryKey: queryKeys.home.all });
-      qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
+      // Patch the cached detail from server truth vs the previous cached value
+      // (never local state — onMutate already flipped it). Guarded so a
+      // non-resident detail query leaves optimistic local state untouched.
+      const prev = qc.getQueryData<{ story: any }>(
+        queryKeys.stories.detail(slug)
+      );
+      if (prev?.story) {
+        const likeDelta = d.liked === prev.story.liked ? 0 : d.liked ? 1 : -1;
+        qc.setQueryData(queryKeys.stories.detail(slug), {
+          ...prev,
+          story: {
+            ...prev.story,
+            liked: d.liked,
+            likeCount: prev.story.likeCount + likeDelta,
+          },
+        });
+        setLikeCount(prev.story.likeCount + likeDelta);
+      }
+      qc.invalidateQueries({ queryKey: queryKeys.home.all, refetchType: "none" });
+      qc.invalidateQueries({ queryKey: queryKeys.stories.lists(), refetchType: "none" });
     },
     onError: () => {
       setLiked((v) => !v);
@@ -99,11 +113,23 @@ export default function StoryDetailPage({
     mutationFn: () => storiesApi.bookmark(data?.story?.id ?? ""),
     onSuccess: (d) => {
       setBookmarked(d.bookmarked);
-      qc.invalidateQueries({
-        queryKey: queryKeys.stories.detail(slug),
-      });
-      qc.invalidateQueries({ queryKey: queryKeys.home.all });
-      qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
+      const prev = qc.getQueryData<{ story: any }>(
+        queryKeys.stories.detail(slug)
+      );
+      if (prev?.story) {
+        const bookmarkDelta =
+          d.bookmarked === prev.story.bookmarked ? 0 : d.bookmarked ? 1 : -1;
+        qc.setQueryData(queryKeys.stories.detail(slug), {
+          ...prev,
+          story: {
+            ...prev.story,
+            bookmarked: d.bookmarked,
+            bookmarkCount: prev.story.bookmarkCount + bookmarkDelta,
+          },
+        });
+      }
+      qc.invalidateQueries({ queryKey: queryKeys.home.all, refetchType: "none" });
+      qc.invalidateQueries({ queryKey: queryKeys.stories.lists(), refetchType: "none" });
       toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
     },
     onError: () => {
@@ -117,9 +143,15 @@ export default function StoryDetailPage({
     onSuccess: () => {
       setCommentText("");
       refetchComments();
-      qc.invalidateQueries({
-        queryKey: queryKeys.stories.detail(slug),
-      });
+      const prev = qc.getQueryData<{ story: any }>(
+        queryKeys.stories.detail(slug)
+      );
+      if (prev?.story) {
+        qc.setQueryData(queryKeys.stories.detail(slug), {
+          ...prev,
+          story: { ...prev.story, commentCount: prev.story.commentCount + 1 },
+        });
+      }
       toast.success("Komen terkirim! 💬");
     },
     onError: () => {
