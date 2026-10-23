@@ -8,22 +8,6 @@ export interface CommentsListResponse {
 }
 
 export const commentsApi = {
-  /** The page stays silent on failed loads — aborts/network rethrow (was !r.ok). */
-  async byStory(
-    storyId: string,
-    opts?: ClientOptions
-  ): Promise<CommentsListResponse> {
-    try {
-      return await api.get<CommentsListResponse>(
-        `/public/comments/${encodeURIComponent(storyId)}`,
-        { signal: opts?.signal }
-      );
-    } catch (e) {
-      if (e instanceof ApiError) return { comments: [] };
-      throw e;
-    }
-  },
-
   /** Parallel variant used on the detail page so comments race the story fetch. */
   async bySlug(slug: string, opts?: ClientOptions): Promise<CommentsListResponse> {
     try {
@@ -46,14 +30,6 @@ export const commentsApi = {
 };
 
 export const commentQueries = {
-  byStory(storyId: string) {
-    return queryOptions({
-      queryKey: queryKeys.comments.byStory(storyId),
-      queryFn: (ctx: { signal?: AbortSignal }) =>
-        commentsApi.byStory(storyId, { signal: ctx.signal }),
-      enabled: !!storyId,
-    });
-  },
   bySlug(slug: string) {
     return queryOptions({
       queryKey: queryKeys.comments.bySlug(slug),

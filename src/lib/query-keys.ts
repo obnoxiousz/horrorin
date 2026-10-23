@@ -36,7 +36,6 @@ export const queryKeys = {
   },
   comments: {
     all: ["comments"] as const,
-    byStory: (storyId: string) => [...queryKeys.comments.all, storyId] as const,
     bySlug: (slug: string) => [...queryKeys.comments.all, "bySlug", slug] as const,
   },
   home: {
