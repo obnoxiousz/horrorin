@@ -28,34 +28,27 @@ import { Badge } from "@/components/ui/badge";
 import { CATEGORIES } from "@/constants";
 import { formatNumber } from "@/utils/format";
 import { useSession } from "next-auth/react";
-import { storyQueries } from "@/lib/api/stories";
-import { categoryQueries } from "@/lib/api/categories";
+import { homeQueries, type HomeCreator } from "@/lib/api/home";
 
 export default function HomePage() {
   const { data: session } = useSession();
 
   const {
-    data: latestData,
-    isLoading: latestLoading,
-    isError: latestError,
-    refetch: refetchLatest,
-  } = useQuery(storyQueries.list({ sort: "latest", take: 8 }));
-  const { data: trendingData, isLoading: trendingLoading } = useQuery(
-    storyQueries.list({ sort: "trending", take: 4 })
-  );
-  const { data: recommendedData, isLoading: recommendedLoading } = useQuery(
-    storyQueries.list({ sort: "recommended", take: 4 })
-  );
-  const { data: catData } = useQuery(categoryQueries.all());
+    data: homeData,
+    isLoading: homeLoading,
+    isError,
+    refetch,
+  } = useQuery(homeQueries.all());
 
   useEffect(() => {
     document.title = "Horrorin — Komunitas Cerita Horror Indonesia";
   }, []);
 
-  const trending = trendingData?.stories ?? [];
-  const latest = latestData?.stories ?? [];
-  const recommended = recommendedData?.stories ?? [];
-  const categories = catData?.categories ?? [];
+  const trending = homeData?.trending ?? [];
+  const latest = homeData?.latest ?? [];
+  const recommended = homeData?.recommended ?? [];
+  const categories = homeData?.categories ?? [];
+  const creators = homeData?.creators ?? [];
 
   return (
     <AppShell>
@@ -99,7 +92,7 @@ export default function HomePage() {
             icon={<Flame className="w-5 h-5 text-primary" />}
             href="/trending"
           />
-          {trendingLoading ? (
+          {homeLoading ? (
             <StoryRow>
               {[0, 1, 2, 3].map((i) => (
                 <StoryCardSkeleton key={i} />
@@ -128,14 +121,14 @@ export default function HomePage() {
             icon={<Clock className="w-5 h-5 text-primary" />}
             href="/terbaru"
           />
-          {latestLoading ? (
+          {homeLoading ? (
             <StoryRow>
               {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <StoryCardSkeleton key={i} />
               ))}
             </StoryRow>
-          ) : latestError ? (
-            <ErrorState onRetry={() => refetchLatest()} />
+          ) : isError ? (
+            <ErrorState onRetry={() => refetch()} />
           ) : latest.length === 0 ? (
             <EmptyState />
           ) : (
@@ -180,7 +173,7 @@ export default function HomePage() {
             subtitle="Berdasarkan yang paling banyak disimpan"
             icon={<TrendingUp className="w-5 h-5 text-primary" />}
           />
-          {recommendedLoading ? (
+          {homeLoading ? (
             <StoryRow>
               {[0, 1, 2, 3].map((i) => (
                 <StoryCardSkeleton key={i} />
@@ -246,7 +239,7 @@ export default function HomePage() {
             icon={<Users className="w-5 h-5 text-primary" />}
             href="/kreator"
           />
-          <CreatorsRow />
+          <HomeCreatorsRow creators={creators} />
         </section>
       </div>
 
@@ -394,20 +387,8 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CreatorsRow() {
-  const { data, isLoading } = useQuery({
-    ...storyQueries.creators(20),
-    select: (d: { stories: any[] }) => {
-      // Get unique authors from trending stories
-      const seen = new Map<string, any>();
-      for (const s of d.stories ?? []) {
-        if (s.author && !seen.has(s.author.id)) seen.set(s.author.id, s.author);
-      }
-      return Array.from(seen.values()).slice(0, 6);
-    },
-  });
-
-  if (isLoading || !data || data.length === 0) {
+function HomeCreatorsRow({ creators }: { creators: HomeCreator[] }) {
+  if (creators.length === 0) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -426,7 +407,7 @@ function CreatorsRow() {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-      {data.map((c: any) => (
+      {creators.map((c: any) => (
         <Link
           key={c.id}
           href={`/u/${c.username ?? c.id}`}

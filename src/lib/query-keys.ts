@@ -40,6 +40,7 @@ export const queryKeys = {
     bySlug: (slug: string) => [...queryKeys.comments.all, "bySlug", slug] as const,
   },
   home: {
+    // Full landing payload in ONE request (stories rows + categories + creators).
     all: ["home"] as const,
   },
   categories: {
