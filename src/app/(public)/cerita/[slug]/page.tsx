@@ -61,7 +61,7 @@ export default function StoryDetailPage({
   const { data, isLoading, isError, refetch } = useQuery(storyQueries.detail(slug));
   const { data: relatedData } = useQuery(storyQueries.related(slug));
   const { data: commentsData, refetch: refetchComments } = useQuery(
-    commentQueries.byStory(data?.story?.id ?? "")
+    commentQueries.bySlug(slug)
   );
 
   useEffect(() => {

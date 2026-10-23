@@ -67,6 +67,15 @@ export const engagementRepository = {
     });
   },
 
+  async listCommentsBySlug(slug: string) {
+    const story = await db.story.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (!story) return [];
+    return this.listComments(story.id);
+  },
+
   async createComment(data: { storyId: string; authorId: string; content: string; parentId?: string }) {
     const c = await db.comment.create({ data });
     await db.story.update({
