@@ -294,6 +294,10 @@ model Upload {
   size      Int
   data      Bytes
   createdAt DateTime @default(now())
+
+  // Per-user quota lookups (count + SUM(size)) — Prisma does not index
+  // foreign keys on Postgres, so this needs an explicit index.
+  @@index([userId])
 }
 
 // ===================== ADMIN / REPORTS =====================

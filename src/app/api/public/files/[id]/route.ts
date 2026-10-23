@@ -23,7 +23,8 @@ export async function GET(
     headers: {
       "Content-Type": upload.mime,
       "Content-Length": String(upload.data.length),
-      "Cache-Control": "public, max-age=31536000, immutable",
+      "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }
