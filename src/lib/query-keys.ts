@@ -37,6 +37,10 @@ export const queryKeys = {
   comments: {
     all: ["comments"] as const,
     byStory: (storyId: string) => [...queryKeys.comments.all, storyId] as const,
+    bySlug: (slug: string) => [...queryKeys.comments.all, "bySlug", slug] as const,
+  },
+  home: {
+    all: ["home"] as const,
   },
   categories: {
     all: ["categories"] as const,
@@ -45,6 +49,7 @@ export const queryKeys = {
   notifications: {
     all: ["notifications"] as const,
     list: () => queryKeys.notifications.all,
+    unreadCount: () => [...queryKeys.notifications.all, "unreadCount"] as const,
   },
   profile: {
     all: ["profile"] as const,
@@ -61,5 +66,6 @@ export const queryKeys = {
     // Read key — search embedded as an object so the root above can invalidate it.
     usersList: (search: string) => [...queryKeys.admin.users(), { search }] as const,
     stories: () => [...queryKeys.admin.all, "stories"] as const,
+    stats: () => [...queryKeys.admin.all, "stats"] as const,
   },
 } as const;

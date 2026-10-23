@@ -50,7 +50,7 @@ export default function NotifikasiPage() {
     mutationFn: () => notificationsApi.markRead(),
     onSuccess: () => {
       toast.success("Semua notifikasi udah dibaca ✅");
-      qc.invalidateQueries({ queryKey: queryKeys.notifications.list() });
+      qc.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
     onError: () => toast.error("Gagal mark read, coba lagi ya"),
   });

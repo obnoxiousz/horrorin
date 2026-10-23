@@ -37,6 +37,12 @@ export const notificationsApi = {
   markRead(opts?: ClientOptions) {
     return api.post<{ ok: boolean }>("/public/notifications/read", {}, opts);
   },
+
+  unread(opts?: ClientOptions) {
+    return api.get<{ unread: number }>("/public/notifications/unread-count", {
+      signal: opts?.signal,
+    });
+  },
 };
 
 export const notificationQueries = {
@@ -45,6 +51,14 @@ export const notificationQueries = {
       queryKey: queryKeys.notifications.list(),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         notificationsApi.list({ signal: ctx.signal }),
+      enabled,
+    });
+  },
+  unread(enabled: boolean) {
+    return queryOptions({
+      queryKey: queryKeys.notifications.unreadCount(),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        notificationsApi.unread({ signal: ctx.signal }),
       enabled,
     });
   },

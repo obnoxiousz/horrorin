@@ -21,7 +21,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useNavbarVisibility } from "@/hooks/use-navbar-visibility";
 import { useRouteTransition } from "@/components/ui/route-transition";
-import { notificationsApi } from "@/lib/api/notifications";
+import { notificationQueries } from "@/lib/api/notifications";
+import { queryKeys } from "@/lib/query-keys";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 
 const NAV_LINKS = [
@@ -35,12 +37,19 @@ export function Navbar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  const qc = useQueryClient();
   const { start } = useRouteTransition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [unread, setUnread] = useState(0);
   const { isVisible, setHoverZoneActive, setLocked, isHoverCapable } =
     useNavbarVisibility();
+
+  // Shared unread count across the app; refreshed once per navigation
+  // (same cadence the old inline fetch effect had) and deduped by react-query.
+  const { data: unreadData } = useQuery(
+    notificationQueries.unread(status === "authenticated")
+  );
+  const unread = unreadData?.unread ?? 0;
 
   // Selama menu mobile / dropdown Radix open → navbar dikunci visible.
   useEffect(() => {
@@ -49,11 +58,8 @@ export function Navbar() {
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    notificationsApi
-      .list()
-      .then((d) => setUnread(d.unread ?? 0))
-      .catch(() => {});
-  }, [status, pathname]);
+    qc.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
+  }, [status, pathname, qc]);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
