@@ -21,6 +21,7 @@ export const categoryQueries = {
       queryKey: queryKeys.categories.list(),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         categoriesApi.all({ signal: ctx.signal }),
+      staleTime: 5 * 60_000,
     });
   },
 };

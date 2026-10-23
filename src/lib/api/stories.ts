@@ -114,6 +114,9 @@ export const storyQueries = {
       queryFn: (ctx: { signal?: AbortSignal }) =>
         storiesApi.list(filters, { signal: ctx.signal }),
       enabled,
+      // Published lists change slowly; mutations invalidate this key precisely
+      // (story-card, detail page, editor save).
+      staleTime: 2 * 60_000,
     });
   },
   detail(slug: string) {
@@ -122,6 +125,7 @@ export const storyQueries = {
       queryFn: (ctx: { signal?: AbortSignal }) =>
         storiesApi.bySlug(slug, { signal: ctx.signal }),
       retry: false as const,
+      staleTime: 2 * 60_000,
     });
   },
   related(slug: string) {
@@ -129,6 +133,7 @@ export const storyQueries = {
       queryKey: queryKeys.stories.related(slug),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         storiesApi.related(slug, { signal: ctx.signal }),
+      staleTime: 2 * 60_000,
     });
   },
   mine(username: string, enabled: boolean) {

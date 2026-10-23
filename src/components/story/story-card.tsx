@@ -8,7 +8,9 @@ import { cn } from "@/lib/utils";
 import { formatNumber, formatRelativeTime, readingTimeLabel, truncate } from "@/utils/format";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import { storiesApi } from "@/lib/api/stories";
+import { queryKeys } from "@/lib/query-keys";
 import { ApiError } from "@/lib/api/client";
 
 interface StoryCardProps {
@@ -21,6 +23,15 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
   const [liked, setLiked] = useState<boolean>(story.liked ?? false);
   const [bookmarked, setBookmarked] = useState<boolean>(story.bookmarked ?? false);
   const [likeCount, setLikeCount] = useState<number>(story.likeCount ?? 0);
+  const qc = useQueryClient();
+
+  // Engagement hits every surface that shows this story's counts; pages not
+  // mounted simply refresh on their next visit (they stay 2-min stale otherwise).
+  const invalidateCounts = () => {
+    qc.invalidateQueries({ queryKey: queryKeys.home.all });
+    qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
+    qc.invalidateQueries({ queryKey: queryKeys.stories.detail(story.slug) });
+  };
 
   const onLike = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -29,6 +40,7 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
       const d = await storiesApi.like(story.id);
       setLiked(d.liked);
       setLikeCount((c) => c + (d.liked ? 1 : -1));
+      invalidateCounts();
     } catch (e) {
       if (e instanceof ApiError && e.status === 401)
         toast.error("Login dulu yuk buat like 💔");
@@ -40,6 +52,7 @@ export function StoryCard({ story, variant = "default", className }: StoryCardPr
     try {
       const d = await storiesApi.bookmark(story.id);
       setBookmarked(d.bookmarked);
+      invalidateCounts();
       toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
     } catch (e) {
       if (e instanceof ApiError && e.status === 401)

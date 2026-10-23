@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
 import {
   ArrowLeft,
   Plus,
@@ -224,6 +226,7 @@ export function StoryEditor({
   const [showPreview, setShowPreview] = useState(false);
   const [saving, setSaving] = useState(false);
   const [storyId, setStoryId] = useState<string | null>(init?.id ?? null);
+  const qc = useQueryClient();
   const [showLeftMobile, setShowLeftMobile] = useState(false);
   const [showRightMobile, setShowRightMobile] = useState(false);
 
@@ -351,6 +354,10 @@ export function StoryEditor({
         ? await storiesApi.update(payload)
         : await storiesApi.create(payload);
       setStoryId(d.story.id);
+      // Draft tabs and list pages read staleTime-2-min caches; saving must
+      // break them immediately so published drafts show up on the spot.
+      qc.invalidateQueries({ queryKey: queryKeys.stories.all });
+      qc.invalidateQueries({ queryKey: queryKeys.home.all });
       if (publish) {
         toast.success("Ceritamu berhasil tayang! ");
         setTimeout(

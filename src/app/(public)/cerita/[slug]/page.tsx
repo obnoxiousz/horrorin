@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/dialog";
 import { storyQueries, storiesApi } from "@/lib/api/stories";
 import { commentQueries, commentsApi } from "@/lib/api/comments";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function StoryDetailPage({
   params,
@@ -81,6 +82,11 @@ export default function StoryDetailPage({
     onSuccess: (d) => {
       setLiked(d.liked);
       setLikeCount((c) => c + (d.liked ? 1 : -1) - (liked ? 1 : -1) * -1);
+      qc.invalidateQueries({
+        queryKey: queryKeys.stories.detail(slug),
+      });
+      qc.invalidateQueries({ queryKey: queryKeys.home.all });
+      qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
     },
     onError: () => {
       setLiked((v) => !v);
@@ -93,6 +99,11 @@ export default function StoryDetailPage({
     mutationFn: () => storiesApi.bookmark(data?.story?.id ?? ""),
     onSuccess: (d) => {
       setBookmarked(d.bookmarked);
+      qc.invalidateQueries({
+        queryKey: queryKeys.stories.detail(slug),
+      });
+      qc.invalidateQueries({ queryKey: queryKeys.home.all });
+      qc.invalidateQueries({ queryKey: queryKeys.stories.lists() });
       toast.success(d.bookmarked ? "Disimpan! Baca nanti ya 📌" : "Dihapus dari simpanan");
     },
     onError: () => {
@@ -106,6 +117,9 @@ export default function StoryDetailPage({
     onSuccess: () => {
       setCommentText("");
       refetchComments();
+      qc.invalidateQueries({
+        queryKey: queryKeys.stories.detail(slug),
+      });
       toast.success("Komen terkirim! 💬");
     },
     onError: () => {

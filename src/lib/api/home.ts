@@ -32,6 +32,9 @@ export const homeQueries = {
       queryKey: queryKeys.home.all,
       queryFn: (ctx: { signal?: AbortSignal }) =>
         homeApi.all({ signal: ctx.signal }),
+      // Landing payload ages slowly; like/bookmark/comment actions invalidate
+      // this key explicitly (see story-card / detail page).
+      staleTime: 2 * 60_000,
     });
   },
 };

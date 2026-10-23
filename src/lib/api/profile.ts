@@ -43,6 +43,7 @@ export const profileQueries = {
       queryFn: (ctx: { signal?: AbortSignal }) =>
         profileApi.byUsername(username, { signal: ctx.signal }),
       retry: false as const,
+      staleTime: 2 * 60_000,
     });
   },
 };
