@@ -161,6 +161,13 @@ model Story {
   @@index([categoryId])
   @@index([status])
   @@index([publishedAt])
+  // Composite indexes sized to the public list sort orders:
+  // latest = (status, publishedAt desc); trending = (status, likeCount; viewCount);
+  // recommended = (status, bookmarkCount; likeCount).
+  @@index([status, publishedAt])
+  @@index([status, likeCount])
+  @@index([status, viewCount])
+  @@index([status, bookmarkCount])
 }
 
 model StoryBlock {
@@ -254,6 +261,9 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  // unreadCount filters (userId, read); the inbox orders (userId, createdAt).
+  @@index([userId, read])
+  @@index([userId, createdAt])
 }
 
 // ===================== DRAFTS =====================
