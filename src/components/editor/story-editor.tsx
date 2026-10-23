@@ -131,6 +131,9 @@ const BLOCK_TYPES: {
   { type: "diary", label: "Diary", icon: BookOpen, desc: "Buku harian" },
 ];
 
+const ASIDE_STICKY =
+  "lg:sticky lg:top-14 lg:self-start lg:h-[calc(100vh-3.5rem)] overflow-hidden";
+
 const genId = () => Math.random().toString(36).slice(2, 11);
 
 const defaultDataFor = (type: BlockType): StoryBlockData => {
@@ -279,6 +282,12 @@ export function StoryEditor({
         b.id === id ? { ...b, data: { ...b.data, ...data } } : b,
       ),
     );
+  };
+  const handleSelectBlock = (id: string) => {
+    setSelectedBlockId(id);
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      setShowRightMobile(true);
+    }
   };
 
   // ===== Tag operations =====
@@ -443,7 +452,12 @@ export function StoryEditor({
       {/* 3-panel editor */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[280px_1fr_320px] min-h-0">
         {/* LEFT SIDEBAR — Block list + add */}
-        <aside className="hidden lg:flex flex-col border-r border-border/40 bg-card/20">
+        <aside
+          className={cn(
+            "hidden lg:flex flex-col border-r border-border/40 bg-card/20",
+            ASIDE_STICKY,
+          )}
+        >
           <LeftPanel
             blocks={blocks}
             selectedBlockId={selectedBlockId}
@@ -465,7 +479,13 @@ export function StoryEditor({
         </button>
 
         {/* CENTER — Live preview */}
-        <main className="overflow-y-auto bg-background/40">
+        <main
+          className={cn(
+            "overflow-y-auto bg-background/40",
+            (showLeftMobile || (showRightMobile && selectedBlock)) &&
+              "pb-[40dvh] lg:pb-0",
+          )}
+        >
           <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
             {/* Thumbnail + meta */}
             <div className="mb-6 space-y-4">
@@ -561,7 +581,7 @@ export function StoryEditor({
               {blocks.map((b, i) => (
                 <div
                   key={b.id}
-                  onClick={() => setSelectedBlockId(b.id)}
+                  onClick={() => handleSelectBlock(b.id)}
                   className={cn(
                     "group relative rounded-2xl transition-all cursor-pointer",
                     selectedBlockId === b.id
@@ -639,7 +659,12 @@ export function StoryEditor({
         </main>
 
         {/* RIGHT SIDEBAR — Properties */}
-        <aside className="hidden lg:flex flex-col border-l border-border/40 bg-card/20">
+        <aside
+          className={cn(
+            "hidden lg:flex flex-col border-l border-border/40 bg-card/20",
+            ASIDE_STICKY,
+          )}
+        >
           <RightPanel
             block={selectedBlock}
             onUpdate={(data) =>
@@ -649,20 +674,12 @@ export function StoryEditor({
           />
         </aside>
 
-        {/* Mobile right toggle */}
-        {selectedBlock && (
-          <button
-            className="lg:hidden fixed bottom-4 right-4 z-30 w-12 h-12 rounded-full glass-strong shadow-xl flex items-center justify-center"
-            onClick={() => setShowRightMobile(true)}
-          >
-            <Sparkles className="w-5 h-5 text-primary" />
-          </button>
-        )}
       </div>
 
       {/* Mobile drawer — Add block */}
       {showLeftMobile && (
         <MobileDrawer
+          modal
           title="Blok & Tambah"
           onClose={() => setShowLeftMobile(false)}
         >
@@ -738,8 +755,8 @@ function LeftPanel({
   blockTypes: { type: BlockType; label: string; icon: any; desc: string }[];
 }) {
   return (
-    <ScrollArea className="flex-1">
-      <div className="p-4 space-y-5 fixed">
+    <ScrollArea className="h-full">
+      <div className="p-4 space-y-5">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
             <Sparkles className="w-3 h-3" /> Tambah Blok
@@ -856,8 +873,8 @@ function RightPanel({
 }) {
   if (!block) {
     return (
-      <ScrollArea className="flex-1">
-        <div className="p-6 text-center fixed">
+      <ScrollArea className="h-full">
+        <div className="p-6 text-center">
           <div className="w-12 h-12 rounded-full glass mx-auto mb-3 flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-muted-foreground" />
           </div>
@@ -872,7 +889,7 @@ function RightPanel({
   const d = block.data;
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="h-full">
       <div className="w-full">
         <div className="p-4 space-y-4">
           <div>
@@ -1513,31 +1530,38 @@ function ImageInput({
 function MobileDrawer({
   title,
   onClose,
+  modal = false,
   children,
 }: {
   title: string;
   onClose: () => void;
+  modal?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div className="lg:hidden fixed inset-0 z-50 flex">
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative ml-auto w-[85%] max-w-sm bg-card border-l border-border/50 flex flex-col animate-slide-up">
-        <div className="flex items-center justify-between p-3 border-b border-border/40">
-          <h3 className="font-semibold text-sm">{title}</h3>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-accent flex items-center justify-center"
-          >
-            <X className="w-4 h-4" />
-          </button>
+    <>
+      {modal && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        />
+      )}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-50 max-h-[70dvh] rounded-t-2xl overflow-y-auto bg-card border-t border-border/50 shadow-xl animate-slide-up">
+        <div className="sticky top-0 z-10 bg-card/80 backdrop-blur-sm px-4 pt-2 pb-2 border-b border-border/40">
+          <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-muted-foreground/30" />
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-sm">{title}</h3>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full hover:bg-accent flex items-center justify-center"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-        <div className="flex-1 overflow-hidden">{children}</div>
+        {children}
       </div>
-    </div>
+    </>
   );
 }
 
