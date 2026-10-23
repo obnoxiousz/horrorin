@@ -44,13 +44,9 @@ export default function AdminDashboardPage() {
 
   const adminGate = status === "authenticated" && session?.user?.role === "ADMIN";
 
-  // Same URL as the admin/users page — dashboard and list share one cache entry.
-  const { data: usersData, isLoading: usersLoading } = useQuery(
-    adminQueries.users(undefined, adminGate)
-  );
-
-  const { data: storiesData, isLoading: storiesLoading } = useQuery(
-    adminQueries.stories(adminGate)
+  // One aggregate request replaces the old double fetch of users+stories lists.
+  const { data: statsData, isLoading: statsLoading } = useQuery(
+    adminQueries.stats(adminGate)
   );
 
   if (status !== "authenticated" || session?.user?.role !== "ADMIN") {
@@ -61,19 +57,17 @@ export default function AdminDashboardPage() {
     );
   }
 
-  const users = usersData?.users ?? [];
-  const stories = storiesData?.stories ?? [];
-  const publishedCount = stories.filter((s: any) => s.status === "PUBLISHED").length;
-  const draftCount = stories.filter((s: any) => s.status === "DRAFT").length;
-  const archivedCount = stories.filter((s: any) => s.status === "ARCHIVED").length;
-  const totalViews = stories.reduce((acc: number, s: any) => acc + (s.viewCount ?? 0), 0);
-  const totalLikes = stories.reduce((acc: number, s: any) => acc + (s.likeCount ?? 0), 0);
-  const totalComments = stories.reduce((acc: number, s: any) => acc + (s.commentCount ?? 0), 0);
+  const publishedCount = statsData?.stories.published ?? 0;
+  const draftCount = statsData?.stories.draft ?? 0;
+  const archivedCount = statsData?.stories.archived ?? 0;
+  const totalUsers = statsData?.users ?? 0;
+  const totalStories = statsData?.stories.total ?? 0;
+  const totalViews = statsData?.views ?? 0;
+  const totalLikes = statsData?.likes ?? 0;
+  const totalComments = statsData?.comments ?? 0;
 
-  const isLoading = usersLoading || storiesLoading;
-  const recentStories = [...stories]
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5);
+  const isLoading = statsLoading;
+  const recentStories = statsData?.recent ?? [];
 
   return (
     <AppShell>
@@ -102,14 +96,14 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <StatCard
                 label="Total Users"
-                value={users.length}
+                value={totalUsers}
                 icon={<Users className="w-5 h-5" />}
                 color="#06b6d4"
                 href="/admin/users"
               />
               <StatCard
                 label="Total Cerita"
-                value={stories.length}
+                value={totalStories}
                 icon={<FileText className="w-5 h-5" />}
                 color="#ef4444"
                 href="/admin/stories"
@@ -141,8 +135,8 @@ export default function AdminDashboardPage() {
               <div className="glass rounded-3xl p-6">
                 <h2 className="font-bold text-lg mb-4">Quick Links</h2>
                 <div className="space-y-2">
-                  <QuickLink href="/admin/users" label="Kelola Users" desc={`${users.length} user terdaftar`} icon={<Users className="w-4 h-4" />} />
-                  <QuickLink href="/admin/stories" label="Kelola Cerita" desc={`${stories.length} cerita total`} icon={<FileText className="w-4 h-4" />} />
+                  <QuickLink href="/admin/users" label="Kelola Users" desc={`${totalUsers} user terdaftar`} icon={<Users className="w-4 h-4" />} />
+                  <QuickLink href="/admin/stories" label="Kelola Cerita" desc={`${totalStories} cerita total`} icon={<FileText className="w-4 h-4" />} />
                   <QuickLink href="/admin/reports" label="Laporan Komunitas" desc="Cek laporan masuk" icon={<AlertCircle className="w-4 h-4" />} />
                 </div>
               </div>

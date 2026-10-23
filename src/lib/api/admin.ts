@@ -44,7 +44,31 @@ export const adminApi = {
   deleteStory(id: string) {
     return api.delete<{ ok: boolean }>(`/admin/stories/${encodeURIComponent(id)}`);
   },
+
+  stats(opts?: ClientOptions) {
+    return api.get<AdminStatsResponse>("/admin/stats", {
+      signal: opts?.signal,
+    });
+  },
 };
+
+export interface AdminStatsRecent {
+  id: string;
+  slug: string;
+  title: string;
+  status: string;
+  createdAt: string;
+  author: { id: string; name: string | null; username: string | null; image: string | null } | null;
+}
+
+export interface AdminStatsResponse {
+  users: number;
+  stories: { total: number; published: number; draft: number; archived: number };
+  views: number;
+  likes: number;
+  comments: number;
+  recent: AdminStatsRecent[];
+}
 
 export const adminQueries = {
   users(search?: string, enabled = true) {
@@ -61,6 +85,14 @@ export const adminQueries = {
       queryKey: queryKeys.admin.stories(),
       queryFn: (ctx: { signal?: AbortSignal }) =>
         adminApi.stories({ signal: ctx.signal }),
+      enabled,
+    });
+  },
+  stats(enabled = true) {
+    return queryOptions({
+      queryKey: queryKeys.admin.stats(),
+      queryFn: (ctx: { signal?: AbortSignal }) =>
+        adminApi.stats({ signal: ctx.signal }),
       enabled,
     });
   },
