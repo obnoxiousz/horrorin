@@ -873,422 +873,155 @@ function RightPanel({
 
   return (
     <ScrollArea className="flex-1">
-      <div className="p-4 space-y-4 fixed">
-        <div>
-          <Badge variant="outline" className="border-primary/40 text-primary">
-            Edit: {block.type}
-          </Badge>
-        </div>
+      <div className="w-full">
+        <div className="p-4 space-y-4">
+          <div>
+            <Badge variant="outline" className="border-primary/40 text-primary">
+              Edit: {block.type}
+            </Badge>
+          </div>
 
-        {/* TEXT */}
-        {block.type === "text" && (
-          <>
-            <Field label="Teks">
-              <Textarea
-                value={d.text ?? ""}
-                onChange={(e) => onUpdate({ text: e.target.value })}
-                placeholder="Tulis sesuatu..."
-                className="resize-none min-h-[120px] bg-background/60"
-              />
-            </Field>
-            <Field label="Align">
-              <div className="flex gap-1">
-                {(["left", "center", "right"] as const).map((a) => (
-                  <Button
-                    key={a}
-                    size="sm"
-                    variant={d.align === a ? "default" : "outline"}
-                    onClick={() => onUpdate({ align: a })}
-                    className="flex-1"
-                  >
-                    {a === "left" ? (
-                      <AlignLeft className="w-4 h-4" />
-                    ) : a === "center" ? (
-                      <AlignCenter className="w-4 h-4" />
-                    ) : (
-                      <AlignRight className="w-4 h-4" />
-                    )}
-                  </Button>
-                ))}
-              </div>
-            </Field>
-            <Field label="Ukuran Font">
-              <div className="flex gap-1">
-                {(["sm", "md", "lg", "xl"] as const).map((s) => (
-                  <Button
-                    key={s}
-                    size="sm"
-                    variant={d.fontSize === s ? "default" : "outline"}
-                    onClick={() => onUpdate({ fontSize: s })}
-                    className="flex-1 text-xs"
-                  >
-                    {s === "sm"
-                      ? "Kecil"
-                      : s === "md"
-                        ? "Sedang"
-                        : s === "lg"
-                          ? "Besar"
-                          : "XL"}
-                  </Button>
-                ))}
-              </div>
-            </Field>
-          </>
-        )}
-
-        {/* IMAGE */}
-        {["image", "large-image", "cover-image"].includes(block.type) && (
-          <>
-            <Field label="Gambar">
-              <ImageInput
-                value={d.imageUrl ?? ""}
-                onChange={(v) => onUpdate({ imageUrl: v })}
-                onUpload={onUpload}
-                aspect="aspect-video"
-              />
-            </Field>
-            <Field label="Caption (opsional)">
-              <Input
-                value={d.caption ?? ""}
-                onChange={(e) => onUpdate({ caption: e.target.value })}
-                placeholder="Penjelasan gambar..."
-                className="bg-background/60"
-              />
-            </Field>
-          </>
-        )}
-
-        {/* QUOTE */}
-        {block.type === "quote" && (
-          <>
-            <Field label="Kutipan">
-              <Textarea
-                value={d.text ?? ""}
-                onChange={(e) => onUpdate({ text: e.target.value })}
-                className="resize-none min-h-[80px] bg-background/60"
-              />
-            </Field>
-            <Field label="Pengarang">
-              <Input
-                value={d.author ?? ""}
-                onChange={(e) => onUpdate({ author: e.target.value })}
-                placeholder="Sumber..."
-                className="bg-background/60"
-              />
-            </Field>
-          </>
-        )}
-
-        {/* GALLERY */}
-        {block.type === "gallery" && (
-          <Field label={`Galeri (${d.images?.length ?? 0} foto)`}>
-            <div className="space-y-2">
-              {(d.images ?? []).map((img, i) => (
-                <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
-                  <ImageInput
-                    value={img.url}
-                    onChange={(v) => {
-                      const next = [...(d.images ?? [])];
-                      next[i] = { ...next[i], url: v };
-                      onUpdate({ images: next });
-                    }}
-                    onUpload={async (f) => {
-                      const url = await onUpload(f);
-                      if (url) {
-                        const next = [...(d.images ?? [])];
-                        next[i] = { ...next[i], url };
-                        onUpdate({ images: next });
-                      }
-                    }}
-                    aspect="aspect-square"
-                  />
-                  <Input
-                    value={img.caption ?? ""}
-                    onChange={(e) => {
-                      const next = [...(d.images ?? [])];
-                      next[i] = { ...next[i], caption: e.target.value };
-                      onUpdate({ images: next });
-                    }}
-                    placeholder="Caption..."
-                    className="bg-background/60 text-xs"
-                  />
-                  <button
-                    onClick={() =>
-                      onUpdate({
-                        images: (d.images ?? []).filter((_, idx) => idx !== i),
-                      })
-                    }
-                    className="text-xs text-destructive hover:underline"
-                  >
-                    Hapus foto ini
-                  </button>
-                </div>
-              ))}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  onUpdate({
-                    images: [...(d.images ?? []), { url: "", caption: "" }],
-                  })
-                }
-                className="w-full"
-              >
-                <Plus className="w-3 h-3 mr-1" /> Tambah Foto
-              </Button>
-            </div>
-          </Field>
-        )}
-
-        {/* TIMELINE */}
-        {block.type === "timeline" && (
-          <Field label={`Timeline (${d.timeline?.length ?? 0} titik)`}>
-            <div className="space-y-2">
-              {(d.timeline ?? []).map((t, i) => (
-                <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
-                  <Input
-                    value={t.time}
-                    onChange={(e) => {
-                      const next = [...(d.timeline ?? [])];
-                      next[i] = { ...next[i], time: e.target.value };
-                      onUpdate({ timeline: next });
-                    }}
-                    placeholder="Waktu..."
-                    className="bg-background/60 text-xs"
-                  />
-                  <Input
-                    value={t.title}
-                    onChange={(e) => {
-                      const next = [...(d.timeline ?? [])];
-                      next[i] = { ...next[i], title: e.target.value };
-                      onUpdate({ timeline: next });
-                    }}
-                    placeholder="Judul..."
-                    className="bg-background/60 text-xs"
-                  />
-                  <Textarea
-                    value={t.description}
-                    onChange={(e) => {
-                      const next = [...(d.timeline ?? [])];
-                      next[i] = { ...next[i], description: e.target.value };
-                      onUpdate({ timeline: next });
-                    }}
-                    placeholder="Deskripsi..."
-                    className="bg-background/60 text-xs resize-none min-h-[50px]"
-                  />
-                  <button
-                    onClick={() =>
-                      onUpdate({
-                        timeline: (d.timeline ?? []).filter(
-                          (_, idx) => idx !== i,
-                        ),
-                      })
-                    }
-                    className="text-xs text-destructive hover:underline"
-                  >
-                    Hapus
-                  </button>
-                </div>
-              ))}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  onUpdate({
-                    timeline: [
-                      ...(d.timeline ?? []),
-                      { time: "00:00", title: "", description: "" },
-                    ],
-                  })
-                }
-                className="w-full"
-              >
-                <Plus className="w-3 h-3 mr-1" /> Tambah Titik
-              </Button>
-            </div>
-          </Field>
-        )}
-
-        {/* CHAT / CONVERSATION */}
-        {(block.type === "chat" || block.type === "conversation") && (
-          <Field label={`Pesan (${d.messages?.length ?? 0})`}>
-            <div className="space-y-2">
-              {(d.messages ?? []).map((m, i) => (
-                <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
-                  <div className="flex gap-1">
-                    {(["me", "them"] as const).map((f) => (
-                      <Button
-                        key={f}
-                        size="sm"
-                        variant={m.from === f ? "default" : "outline"}
-                        onClick={() => {
-                          const next = [...(d.messages ?? [])];
-                          next[i] = { ...next[i], from: f };
-                          onUpdate({ messages: next });
-                        }}
-                        className="flex-1 text-xs"
-                      >
-                        {f === "me" ? "Gue" : "Mereka"}
-                      </Button>
-                    ))}
-                  </div>
-                  {m.from === "them" && (
-                    <Input
-                      value={m.name ?? ""}
-                      onChange={(e) => {
-                        const next = [...(d.messages ?? [])];
-                        next[i] = { ...next[i], name: e.target.value };
-                        onUpdate({ messages: next });
-                      }}
-                      placeholder="Nama pengirim..."
-                      className="bg-background/60 text-xs"
-                    />
-                  )}
-                  <Textarea
-                    value={m.text}
-                    onChange={(e) => {
-                      const next = [...(d.messages ?? [])];
-                      next[i] = { ...next[i], text: e.target.value };
-                      onUpdate({ messages: next });
-                    }}
-                    placeholder="Pesan..."
-                    className="bg-background/60 text-xs resize-none min-h-[50px]"
-                  />
-                  <Input
-                    value={m.time ?? ""}
-                    onChange={(e) => {
-                      const next = [...(d.messages ?? [])];
-                      next[i] = { ...next[i], time: e.target.value };
-                      onUpdate({ messages: next });
-                    }}
-                    placeholder="23:45"
-                    className="bg-background/60 text-xs"
-                  />
-                  <button
-                    onClick={() =>
-                      onUpdate({
-                        messages: (d.messages ?? []).filter(
-                          (_, idx) => idx !== i,
-                        ),
-                      })
-                    }
-                    className="text-xs text-destructive hover:underline"
-                  >
-                    Hapus
-                  </button>
-                </div>
-              ))}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  onUpdate({
-                    messages: [
-                      ...(d.messages ?? []),
-                      { from: "them", name: "Mereka", text: "", time: "" },
-                    ],
-                  })
-                }
-                className="w-full"
-              >
-                <Plus className="w-3 h-3 mr-1" /> Tambah Pesan
-              </Button>
-            </div>
-          </Field>
-        )}
-
-        {/* REPORT (news / police / cctv / investigation) */}
-        {["news", "police", "cctv", "investigation"].includes(block.type) && (
-          <>
-            <Field label="Case Number">
-              <Input
-                value={d.caseNumber ?? ""}
-                onChange={(e) => onUpdate({ caseNumber: e.target.value })}
-                className="bg-background/60 font-mono text-xs"
-              />
-            </Field>
-            <Field label="Classification">
-              <Input
-                value={d.classification ?? ""}
-                onChange={(e) => onUpdate({ classification: e.target.value })}
-                className="bg-background/60 text-xs"
-              />
-            </Field>
-            <div className="grid grid-cols-2 gap-2">
-              <Field label="Lokasi">
-                <Input
-                  value={d.location ?? ""}
-                  onChange={(e) => onUpdate({ location: e.target.value })}
-                  className="bg-background/60 text-xs"
+          {/* TEXT */}
+          {block.type === "text" && (
+            <>
+              <Field label="Teks">
+                <Textarea
+                  value={d.text ?? ""}
+                  onChange={(e) => onUpdate({ text: e.target.value })}
+                  placeholder="Tulis sesuatu..."
+                  className="resize-none min-h-[120px] bg-background/60"
                 />
               </Field>
-              <Field label="Waktu">
-                <Input
-                  value={d.datetime ?? ""}
-                  onChange={(e) => onUpdate({ datetime: e.target.value })}
-                  className="bg-background/60 text-xs"
-                />
-              </Field>
-            </div>
-            <Field label="Pelapor">
-              <Input
-                value={d.observedBy ?? ""}
-                onChange={(e) => onUpdate({ observedBy: e.target.value })}
-                className="bg-background/60 text-xs"
-              />
-            </Field>
-            <Field label={`Readings (${d.readings?.length ?? 0})`}>
-              <div className="space-y-1.5">
-                {(d.readings ?? []).map((r, i) => (
-                  <div key={i} className="flex gap-1">
-                    <Input
-                      value={r.label}
-                      onChange={(e) => {
-                        const next = [...(d.readings ?? [])];
-                        next[i] = { ...next[i], label: e.target.value };
-                        onUpdate({ readings: next });
-                      }}
-                      placeholder="Label"
-                      className="bg-background/60 text-xs"
-                    />
-                    <Input
-                      value={r.value}
-                      onChange={(e) => {
-                        const next = [...(d.readings ?? [])];
-                        next[i] = { ...next[i], value: e.target.value };
-                        onUpdate({ readings: next });
-                      }}
-                      placeholder="Value"
-                      className="bg-background/60 text-xs"
-                    />
-                    <Select
-                      value={r.status ?? "normal"}
-                      onValueChange={(v) => {
-                        const next = [...(d.readings ?? [])];
-                        next[i] = { ...next[i], status: v as any };
-                        onUpdate({ readings: next });
-                      }}
+              <Field label="Align">
+                <div className="flex gap-1">
+                  {(["left", "center", "right"] as const).map((a) => (
+                    <Button
+                      key={a}
+                      size="sm"
+                      variant={d.align === a ? "default" : "outline"}
+                      onClick={() => onUpdate({ align: a })}
+                      className="flex-1"
                     >
-                      <SelectTrigger className="bg-background/60 text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="normal">Normal</SelectItem>
-                        <SelectItem value="warning">Warning</SelectItem>
-                        <SelectItem value="critical">Critical</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      {a === "left" ? (
+                        <AlignLeft className="w-4 h-4" />
+                      ) : a === "center" ? (
+                        <AlignCenter className="w-4 h-4" />
+                      ) : (
+                        <AlignRight className="w-4 h-4" />
+                      )}
+                    </Button>
+                  ))}
+                </div>
+              </Field>
+              <Field label="Ukuran Font">
+                <div className="flex gap-1">
+                  {(["sm", "md", "lg", "xl"] as const).map((s) => (
+                    <Button
+                      key={s}
+                      size="sm"
+                      variant={d.fontSize === s ? "default" : "outline"}
+                      onClick={() => onUpdate({ fontSize: s })}
+                      className="flex-1 text-xs"
+                    >
+                      {s === "sm"
+                        ? "Kecil"
+                        : s === "md"
+                          ? "Sedang"
+                          : s === "lg"
+                            ? "Besar"
+                            : "XL"}
+                    </Button>
+                  ))}
+                </div>
+              </Field>
+            </>
+          )}
+
+          {/* IMAGE */}
+          {["image", "large-image", "cover-image"].includes(block.type) && (
+            <>
+              <Field label="Gambar">
+                <ImageInput
+                  value={d.imageUrl ?? ""}
+                  onChange={(v) => onUpdate({ imageUrl: v })}
+                  onUpload={onUpload}
+                  aspect="aspect-video"
+                />
+              </Field>
+              <Field label="Caption (opsional)">
+                <Input
+                  value={d.caption ?? ""}
+                  onChange={(e) => onUpdate({ caption: e.target.value })}
+                  placeholder="Penjelasan gambar..."
+                  className="bg-background/60"
+                />
+              </Field>
+            </>
+          )}
+
+          {/* QUOTE */}
+          {block.type === "quote" && (
+            <>
+              <Field label="Kutipan">
+                <Textarea
+                  value={d.text ?? ""}
+                  onChange={(e) => onUpdate({ text: e.target.value })}
+                  className="resize-none min-h-[80px] bg-background/60"
+                />
+              </Field>
+              <Field label="Pengarang">
+                <Input
+                  value={d.author ?? ""}
+                  onChange={(e) => onUpdate({ author: e.target.value })}
+                  placeholder="Sumber..."
+                  className="bg-background/60"
+                />
+              </Field>
+            </>
+          )}
+
+          {/* GALLERY */}
+          {block.type === "gallery" && (
+            <Field label={`Galeri (${d.images?.length ?? 0} foto)`}>
+              <div className="space-y-2">
+                {(d.images ?? []).map((img, i) => (
+                  <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
+                    <ImageInput
+                      value={img.url}
+                      onChange={(v) => {
+                        const next = [...(d.images ?? [])];
+                        next[i] = { ...next[i], url: v };
+                        onUpdate({ images: next });
+                      }}
+                      onUpload={async (f) => {
+                        const url = await onUpload(f);
+                        if (url) {
+                          const next = [...(d.images ?? [])];
+                          next[i] = { ...next[i], url };
+                          onUpdate({ images: next });
+                        }
+                      }}
+                      aspect="aspect-square"
+                    />
+                    <Input
+                      value={img.caption ?? ""}
+                      onChange={(e) => {
+                        const next = [...(d.images ?? [])];
+                        next[i] = { ...next[i], caption: e.target.value };
+                        onUpdate({ images: next });
+                      }}
+                      placeholder="Caption..."
+                      className="bg-background/60 text-xs"
+                    />
                     <button
                       onClick={() =>
                         onUpdate({
-                          readings: (d.readings ?? []).filter(
-                            (_, idx) => idx !== i,
-                          ),
+                          images: (d.images ?? []).filter((_, idx) => idx !== i),
                         })
                       }
-                      className="text-destructive hover:text-destructive/80 px-1"
+                      className="text-xs text-destructive hover:underline"
                     >
-                      <X className="w-3 h-3" />
+                      Hapus foto ini
                     </button>
                   </div>
                 ))}
@@ -1297,43 +1030,64 @@ function RightPanel({
                   variant="outline"
                   onClick={() =>
                     onUpdate({
-                      readings: [
-                        ...(d.readings ?? []),
-                        { label: "", value: "", status: "normal" },
-                      ],
+                      images: [...(d.images ?? []), { url: "", caption: "" }],
                     })
                   }
-                  className="w-full text-xs"
+                  className="w-full"
                 >
-                  <Plus className="w-3 h-3 mr-1" /> Tambah Reading
+                  <Plus className="w-3 h-3 mr-1" /> Tambah Foto
                 </Button>
               </div>
             </Field>
-            <Field label={`Detail Paragraf (${d.paragraphs?.length ?? 0})`}>
-              <div className="space-y-1.5">
-                {(d.paragraphs ?? []).map((p, i) => (
-                  <div key={i} className="flex gap-1">
-                    <Textarea
-                      value={p}
+          )}
+
+          {/* TIMELINE */}
+          {block.type === "timeline" && (
+            <Field label={`Timeline (${d.timeline?.length ?? 0} titik)`}>
+              <div className="space-y-2">
+                {(d.timeline ?? []).map((t, i) => (
+                  <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
+                    <Input
+                      value={t.time}
                       onChange={(e) => {
-                        const next = [...(d.paragraphs ?? [])];
-                        next[i] = e.target.value;
-                        onUpdate({ paragraphs: next });
+                        const next = [...(d.timeline ?? [])];
+                        next[i] = { ...next[i], time: e.target.value };
+                        onUpdate({ timeline: next });
                       }}
-                      placeholder={`Paragraf ${i + 1}`}
+                      placeholder="Waktu..."
+                      className="bg-background/60 text-xs"
+                    />
+                    <Input
+                      value={t.title}
+                      onChange={(e) => {
+                        const next = [...(d.timeline ?? [])];
+                        next[i] = { ...next[i], title: e.target.value };
+                        onUpdate({ timeline: next });
+                      }}
+                      placeholder="Judul..."
+                      className="bg-background/60 text-xs"
+                    />
+                    <Textarea
+                      value={t.description}
+                      onChange={(e) => {
+                        const next = [...(d.timeline ?? [])];
+                        next[i] = { ...next[i], description: e.target.value };
+                        onUpdate({ timeline: next });
+                      }}
+                      placeholder="Deskripsi..."
                       className="bg-background/60 text-xs resize-none min-h-[50px]"
                     />
                     <button
                       onClick={() =>
                         onUpdate({
-                          paragraphs: (d.paragraphs ?? []).filter(
+                          timeline: (d.timeline ?? []).filter(
                             (_, idx) => idx !== i,
                           ),
                         })
                       }
-                      className="text-destructive hover:text-destructive/80 px-1"
+                      className="text-xs text-destructive hover:underline"
                     >
-                      <X className="w-3 h-3" />
+                      Hapus
                     </button>
                   </div>
                 ))}
@@ -1341,59 +1095,87 @@ function RightPanel({
                   size="sm"
                   variant="outline"
                   onClick={() =>
-                    onUpdate({ paragraphs: [...(d.paragraphs ?? []), ""] })
+                    onUpdate({
+                      timeline: [
+                        ...(d.timeline ?? []),
+                        { time: "00:00", title: "", description: "" },
+                      ],
+                    })
                   }
-                  className="w-full text-xs"
+                  className="w-full"
                 >
-                  <Plus className="w-3 h-3 mr-1" /> Tambah Paragraf
+                  <Plus className="w-3 h-3 mr-1" /> Tambah Titik
                 </Button>
               </div>
             </Field>
-          </>
-        )}
+          )}
 
-        {/* DIARY */}
-        {block.type === "diary" && (
-          <>
-            <Field label="Penulis">
-              <Input
-                value={d.observedBy ?? ""}
-                onChange={(e) => onUpdate({ observedBy: e.target.value })}
-                className="bg-background/60 text-xs"
-              />
-            </Field>
-            <Field label="Tanggal">
-              <Input
-                value={d.datetime ?? ""}
-                onChange={(e) => onUpdate({ datetime: e.target.value })}
-                className="bg-background/60 text-xs"
-              />
-            </Field>
-            <Field label={`Catatan (${d.paragraphs?.length ?? 0})`}>
-              <div className="space-y-1.5">
-                {(d.paragraphs ?? []).map((p, i) => (
-                  <div key={i} className="flex gap-1">
+          {/* CHAT / CONVERSATION */}
+          {(block.type === "chat" || block.type === "conversation") && (
+            <Field label={`Pesan (${d.messages?.length ?? 0})`}>
+              <div className="space-y-2">
+                {(d.messages ?? []).map((m, i) => (
+                  <div key={i} className="space-y-1.5 p-2 rounded-lg glass">
+                    <div className="flex gap-1">
+                      {(["me", "them"] as const).map((f) => (
+                        <Button
+                          key={f}
+                          size="sm"
+                          variant={m.from === f ? "default" : "outline"}
+                          onClick={() => {
+                            const next = [...(d.messages ?? [])];
+                            next[i] = { ...next[i], from: f };
+                            onUpdate({ messages: next });
+                          }}
+                          className="flex-1 text-xs"
+                        >
+                          {f === "me" ? "Gue" : "Mereka"}
+                        </Button>
+                      ))}
+                    </div>
+                    {m.from === "them" && (
+                      <Input
+                        value={m.name ?? ""}
+                        onChange={(e) => {
+                          const next = [...(d.messages ?? [])];
+                          next[i] = { ...next[i], name: e.target.value };
+                          onUpdate({ messages: next });
+                        }}
+                        placeholder="Nama pengirim..."
+                        className="bg-background/60 text-xs"
+                      />
+                    )}
                     <Textarea
-                      value={p}
+                      value={m.text}
                       onChange={(e) => {
-                        const next = [...(d.paragraphs ?? [])];
-                        next[i] = e.target.value;
-                        onUpdate({ paragraphs: next });
+                        const next = [...(d.messages ?? [])];
+                        next[i] = { ...next[i], text: e.target.value };
+                        onUpdate({ messages: next });
                       }}
-                      placeholder={`Catatan ${i + 1}`}
-                      className="bg-background/60 text-xs resize-none min-h-[60px]"
+                      placeholder="Pesan..."
+                      className="bg-background/60 text-xs resize-none min-h-[50px]"
+                    />
+                    <Input
+                      value={m.time ?? ""}
+                      onChange={(e) => {
+                        const next = [...(d.messages ?? [])];
+                        next[i] = { ...next[i], time: e.target.value };
+                        onUpdate({ messages: next });
+                      }}
+                      placeholder="23:45"
+                      className="bg-background/60 text-xs"
                     />
                     <button
                       onClick={() =>
                         onUpdate({
-                          paragraphs: (d.paragraphs ?? []).filter(
+                          messages: (d.messages ?? []).filter(
                             (_, idx) => idx !== i,
                           ),
                         })
                       }
-                      className="text-destructive hover:text-destructive/80 px-1"
+                      className="text-xs text-destructive hover:underline"
                     >
-                      <X className="w-3 h-3" />
+                      Hapus
                     </button>
                   </div>
                 ))}
@@ -1401,16 +1183,236 @@ function RightPanel({
                   size="sm"
                   variant="outline"
                   onClick={() =>
-                    onUpdate({ paragraphs: [...(d.paragraphs ?? []), ""] })
+                    onUpdate({
+                      messages: [
+                        ...(d.messages ?? []),
+                        { from: "them", name: "Mereka", text: "", time: "" },
+                      ],
+                    })
                   }
-                  className="w-full text-xs"
+                  className="w-full"
                 >
-                  <Plus className="w-3 h-3 mr-1" /> Tambah Catatan
+                  <Plus className="w-3 h-3 mr-1" /> Tambah Pesan
                 </Button>
               </div>
             </Field>
-          </>
-        )}
+          )}
+
+          {/* REPORT (news / police / cctv / investigation) */}
+          {["news", "police", "cctv", "investigation"].includes(block.type) && (
+            <>
+              <Field label="Case Number">
+                <Input
+                  value={d.caseNumber ?? ""}
+                  onChange={(e) => onUpdate({ caseNumber: e.target.value })}
+                  className="bg-background/60 font-mono text-xs"
+                />
+              </Field>
+              <Field label="Classification">
+                <Input
+                  value={d.classification ?? ""}
+                  onChange={(e) => onUpdate({ classification: e.target.value })}
+                  className="bg-background/60 text-xs"
+                />
+              </Field>
+              <div className="grid grid-cols-2 gap-2">
+                <Field label="Lokasi">
+                  <Input
+                    value={d.location ?? ""}
+                    onChange={(e) => onUpdate({ location: e.target.value })}
+                    className="bg-background/60 text-xs"
+                  />
+                </Field>
+                <Field label="Waktu">
+                  <Input
+                    value={d.datetime ?? ""}
+                    onChange={(e) => onUpdate({ datetime: e.target.value })}
+                    className="bg-background/60 text-xs"
+                  />
+                </Field>
+              </div>
+              <Field label="Pelapor">
+                <Input
+                  value={d.observedBy ?? ""}
+                  onChange={(e) => onUpdate({ observedBy: e.target.value })}
+                  className="bg-background/60 text-xs"
+                />
+              </Field>
+              <Field label={`Readings (${d.readings?.length ?? 0})`}>
+                <div className="space-y-1.5">
+                  {(d.readings ?? []).map((r, i) => (
+                    <div key={i} className="flex gap-1">
+                      <Input
+                        value={r.label}
+                        onChange={(e) => {
+                          const next = [...(d.readings ?? [])];
+                          next[i] = { ...next[i], label: e.target.value };
+                          onUpdate({ readings: next });
+                        }}
+                        placeholder="Label"
+                        className="bg-background/60 text-xs"
+                      />
+                      <Input
+                        value={r.value}
+                        onChange={(e) => {
+                          const next = [...(d.readings ?? [])];
+                          next[i] = { ...next[i], value: e.target.value };
+                          onUpdate({ readings: next });
+                        }}
+                        placeholder="Value"
+                        className="bg-background/60 text-xs"
+                      />
+                      <Select
+                        value={r.status ?? "normal"}
+                        onValueChange={(v) => {
+                          const next = [...(d.readings ?? [])];
+                          next[i] = { ...next[i], status: v as any };
+                          onUpdate({ readings: next });
+                        }}
+                      >
+                        <SelectTrigger className="bg-background/60 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="normal">Normal</SelectItem>
+                          <SelectItem value="warning">Warning</SelectItem>
+                          <SelectItem value="critical">Critical</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <button
+                        onClick={() =>
+                          onUpdate({
+                            readings: (d.readings ?? []).filter(
+                              (_, idx) => idx !== i,
+                            ),
+                          })
+                        }
+                        className="text-destructive hover:text-destructive/80 px-1"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      onUpdate({
+                        readings: [
+                          ...(d.readings ?? []),
+                          { label: "", value: "", status: "normal" },
+                        ],
+                      })
+                    }
+                    className="w-full text-xs"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Tambah Reading
+                  </Button>
+                </div>
+              </Field>
+              <Field label={`Detail Paragraf (${d.paragraphs?.length ?? 0})`}>
+                <div className="space-y-1.5">
+                  {(d.paragraphs ?? []).map((p, i) => (
+                    <div key={i} className="flex gap-1">
+                      <Textarea
+                        value={p}
+                        onChange={(e) => {
+                          const next = [...(d.paragraphs ?? [])];
+                          next[i] = e.target.value;
+                          onUpdate({ paragraphs: next });
+                        }}
+                        placeholder={`Paragraf ${i + 1}`}
+                        className="bg-background/60 text-xs resize-none min-h-[50px]"
+                      />
+                      <button
+                        onClick={() =>
+                          onUpdate({
+                            paragraphs: (d.paragraphs ?? []).filter(
+                              (_, idx) => idx !== i,
+                            ),
+                          })
+                        }
+                        className="text-destructive hover:text-destructive/80 px-1"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      onUpdate({ paragraphs: [...(d.paragraphs ?? []), ""] })
+                    }
+                    className="w-full text-xs"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Tambah Paragraf
+                  </Button>
+                </div>
+              </Field>
+            </>
+          )}
+
+          {/* DIARY */}
+          {block.type === "diary" && (
+            <>
+              <Field label="Penulis">
+                <Input
+                  value={d.observedBy ?? ""}
+                  onChange={(e) => onUpdate({ observedBy: e.target.value })}
+                  className="bg-background/60 text-xs"
+                />
+              </Field>
+              <Field label="Tanggal">
+                <Input
+                  value={d.datetime ?? ""}
+                  onChange={(e) => onUpdate({ datetime: e.target.value })}
+                  className="bg-background/60 text-xs"
+                />
+              </Field>
+              <Field label={`Catatan (${d.paragraphs?.length ?? 0})`}>
+                <div className="space-y-1.5">
+                  {(d.paragraphs ?? []).map((p, i) => (
+                    <div key={i} className="flex gap-1">
+                      <Textarea
+                        value={p}
+                        onChange={(e) => {
+                          const next = [...(d.paragraphs ?? [])];
+                          next[i] = e.target.value;
+                          onUpdate({ paragraphs: next });
+                        }}
+                        placeholder={`Catatan ${i + 1}`}
+                        className="bg-background/60 text-xs resize-none min-h-[60px]"
+                      />
+                      <button
+                        onClick={() =>
+                          onUpdate({
+                            paragraphs: (d.paragraphs ?? []).filter(
+                              (_, idx) => idx !== i,
+                            ),
+                          })
+                        }
+                        className="text-destructive hover:text-destructive/80 px-1"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      onUpdate({ paragraphs: [...(d.paragraphs ?? []), ""] })
+                    }
+                    className="w-full text-xs"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Tambah Catatan
+                  </Button>
+                </div>
+              </Field>
+            </>
+          )}
+        </div>
       </div>
     </ScrollArea>
   );
