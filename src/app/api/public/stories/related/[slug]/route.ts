@@ -6,8 +6,6 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const story = await storyRepository.findBySlug(slug);
-  if (!story) return NextResponse.json({ stories: [] });
-  const stories = await storyRepository.findRelated(story.id, story.categoryId, 4);
+  const stories = await storyRepository.findRelatedBySlug(slug);
   return NextResponse.json({ stories });
 }

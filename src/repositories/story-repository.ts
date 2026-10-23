@@ -103,12 +103,19 @@ export const storyRepository = {
     });
   },
 
-  async findRelated(storyId: string, categoryId: string, take = 4) {
+  /** Related-by-category: reads only (id, categoryId) for the source story —
+   *  never the full row with blocks — then lists its same-category neighbors. */
+  async findRelatedBySlug(slug: string, take = 4) {
+    const story = await db.story.findUnique({
+      where: { slug },
+      select: { id: true, categoryId: true },
+    });
+    if (!story) return [];
     return db.story.findMany({
       where: {
-        categoryId,
+        categoryId: story.categoryId,
         status: "PUBLISHED",
-        id: { not: storyId },
+        id: { not: story.id },
       },
       take,
       orderBy: { likeCount: "desc" },
