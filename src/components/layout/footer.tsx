@@ -52,7 +52,7 @@ export function Footer() {
 
         <div className="mt-10 pt-6 border-t border-border/40 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-background">
           <p>© {new Date().getFullYear()} Horrorin.</p>
-          <p>Yang dibaca di sini, tinggal di sini. Jangan coba di rumah.</p>
+          <p>Yang dibaca disini, tinggal disini. Jangan sampai ikut ke rumah</p>
         </div>
       </div>
     </footer>
