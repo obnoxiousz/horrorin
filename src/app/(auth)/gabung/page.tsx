@@ -259,7 +259,7 @@ export default function GabungPage() {
             </form>
 
             <p className="text-center text-xs text-muted-foreground mt-6">
-              Dengan gabung, kamu setuju sama Aturan Komunitas & Kebijakan Privasi Horrorin.
+              Dengan bergabung, kamu setuju sama Aturan Kebijakan Privasi platform HorrorIn.
             </p>
           </div>
         </div>
