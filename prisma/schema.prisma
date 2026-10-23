@@ -163,11 +163,11 @@ model Story {
   @@index([status])
   @@index([publishedAt])
   // Composite indexes sized to the public list sort orders:
-  // latest = (status, publishedAt desc); trending = (status, likeCount; viewCount);
+  // latest = (status, publishedAt desc); trending = (status, likeCount) —
+  // viewCount is only a secondary tiebreak (and is rewritten on every view);
   // recommended = (status, bookmarkCount; likeCount).
   @@index([status, publishedAt])
   @@index([status, likeCount])
-  @@index([status, viewCount])
   @@index([status, bookmarkCount])
 }
 
