@@ -180,6 +180,7 @@ Buka [http://localhost:3000](http://localhost:3000) 🎉
 - Seluruh UI berbahasa Indonesia dengan tone Gen Z.
 - `Caddyfile` di root dipakai sebagai reverse proxy (default `:81` → `localhost:3000`), mendukung per-rute transform port lewat query `XTransformPort`.
 - Deploy serverless (Vercel): pool koneksi `pg` di `src/lib/db.ts` menyesuaikan otomatis (maks 3 koneksi per lambda, bisa dioverride lewat env `PG_POOL_MAX`).
+- Deploy production: `bun run build` TIDAK menjalankan migrasi (hanya `prisma generate` + `next build`). Jalankan `bunx prisma migrate deploy` ke database production (pakai `DIRECT_URL`) sebelum/sesudah deploy — tabel `Upload` dan indeks composite baru wajib sudah ada sebelum app kena DB.
 - Gambar editor tersimpan di tabel `Upload` (bukan filesystem — filesystem serverless read-only) dan dilayani `/api/public/files/[id]` dengan id acak sebagai capability.
 - Indeks composite untuk urutan sort cerita & notifikasi ada di `prisma/migrations/20261023010936_story_notification_sort_indexes`.
 - Log pengembangan ada di `worklog.md` (bisa jadi tidak mutakhir — kode tetap sumber kebenarannya).
