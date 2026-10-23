@@ -49,6 +49,9 @@ import { StoryBlockRenderer } from "@/components/story/story-block-renderer";
 import { type TemplateDef, type BlockType } from "@/constants";
 import { type StoryBlockData } from "@/types";
 import { slugify, truncate } from "@/utils/format";
+import { storiesApi } from "@/lib/api/stories";
+import { uploadApi } from "@/lib/api/upload";
+import { ApiError } from "@/lib/api/client";
 
 interface Block {
   id: string;
@@ -293,20 +296,11 @@ export function StoryEditor({
     return new Promise((resolve) => {
       reader.onload = async () => {
         try {
-          const r = await fetch("/api/public/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ dataUrl: reader.result }),
-          });
-          if (!r.ok) {
-            toast.error("Upload gagal 😢");
-            resolve(null);
-            return;
-          }
-          const d = await r.json();
+          const d = await uploadApi.acceptDataUrl(reader.result as string);
           resolve(d.url);
-        } catch {
-          toast.error("Upload error");
+        } catch (e) {
+          if (e instanceof ApiError) toast.error("Upload gagal 😢");
+          else toast.error("Upload error");
           resolve(null);
         }
       };
@@ -353,17 +347,9 @@ export function StoryEditor({
     setSaving(true);
     try {
       const payload = buildPayload(publish ? "PUBLISHED" : "DRAFT");
-      const r = await fetch("/api/public/stories/create", {
-        method: storyId ? "PATCH" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!r.ok) {
-        const d = await r.json().catch(() => ({}));
-        toast.error(d.error ?? "Gagal simpan");
-        return;
-      }
-      const d = await r.json();
+      const d = storyId
+        ? await storiesApi.update(payload)
+        : await storiesApi.create(payload);
       setStoryId(d.story.id);
       if (publish) {
         toast.success("Ceritamu berhasil tayang! ");
@@ -375,7 +361,11 @@ export function StoryEditor({
         toast.success("Draft berhasil disimpan ✨");
       }
     } catch (e) {
-      toast.error("Error simpan");
+      if (e instanceof ApiError) {
+        toast.error((e.data as { error?: string } | undefined)?.error ?? "Gagal simpan");
+      } else {
+        toast.error("Error simpan");
+      }
     } finally {
       setSaving(false);
     }

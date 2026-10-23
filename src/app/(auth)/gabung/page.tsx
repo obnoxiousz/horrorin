@@ -13,6 +13,8 @@ import { useRouteTransition } from "@/components/ui/route-transition";
 import { PageTransition } from "@/components/ui/page-transition";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ApiError } from "@/lib/api/client";
+import { authApi } from "@/lib/api/auth";
 import Image from "next/image";
 
 const schema = z
@@ -66,22 +68,12 @@ export default function GabungPage() {
 
     setLoading(true);
     try {
-      const r = await fetch("/api/public/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          username: form.username,
-          password: form.password,
-        }),
+      await authApi.register({
+        name: form.name,
+        email: form.email,
+        username: form.username,
+        password: form.password,
       });
-      const data = await r.json();
-      if (!r.ok) {
-        toast.error(data.error ?? "Gagal daftar nih");
-        setLoading(false);
-        return;
-      }
 
       toast.success("Akun berhasil dibuat! Lagi masuk...");
       const res = await signIn("credentials", {
@@ -99,8 +91,12 @@ export default function GabungPage() {
       start();
       router.push("/");
       router.refresh();
-    } catch {
-      toast.error("Ada yang error, coba lagi ya");
+    } catch (e) {
+      if (e instanceof ApiError) {
+        toast.error((e.data as { error?: string } | undefined)?.error ?? "Gagal daftar nih");
+      } else {
+        toast.error("Ada yang error, coba lagi ya");
+      }
       setLoading(false);
     }
   };
