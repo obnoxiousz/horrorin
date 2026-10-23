@@ -23,6 +23,8 @@ import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { formatRelativeTime } from "@/utils/format";
 import { cn } from "@/lib/utils";
+import { notificationQueries, notificationsApi } from "@/lib/api/notifications";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function NotifikasiPage() {
   const { data: session, status } = useSession();
@@ -40,29 +42,15 @@ export default function NotifikasiPage() {
     }
   }, [status, router]);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/notifications");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated",
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    notificationQueries.list(status === "authenticated")
+  );
 
   const markAllReadMutation = useMutation({
-    mutationFn: async () => {
-      const r = await fetch("/api/public/notifications/read", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: () => notificationsApi.markRead(),
     onSuccess: () => {
       toast.success("Semua notifikasi udah dibaca ✅");
-      qc.invalidateQueries({ queryKey: ["notifications"] });
+      qc.invalidateQueries({ queryKey: queryKeys.notifications.list() });
     },
     onError: () => toast.error("Gagal mark read, coba lagi ya"),
   });

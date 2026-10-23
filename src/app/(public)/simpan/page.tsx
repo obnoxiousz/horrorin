@@ -9,6 +9,7 @@ import { StoryCard } from "@/components/story/story-card";
 import { ErrorState, EmptyState } from "@/components/ui/states";
 import { SkeletonCardGrid, SkeletonPageHeader } from "@/components/ui/skeletons";
 import { useSession } from "next-auth/react";
+import { bookmarkQueries } from "@/lib/api/bookmarks";
 
 export default function SimpanPage() {
   const { status } = useSession();
@@ -24,15 +25,9 @@ export default function SimpanPage() {
     }
   }, [status, router]);
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["bookmarks"],
-    queryFn: async () => {
-      const r = await fetch("/api/public/stories/bookmark/list");
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
-    enabled: status === "authenticated",
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    bookmarkQueries.list(status === "authenticated")
+  );
 
   if (status === "loading" || status === "unauthenticated" || isLoading) {
     return (

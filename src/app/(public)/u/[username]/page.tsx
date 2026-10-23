@@ -36,6 +36,9 @@ import {
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { formatDate, formatNumber } from "@/utils/format";
+import { profileQueries, profileApi } from "@/lib/api/profile";
+import { storyQueries } from "@/lib/api/stories";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function ProfilePage({
   params,
@@ -51,39 +54,19 @@ export default function ProfilePage({
 
   const isOwn = session?.user?.username === username;
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["profile", username],
-    queryFn: async () => {
-      const r = await fetch(`/api/public/profile/${username}`);
-      if (!r.ok) throw new Error("not found");
-      return r.json();
-    },
-    retry: false,
-  });
+  const { data, isLoading, isError, refetch } = useQuery(
+    profileQueries.byUsername(username)
+  );
 
-  const { data: myStoriesData } = useQuery({
-    queryKey: ["my-stories", username],
-    queryFn: async () => {
-      const r = await fetch("/api/public/stories/me");
-      if (!r.ok) return { stories: [] };
-      return r.json();
-    },
-    enabled: isOwn && status === "authenticated",
-  });
+  const { data: myStoriesData } = useQuery(
+    storyQueries.mine(username, isOwn && status === "authenticated")
+  );
 
   const followMutation = useMutation({
-    mutationFn: async () => {
-      const r = await fetch("/api/public/profile/follow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ targetUserId: data?.profile?.id }),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: () => profileApi.follow(data?.profile?.id),
     onSuccess: (d) => {
       toast.success(d.following ? "Kamu mulai nge-follow 💀" : "Berhasil unfollow");
-      qc.invalidateQueries({ queryKey: ["profile", username] });
+      qc.invalidateQueries({ queryKey: queryKeys.profile.byUsername(username) });
     },
     onError: () => {
       if (status !== "authenticated") {
@@ -96,19 +79,16 @@ export default function ProfilePage({
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (body: any) => {
-      const r = await fetch("/api/public/profile/me", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!r.ok) throw new Error("failed");
-      return r.json();
-    },
+    mutationFn: (body: {
+      name: string;
+      bio: string;
+      image: string | null;
+      username: string;
+    }) => profileApi.updateMe(body),
     onSuccess: () => {
       toast.success("Profil ke-update! ✨");
       setEditOpen(false);
-      qc.invalidateQueries({ queryKey: ["profile", username] });
+      qc.invalidateQueries({ queryKey: queryKeys.profile.byUsername(username) });
     },
     onError: () => {
       toast.error("Gagal update profil, coba lagi ya");

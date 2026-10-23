@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useNavbarVisibility } from "@/hooks/use-navbar-visibility";
 import { useRouteTransition } from "@/components/ui/route-transition";
+import { notificationsApi } from "@/lib/api/notifications";
 import Image from "next/image";
 
 const NAV_LINKS = [
@@ -48,8 +49,8 @@ export function Navbar() {
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    fetch("/api/public/notifications")
-      .then((r) => r.json())
+    notificationsApi
+      .list()
       .then((d) => setUnread(d.unread ?? 0))
       .catch(() => {});
   }, [status, pathname]);

@@ -1,7 +1,7 @@
 import { api, type ClientOptions } from "./client";
 import { queryKeys } from "@/lib/query-keys";
 import { queryOptions } from "@tanstack/react-query";
-import type { ProfileDTO } from "@/types";
+import type { ProfileDTO, StoryListItem } from "@/types";
 
 export type UpdateProfileBody = {
   name: string;
@@ -12,6 +12,7 @@ export type UpdateProfileBody = {
 
 export interface ProfileResponse {
   profile: ProfileDTO | null;
+  stories?: StoryListItem[];
 }
 
 export interface FollowResult {
@@ -26,8 +27,8 @@ export const profileApi = {
     );
   },
 
-  follow(id: string) {
-    return api.post<FollowResult>("/public/profile/follow", { id });
+  follow(targetUserId: string | undefined) {
+    return api.post<FollowResult>("/public/profile/follow", { targetUserId });
   },
 
   updateMe(body: UpdateProfileBody) {

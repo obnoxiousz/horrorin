@@ -23,9 +23,9 @@ export interface MyNotificationsResponse {
       | null;
     type: string;
   }[];
+  unread: number;
 }
 
-/** The navbar strips query-string ids in use — kept verbatim on the client. */
 export const notificationsApi = {
   list(opts?: ClientOptions) {
     return api.get<MyNotificationsResponse>("/public/notifications", {
@@ -33,8 +33,9 @@ export const notificationsApi = {
     });
   },
 
+  /** POST (server reads optional ids; {} marks everything). */
   markRead(opts?: ClientOptions) {
-    return api.patch<{ ok: boolean }>("/public/notifications/read", undefined, opts);
+    return api.post<{ ok: boolean }>("/public/notifications/read", {}, opts);
   },
 };
 
