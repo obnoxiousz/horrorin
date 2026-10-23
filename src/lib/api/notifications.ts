@@ -60,6 +60,9 @@ export const notificationQueries = {
       queryFn: (ctx: { signal?: AbortSignal }) =>
         notificationsApi.unread({ signal: ctx.signal }),
       enabled,
+      // Badge is fresh for a minute; mark-all-read invalidation still
+      // refreshes it immediately.
+      staleTime: 60_000,
     });
   },
 };

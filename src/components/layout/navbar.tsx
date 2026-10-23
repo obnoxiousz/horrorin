@@ -22,8 +22,7 @@ import { cn } from "@/lib/utils";
 import { useNavbarVisibility } from "@/hooks/use-navbar-visibility";
 import { useRouteTransition } from "@/components/ui/route-transition";
 import { notificationQueries } from "@/lib/api/notifications";
-import { queryKeys } from "@/lib/query-keys";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
 const NAV_LINKS = [
@@ -37,15 +36,14 @@ export function Navbar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const qc = useQueryClient();
   const { start } = useRouteTransition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const { isVisible, setHoverZoneActive, setLocked, isHoverCapable } =
     useNavbarVisibility();
 
-  // Shared unread count across the app; refreshed once per navigation
-  // (same cadence the old inline fetch effect had) and deduped by react-query.
+  // Shared unread count across the app. Fresh for 60s (staleTime), refetched
+  // when the navbar remounts or mark-all-read invalidates it.
   const { data: unreadData } = useQuery(
     notificationQueries.unread(status === "authenticated")
   );
@@ -55,11 +53,6 @@ export function Navbar() {
   useEffect(() => {
     setLocked(mobileOpen);
   }, [mobileOpen, setLocked]);
-
-  useEffect(() => {
-    if (status !== "authenticated") return;
-    qc.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
-  }, [status, pathname, qc]);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
