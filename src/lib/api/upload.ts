@@ -5,9 +5,8 @@ export interface UploadResult {
 }
 
 /**
- * POST /public/upload with JSON { dataUrl }.
- * NOTE: no route.ts exists under src/app/api/public/upload yet —
- * this call 404s server-side today; this file only models the existing client call.
+ * POST /api/public/upload with JSON { dataUrl } → { url }.
+ * Backed by the Upload table; images are served by /api/public/files/[id].
  */
 export const uploadApi = {
   acceptDataUrl(dataUrl: string) {

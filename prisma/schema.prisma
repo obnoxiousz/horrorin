@@ -38,6 +38,7 @@ model User {
 
   followersRel  Follow[]    @relation("Following")
   followingRel  Follow[]    @relation("Follower")
+  uploads       Upload[]
 }
 
 model Account {
@@ -279,6 +280,20 @@ model Draft {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// ===================== UPLOADS =====================
+
+// Images uploaded from the editor live in the DB (served via
+// /api/public/files/[id]) so the app stays portable across hosts.
+model Upload {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mime      String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
 }
 
 // ===================== ADMIN / REPORTS =====================
