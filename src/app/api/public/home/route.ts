@@ -5,14 +5,16 @@ import { engagementRepository } from "@/repositories/engagement-repository";
 import { getSessionUser } from "@/auth/session";
 
 export async function GET() {
-  const [latest, trending, recommended, trendingForCreators, categories] =
-    await Promise.all([
-      storyRepository.findPublished({ sort: "latest", take: 8 }),
-      storyRepository.findPublished({ sort: "trending", take: 4 }),
-      storyRepository.findPublished({ sort: "recommended", take: 4 }),
-      storyRepository.findPublished({ sort: "trending", take: 20 }),
-      categoryRepository.findAll(),
-    ]);
+  const [latest, trendingPool, recommended, categories] = await Promise.all([
+    storyRepository.findPublished({ sort: "latest", take: 8 }),
+    storyRepository.findPublished({ sort: "trending", take: 20 }),
+    storyRepository.findPublished({ sort: "recommended", take: 4 }),
+    categoryRepository.findAll(),
+  ]);
+
+  // trending is just the head of the same trending take-20 query (same where,
+  // same orderBy) — one fewer query, and tie order stays consistent.
+  const trending = trendingPool.slice(0, 4);
 
   const user = await getSessionUser();
   const ids = Array.from(
@@ -32,39 +34,25 @@ export async function GET() {
     bookmarked: bookmarkedSet.has(s.id),
   });
 
-  // Creators derived server-side from trending take 20 (same logic the old
-  // client hook used): unique authors, sorted by total likes, top 6.
-  const byAuthor = new Map<
-    string,
-    {
-      id: string;
-      name: string | null;
-      username: string | null;
-      image: string | null;
-      storyCount: number;
-      totalLikes: number;
-    }
-  >();
-  for (const s of trendingForCreators) {
-    if (!s.author) continue;
-    const prev = byAuthor.get(s.author.id);
-    if (prev) {
-      prev.storyCount += 1;
-      prev.totalLikes += s.likeCount ?? 0;
-    } else {
-      byAuthor.set(s.author.id, {
-        id: s.author.id,
-        name: s.author.name,
-        username: s.author.username,
-        image: s.author.image,
-        storyCount: 1,
-        totalLikes: s.likeCount ?? 0,
-      });
-    }
+  // Creators: unique authors in trending order (first-seen), first 6.
+  const seenAuthors = new Set<string>();
+  const creators: {
+    id: string;
+    name: string | null;
+    username: string | null;
+    image: string | null;
+  }[] = [];
+  for (const s of trendingPool) {
+    if (!s.author || seenAuthors.has(s.author.id)) continue;
+    seenAuthors.add(s.author.id);
+    creators.push({
+      id: s.author.id,
+      name: s.author.name,
+      username: s.author.username,
+      image: s.author.image,
+    });
+    if (creators.length === 6) break;
   }
-  const creators = Array.from(byAuthor.values())
-    .sort((a, b) => b.totalLikes - a.totalLikes)
-    .slice(0, 6);
 
   return NextResponse.json({
     latest: latest.map(flag),

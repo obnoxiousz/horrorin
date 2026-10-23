@@ -8,8 +8,6 @@ export interface HomeCreator {
   name: string | null;
   username: string | null;
   image: string | null;
-  storyCount: number;
-  totalLikes: number;
 }
 
 export interface HomeResponse {
