@@ -277,6 +277,19 @@ export function Navbar() {
           </div>
         )}
       </header>
+      {status === "authenticated" && !mobileOpen && pathname !== "/editor" && (
+        <Link
+          href="/editor"
+          aria-label="Tambah postingan"
+          className="fixed right-4 z-40 lg:hidden"
+          style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
+        >
+          <Button className="h-12 gap-2 rounded-full px-5 font-semibold shadow-lg shadow-primary/25">
+            <Plus className="h-5 w-5" />
+            Tambah postingan
+          </Button>
+        </Link>
+      )}
     </>
   );
 }
