@@ -54,6 +54,34 @@ export function Navbar() {
     setLocked(mobileOpen);
   }, [mobileOpen, setLocked]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    const closeOnDesktop = window.matchMedia("(min-width: 1024px)");
+    const handleBreakpoint = (event: MediaQueryListEvent) => {
+      if (event.matches) setMobileOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    closeOnDesktop.addEventListener("change", handleBreakpoint);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+      closeOnDesktop.removeEventListener("change", handleBreakpoint);
+    };
+  }, [mobileOpen]);
+
+  // Menutup menu bila perpindahan route dipicu dari komponen lain.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchValue.trim()) return;
@@ -64,6 +92,14 @@ export function Navbar() {
 
   return (
     <>
+      {mobileOpen && (
+        <button
+          type="button"
+          aria-label="Tutup menu"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm animate-[menu-backdrop-in_320ms_ease-out_both] motion-reduce:animate-none"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
       {/* Hover zone desktop-only: siretnya invisible, setengah lebar viewport atas,
           mouse di sini saat navbar hidden → navbar munculkan lagi. */}
       {isHoverCapable && (
@@ -78,10 +114,12 @@ export function Navbar() {
       <header
         data-state={isVisible ? "visible" : "hidden"}
         className={cn(
-          "fixed top-4 left-0 right-0 z-50 mx-auto w-fit max-w-[calc(100vw-2rem)] rounded-full",
-          "glass-strong shadow-lg shadow-black/30 backdrop-blur-md backdrop-saturate-150",
-          "transition-[translate,opacity] duration-300 ease-out",
+          "z-50 glass-strong shadow-lg shadow-black/30 backdrop-blur-md backdrop-saturate-150",
+          "transition-[translate,opacity,border-radius] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "motion-reduce:transition-opacity motion-reduce:translate-y-0",
+          mobileOpen
+            ? "fixed inset-0 m-0 flex h-dvh w-full max-w-none flex-col rounded-none animate-[menu-card-in_460ms_cubic-bezier(0.22,1,0.36,1)_both] motion-reduce:animate-none"
+            : "fixed top-4 left-0 right-0 mx-auto w-fit max-w-[calc(100vw-2rem)] rounded-full",
           isVisible
             ? "opacity-100"
             : "-translate-y-[calc(100%+1rem)] opacity-0 pointer-events-none motion-reduce:translate-y-0"
@@ -92,7 +130,7 @@ export function Navbar() {
         onBlur={() => setHoverZoneActive(false)}
         inert={isVisible ? undefined : true}
       >
-        <div className="flex h-14 items-center gap-2 px-3 sm:px-5">
+        <div className={cn("flex h-14 shrink-0 items-center gap-2 px-3 sm:px-5", mobileOpen && "w-full")}>
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
             {/* <div className="relative">
@@ -225,6 +263,8 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               className="lg:hidden rounded-full"
+              aria-label={mobileOpen ? "Tutup menu" : "Buka menu"}
+              aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((v) => !v)}
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -232,9 +272,9 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu: panel floating di bawah pill */}
+        {/* Menu menyatu dengan pill dalam satu kartu, dengan scroll internal. */}
         {mobileOpen && (
-          <div className="absolute left-1/2 top-full mt-2 w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl glass-strong shadow-lg shadow-black/30 p-4 animate-fade-in">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain border-t border-border/40 p-4 animate-[menu-content-in_360ms_100ms_ease-out_both] motion-reduce:animate-none">
             <form onSubmit={onSearch} className="mb-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
