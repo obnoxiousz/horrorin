@@ -317,7 +317,8 @@ export function Navbar() {
           </div>
         )}
       </header>
-      {status === "authenticated" && !mobileOpen && pathname !== "/editor" && (
+      {status === "authenticated" && !mobileOpen && pathname !== "/editor" && !pathname.startsWith("/u/") && !pathname.startsWith("/cerita")
+       && (
         <Link
           href="/editor"
           aria-label="Tambah postingan"
