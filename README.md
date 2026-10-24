@@ -1,6 +1,6 @@
 # Horrorin — Komunitas Cerita Horror Indonesia
 
-> "Gabun komunitas horror paling ngeri di Indonesia" 👻
+> "Gabung komunitas horror paling ngeri di Indonesia" 👻
 
 Horrorin adalah platform komunitas untuk menulis, membaca, dan berbagi cerita horror berbahasa Indonesia dengan tone Gen Z. Dibangun dengan dark mode + glassmorphism, lengkap dengan editor cerita multi-template, interaksi sosial, serta panel admin.
 
@@ -50,21 +50,7 @@ Horrorin adalah platform komunitas untuk menulis, membaca, dan berbagi cerita ho
 
 ## API
 
-Semua handler REST berada di `src/app/api`:
-
-- **`/api/public`**
-  - `stories` — list (filter sort/category/tag/q), `[slug]` detail, `create` (GET draft + POST buat + PATCH update), `me`, `related/[slug]`, `like`, `bookmark` (+ `bookmark/list`).
-  - `home` — payload landing gabungan (cerita latest/trending/recommended + kategori + kreator top) dalam **satu request**.
-  - `comments/[storyId]` — daftar & komentar baru; `comments?slug=` — daftar komentar lewat slug (dipakai halaman detail agar 3 request jalan paralel).
-  - `categories`, `templates`.
-  - `profile/me` (update), `profile/[username]`, `profile/follow`.
-  - `notifications`, `notifications/read` (POST tanda baca), `notifications/unread-count` (badge navbar).
-  - `upload` (POST data URL gambar ≤3MB) dan `files/[id]` (melayani gambarnya).
-  - `auth/register`.
-- **`/api/admin`** — `users` (+`[id]` promote/demote/ban/unban), `stories` (+`[id]` archive/delete), `stats` (dashboard agregat angka sesungguhnya dalam satu request).
-- **`/api/auth`** — NextAuth handlers (`[...nextauth]`).
-
-Data layer memakai repository pattern di `src/repositories` (story, user, engagement, notification, template).
+Seluruh route handler berada di `src/app/api`. Untuk metode, autentikasi, parameter, body, contoh request, dan bentuk respons, lihat [API.md](./API.md).
 
 ## Arsitektur Data (sisi klien)
 
@@ -169,6 +155,7 @@ Buka [http://localhost:3000](http://localhost:3000) 🎉
 | `npm run dev` | Jalankan server development |
 | `npm run build` | Build production (prisma generate + next build) |
 | `npm run start` | Jalankan server production |
+| `npm run prod` | Build lalu jalankan server production |
 | `npm run lint` | ESLint |
 | `npm run db:generate` | Generate Prisma client |
 | `npm run db:migrate` | Prisma migrate dev |
